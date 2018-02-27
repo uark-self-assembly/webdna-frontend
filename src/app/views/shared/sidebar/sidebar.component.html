@@ -1,0 +1,32 @@
+<div class="sidebar-wrapper">
+    <div class="logo row" style="height: 120px;">
+        <a routerLink="/dashboard">
+            <div class="logo-img">
+                <img data-toggle="collapse" src="../../assets/img/full-logo.png" class="collapsed"/>
+            </div>
+        </a>
+    </div>
+
+    <ul class="nav">
+        <li routerLinkActive="active" *ngFor="let menuitem of menuItems">
+            <!--If is a single link-->
+            <a *ngIf="menuitem.type === 'link'" [routerLink]="[menuitem.path]">
+                <i class="{{menuitem.icontype}}"></i>
+                <p>{{menuitem.title}}</p>
+            </a>
+
+            <!--If it have a submenu-->
+            <a *ngIf="menuitem.type === 'sub'" data-toggle="collapse" href="#{{menuitem.title}}">
+                <i class="{{menuitem.icontype}}"></i>
+                <p>{{menuitem.title}}<b class="caret"></b></p>
+            </a>
+        </li>
+        <li routerLinkActive="active" *ngIf="user.accessLevel === 'ADMIN' || user.accessLevel === 'SUPER'">
+            <!--If is a single link-->
+            <a routerLink="/admin">
+                <i class="pe-7s-users"></i>
+                <p>Admin</p>
+            </a>
+        </li>
+    </ul>
+</div>

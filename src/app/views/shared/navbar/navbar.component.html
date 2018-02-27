@@ -1,0 +1,32 @@
+
+<nav #navbar class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-minimize">
+            <button id="minimizeSidebar" class="btn btn-primary btn-fill btn-round btn-icon">
+                <i class="fa fa-ellipsis-v visible-on-sidebar-regular"></i>
+                <i class="fa fa-navicon visible-on-sidebar-mini"></i>
+            </button>
+        </div>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" (click)="sidebarToggle()">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">{{getTitle()}}</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <div class="" *ngIf="isMobileMenu()">
+              <ul class="nav navbar-nav navbar-right">
+                  <li>
+                      <a (click)="logout()">
+                          <i class="fa fa-lock"></i>
+                          <p>Logout</p>
+                      </a>
+                  </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
