@@ -4,7 +4,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LbdModule } from '../components/lbd/lbd.module';
 import { DropdownModule } from "ng2-dropdown";
-import {AccordionModule} from "ng2-accordion";
+import { AccordionModule } from "ng2-accordion";
+import { ProjectListComponent } from './project-list/project-list.component';
+import { ProjectTableComponent } from './project-list/project-table/project-table.component';
 
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutes } from './dashboard.routing';
@@ -19,7 +21,9 @@ import { DashboardRoutes } from './dashboard.routing';
         AccordionModule
     ],
     declarations: [
-      DashboardComponent
+      DashboardComponent,
+      ProjectListComponent,
+      ProjectTableComponent
     ]
 })
 

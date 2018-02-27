@@ -45,7 +45,6 @@ export class LoginComponent implements OnInit{
   }
 
   login() {
-    console.log("logging in");
     this.loading = true;
     this.responseMessage = '';
     this.responseOk = true;

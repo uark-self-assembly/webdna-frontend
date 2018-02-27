@@ -1,0 +1,19 @@
+<div class="card">
+    <div class="header">
+        <h4 class="title">Click on a project to execute it</h4>
+    </div>
+    <div class="content table-responsive table-full-width">
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th *ngFor="let cell of tableData.headerRow">{{ cell }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of tableData.dataRows" (click)="projectClicked(row.project)">
+                    <td *ngFor="let cell of row.displayed">{{cell}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

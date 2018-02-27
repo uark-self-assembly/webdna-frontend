@@ -32,7 +32,6 @@ export class DashboardComponent {
     ngOnInit() {
       this.userService.getUsers().then(profile => {
         this.user = profile[0];
-        console.log(this.user.created_on);
       }, error => {
         console.log(error);
         return false;

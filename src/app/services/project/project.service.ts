@@ -9,7 +9,7 @@ import { Request, RequestBuilder } from '../request-builder/request.builder';
 export class ProjectService {
 
   isDev: boolean;
-  private projectsUrl = '/api/projects/';
+  private projectsUrl = 'api/projects/';
   private headers = new Headers({'Content-Type': 'application/json'});
   request: RequestBuilder;
   endpoint: string;
@@ -26,6 +26,12 @@ export class ProjectService {
   getProjects(): Promise<Project[]> {
     return this.http.get(this.endpoint, { headers: this.request.request.headers })
         .toPromise()
-        .then(response => response.json().response as Project[]);
+        .then(response => response.json() as Project[]);
+  }
+
+  executeProject(project: Project): Promise<number> {
+    return this.http.get(this.endpoint, {headers: this.request.request.headers })
+        .toPromise()
+        .then(response => response.status)
   }
 }

@@ -77,7 +77,6 @@ export class PagesnavbarComponent implements OnInit{
     }
     
     getPath(){
-        // console.log(this.location);
         return this.location.prepareExternalUrl(this.location.path());
     }
 }
