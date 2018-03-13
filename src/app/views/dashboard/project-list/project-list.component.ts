@@ -52,20 +52,30 @@ export class ProjectListComponent {
 
     addProjectConfirmed = ((project: Project) => {
         console.log("Adding project: " + project.name);
-        this.projectService.putProject(project).then(response => {
-            if (response.status == 200) {
-                this.projects.push(response.response as Project);
-                this.addingProject = false;
-            } else {
-                console.log("Error creating project...");
-            }
+        this.projectService.createProject(project).then(response => {
+            this.projects.push(response);
+            this.addingProject = false;
         });
     }).bind(this);
 
     projectClicked = ((project: Project) => {
-        console.log(this);
-        this.projectService.executeProject(project).then(status => {
-            console.log(status);
+        // TODO Move to edit project
+        console.log("Clicked project " + project.name);
+    }).bind(this);
+
+    runClicked = ((project: Project) => {
+        project.job_running = true;
+        this.projectService.updateProject(project).then(status => {
+        });
+    }).bind(this);
+
+    deleteClicked = ((project: Project) => {
+        this.projectService.deleteProject(project).then(deleted => {
+            if (deleted) {
+                this.projects = this.projects.filter((p) => p.id !== project.id);
+            } else {
+                console.log("could not delete project");
+            }
         });
     }).bind(this);
 }

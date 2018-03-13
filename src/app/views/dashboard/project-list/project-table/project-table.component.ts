@@ -19,6 +19,12 @@ export class ProjectTableComponent {
     projectClicked: (project: Project) => void;
 
     @Input()
+    runClicked: (project: Project) => void;
+
+    @Input()
+    deleteClicked: (project: Project) => void;
+
+    @Input()
     set projects(newProjects) {
         this._projects = newProjects;
         this.updateTable();
@@ -58,4 +64,3 @@ export class ProjectTableComponent {
         };
     }
 }
-

@@ -10,7 +10,7 @@ export class ProjectService {
 
   isDev: boolean;
   private projectsUrl = 'api/projects/';
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers = new Headers({ 'Content-Type': 'application/json' });
   requestBuilder: RequestBuilder;
   endpoint: string;
 
@@ -25,20 +25,26 @@ export class ProjectService {
 
   getProjects(): Promise<Project[]> {
     return this.http.get(this.endpoint, { headers: this.requestBuilder.request.headers })
-        .toPromise()
-        .then(response => response.json() as Project[]);
+      .toPromise()
+      .then(response => response.json() as Project[]);
   }
 
-  putProject(project: Project): Promise<any> {
+  createProject(project: Project): Promise<Project> {
     project.user = this.requestBuilder.getUserId();
-    return this.http.put(this.endpoint, project, {headers: this.requestBuilder.request.headers })
-        .toPromise()
-        .then(response => response.json());
+    return this.http.post(this.endpoint, project, { headers: this.requestBuilder.request.headers })
+      .toPromise()
+      .then(response => response.json() as Project);
   }
 
-  executeProject(project: Project): Promise<number> {
-    return this.http.get(this.endpoint, {headers: this.requestBuilder.request.headers })
-        .toPromise()
-        .then(response => response.status)
+  updateProject(project: Project): Promise<Project> {
+    return this.http.put(this.endpoint + project.id + '/', project, { headers: this.requestBuilder.request.headers })
+      .toPromise()
+      .then(response => response.json() as Project);
+  }
+
+  deleteProject(project: Project): Promise<boolean> {
+    return this.http.delete(this.endpoint + project.id + '/', { headers: this.requestBuilder.request.headers })
+      .toPromise()
+      .then(response => response.status == 204);
   }
 }

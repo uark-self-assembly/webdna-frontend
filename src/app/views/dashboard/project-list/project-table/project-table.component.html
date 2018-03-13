@@ -1,17 +1,48 @@
 <div class="card">
-    <div class="header">
-        <h4 class="title">Click on a project to execute it</h4>
-    </div>
     <div class="content table-responsive table-full-width">
         <table class="table table-hover table-striped">
             <thead>
                 <tr>
-                    <th *ngFor="let cell of tableData.headerRow">{{ cell }}</th>
+                    <th>Name</th>
+                    <th>Created On</th>
+                    <th class="text-right">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let row of tableData.dataRows" (click)="projectClicked(row.project)">
-                    <td *ngFor="let cell of row.displayed">{{cell}}</td>
+                <tr *ngFor="let project of projects">
+                    <td>{{project.name}}</td>
+                    <td>{{project.created_on}}</td>
+                    <td class="td-actions text-right">
+                        <!-- Edit button -->
+                        <a rel="tooltip" title="Edit" class="btn btn-primary btn-simple btn-xs" (click)="projectClicked(project)">
+                            Edit Project
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        
+                        <!-- Run Button -->
+                        <div *ngIf="project.job_running;then waiting else idle"></div>
+                        
+                        <!-- Delete Button -->
+                        <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-xs" (click)="deleteClicked(project)">
+                            Delete Project
+                            <i class="fa fa-trash"></i>
+                        </a>
+
+                        <ng-template #waiting>
+                            <a rel="tooltip" title="Running..." class="btn btn-success btn-simple btn-xs">
+                                Simulation Running...
+                                <i class="fa fa-spinner"></i>
+                            </a>
+                        </ng-template>
+
+                        <ng-template #idle>
+                            <a rel="tooltip" title="Run" class="btn btn-success btn-simple btn-xs" (click)="runClicked(project)">
+                                Run Simulation
+                                <i class="fa fa-play"></i>
+                            </a>
+                        </ng-template>
+
+                    </td>
                 </tr>
             </tbody>
         </table>
