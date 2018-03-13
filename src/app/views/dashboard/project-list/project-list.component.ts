@@ -15,6 +15,8 @@ export class ProjectListComponent {
     @Input()
     user: User;
 
+    addingProject: boolean = false;
+
     get firstName() {
         if (!this.user) {
             return "";
@@ -39,6 +41,26 @@ export class ProjectListComponent {
             return false;
         });
     }
+
+    addProjectClicked() {
+        this.addingProject = true;
+    }
+
+    cancelAddProjectClicked() {
+        this.addingProject = false;
+    }
+
+    addProjectConfirmed = ((project: Project) => {
+        console.log("Adding project: " + project.name);
+        this.projectService.putProject(project).then(response => {
+            if (response.status == 200) {
+                this.projects.push(response.response as Project);
+                this.addingProject = false;
+            } else {
+                console.log("Error creating project...");
+            }
+        });
+    }).bind(this);
 
     projectClicked = ((project: Project) => {
         console.log(this);

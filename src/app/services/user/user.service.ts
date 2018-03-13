@@ -10,7 +10,7 @@ export class UserService {
 
   isDev: boolean;
   private usersUrl = 'api/users/';
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers = new Headers({ 'Content-Type': 'application/json' });
   request: RequestBuilder;
   endpoint: string;
 
@@ -23,11 +23,11 @@ export class UserService {
     this.endpoint = this.request.prepEndpoint(this.usersUrl);
   }
 
-  getUsers(): Promise<User[]>{
-    return this.http.get(this.endpoint, {headers: this.request.request.headers})
-        .toPromise()
-        .then(response => {
-          return response.json() as User[]
-        });
+  getUsers(): Promise<User[]> {
+    return this.http.get(this.endpoint, { headers: this.request.request.headers })
+      .toPromise()
+      .then(response => {
+        return response.json() as User[]
+      });
   }
 }

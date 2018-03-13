@@ -13,11 +13,12 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import { tokenNotExpired } from 'angular2-jwt';
 import { Request, RequestBuilder } from '../request-builder/request.builder';
+import { User } from "../user/user";
 
 @Injectable()
 export class AuthenticationService {
   authToken: any;
-  user: any;
+  user: User;
   isDev: boolean;
   private authenticateURL = 'api/';
   private headers = new Headers({'Content-Type': 'application/json'});
@@ -38,12 +39,14 @@ export class AuthenticationService {
   ********************************************************/
   authenticateUser(user): Promise<AuthenticationResponse> {
     let headers = new Headers();
+    headers['Content-Type'] = 'application/x-www-form-urlencoded';
     let ep = this.endpoint + 'login/';
     var request = {
       'username': user.username,
       'password': user.password
     }
-    return this.http.post(ep, request, {headers: headers})
+
+    return this.http.post(ep, request)
         .toPromise()
         .then(response => response.json() as AuthenticationResponse);
   }

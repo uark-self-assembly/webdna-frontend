@@ -23,7 +23,11 @@ export class RequestBuilder {
 
   getAuthToken() {
     this.authToken = this.authService.loadToken();
-    this.request.headers.append('Authorization', "Bearer " + this.authToken);
+    // this.request.headers.append('Authorization', "Bearer " + this.authToken);
+  }
+
+  getUserId(): string {
+    return this.authService.user.id;
   }
 
   prepEndpoint(endpoint) {
