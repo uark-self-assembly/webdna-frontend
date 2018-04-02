@@ -24,6 +24,13 @@ export class UserService {
   }
 
   // Register user method goes here
+  registerUser(user: User): Promise<User> {
+    return this.http.post(this.request.prepEndpoint('api/register/'), user, { headers: this.request.request.headers })
+      .toPromise()
+      .then(response => {
+        return response.json() as User
+      });
+  }
 
   getUsers(): Promise<User[]> {
     return this.http.get(this.endpoint, { headers: this.request.request.headers })
