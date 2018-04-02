@@ -53,42 +53,42 @@
 
                     </div>
                     <div class="col-md-4 col-md-offset-s1">
-                        <form method="#" action="#">
+                        <form (ngSubmit)="register()">
                             <div class="card card-plain">
                                 <div class="content">
                                     <div class="form-group">
-                                        <input type="email" placeholder="Your First Name" class="form-control">
+                                        <input [(ngModel)]="user.first_name" #firstNameInput="ngModel" name="firstname" type="email" placeholder="Your First Name" class="form-control">
                                     </div>
                                     <div class="form-group">
-                                        <input type="email" placeholder="Your Last Name" class="form-control">
+                                        <input [(ngModel)]="user.last_name" #lastNameInput="ngModel" name="lastname" type="email" placeholder="Your Last Name" class="form-control">
                                     </div>
                                     <div class="form-group">
-                                        <input type="email" placeholder="Username" class="form-control">
+                                        <input [(ngModel)]="user.username" #usernameInput="ngModel" name="username" type="email" placeholder="Username" class="form-control">
                                     </div>
                                     <div class="form-group">
-                                        <input type="email" placeholder="Enter email" class="form-control">
+                                        <input [(ngModel)]="user.email" #emailInput="ngModel" name="email" type="email" placeholder="Enter email" class="form-control">
                                     </div>
                                     <div class="form-group">
-                                        <input type="password" placeholder="Password" class="form-control">
+                                        <input [(ngModel)]="user.password" #passwordInput="ngModel" name="password" type="password" placeholder="Password" class="form-control">
                                     </div>
                                     <div class="form-group">
-                                        <input type="password" placeholder="Password Confirmation" class="form-control">
+                                        <input [(ngModel)]="password_confirmation" #passwordConfirmInput="ngModel" name="password_confirm" type="password" placeholder="Password Confirmation" class="form-control">
                                     </div>
                                 </div>
                                 <div class="footer text-center">
                                     <button type="submit" class="btn btn-fill btn-neutral btn-wd">Create A New Account</button>
                                 </div>
-                                
-                                <div class="header">
-                                    <hr/>
-                                </div>
-                                <br/>
-
-                                <div class="footer text-center">
-                                    <button type="submit" class="btn btn-fill btn-neutral btn-wd">Log in with Existing Account</button>
-                                </div>
                             </div>
                         </form>
+
+                        <div class="header">
+                            <hr/>
+                        </div>
+                        <br/>
+
+                        <div class="card card-plain text-center">
+                            <button (click)="existing()" type="submit" class="btn btn-fill btn-neutral btn-wd">Log in with Existing Account</button>
+                        </div>
 
                     </div>
                 </div>
