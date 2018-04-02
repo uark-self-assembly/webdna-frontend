@@ -1,6 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { AuthenticationService } from '../../services/auth-guard/auth.service';
 
 declare var $:any;
