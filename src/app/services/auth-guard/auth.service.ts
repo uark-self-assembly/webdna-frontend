@@ -21,7 +21,7 @@ export class AuthenticationService {
   user: User;
   isDev: boolean;
   private authenticateURL = 'api/';
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers = new Headers({ 'Content-Type': 'application/json' });
   endpoint: string;
   request: RequestBuilder;
 
@@ -47,8 +47,8 @@ export class AuthenticationService {
     }
 
     return this.http.post(ep, request)
-        .toPromise()
-        .then(response => response.json() as AuthenticationResponse);
+      .toPromise()
+      .then(response => response.json() as AuthenticationResponse);
   }
 
   loggedIn() {
@@ -73,8 +73,8 @@ export class AuthenticationService {
   **
   **  Gets Json Web Token from local storage
   ********************************************************/
-  loadToken() : string{
-     return localStorage.getItem('id_token');
+  loadToken(): string {
+    return localStorage.getItem('id_token');
   }
 
   logout() {
