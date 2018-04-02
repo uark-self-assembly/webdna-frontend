@@ -42,15 +42,22 @@ export class RegisterComponent implements OnInit {
     }
 
     register() {
+
+        var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+
         // Validate Register Form and Create Database entry
         if (this.user.password == this.password_confirmation) {
-            this.userService.registerUser(this.user).then(data => {
-                if (data) {
-                    this.router.navigate(['dashboard']);
-                } else {
-                    console.log("User with that name already exists")
-                }
-            });
+            if (strongRegex.test(this.user.password)) {
+                this.userService.registerUser(this.user).then(data => {
+                    if (data) {
+                        this.router.navigate(['dashboard']);
+                    } else {
+                        console.log("User with that name already exists")
+                    }
+                });
+            } else {
+                console.log("Password doesn't match correct format.")
+            }
         } else {
             console.log("Passwords don't match")
         }
