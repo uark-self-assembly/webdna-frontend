@@ -7,7 +7,7 @@ import {PageNotFoundComponent} from './views/page-not-found.component';
 import { AuthGuard } from './services/auth-guard/auth.guard';
 
 export const AppRoutes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full'},
+  { path: '', redirectTo: '/register', pathMatch: 'full'},
   {
       path: '',
       component: AuthLayoutComponent,
