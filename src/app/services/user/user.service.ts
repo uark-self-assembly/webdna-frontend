@@ -23,6 +23,8 @@ export class UserService {
     this.endpoint = this.request.prepEndpoint(this.usersUrl);
   }
 
+  // Register user method goes here
+
   getUsers(): Promise<User[]> {
     return this.http.get(this.endpoint, { headers: this.request.request.headers })
       .toPromise()
