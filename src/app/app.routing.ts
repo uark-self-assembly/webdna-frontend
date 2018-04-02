@@ -17,6 +17,14 @@ export const AppRoutes: Routes = [
       }]
   },
   {
+    path: '',
+    component: AuthLayoutComponent,
+    children: [{
+        path: '',
+        loadChildren: './views/register/register.module#RegisterModule',
+    }]
+ },
+  {
       path: '',
       component: AdminLayoutComponent,
       children: [{
