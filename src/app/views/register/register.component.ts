@@ -1,4 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
+import { UserService } from '../../services/user/user.service';
 
 declare var $:any;
 
@@ -10,6 +11,10 @@ declare var $:any;
 
 export class RegisterComponent implements OnInit{
     test : Date = new Date();
+
+    constructor(userService:UserService){
+        
+    }
 
     checkFullPageBackgroundImage(){
         var $page = $('.full-page');
