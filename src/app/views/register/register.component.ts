@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
 import { User } from '../../services/user/user';
+import { SweetAlertComponent } from '../components/sweetalert/sweetalert.component';
 
 declare var $: any;
 
@@ -18,7 +19,8 @@ export class RegisterComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private userService: UserService) {
+        private userService: UserService,
+        private alertService: SweetAlertComponent){
 
     }
 
@@ -52,13 +54,19 @@ export class RegisterComponent implements OnInit {
                     if (data) {
                         this.router.navigate(['dashboard']);
                     } else {
+                        // Add a visual alert here that pops up
+
                         console.log("User with that name already exists")
                     }
                 });
             } else {
+                // Add a visual alert here that pops up
+
                 console.log("Password doesn't match correct format.")
             }
         } else {
+            // Add a visual alert here that pops up
+
             console.log("Passwords don't match")
         }
     }

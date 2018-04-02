@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/auth-guard/auth.service';
+import { SweetAlertComponent } from '../components/sweetalert/sweetalert.component';
 
 declare var $: any;
 
@@ -20,7 +21,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService) {
+    private authenticationService: AuthenticationService,
+    private alertService: SweetAlertComponent){
 
   }
 
@@ -47,6 +49,7 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.responseMessage = '';
     this.responseOk = true;
+
     const user = {
       username: this.username,
       password: this.password
@@ -62,6 +65,9 @@ export class LoginComponent implements OnInit {
       } else {
         this.loading = false;
         this.responseOk = false;
+
+        // Add a visual alert here that pops up, currently the server is providing the error
+        
         console.log('No user found with username "' + this.username + '".');
       }
     });

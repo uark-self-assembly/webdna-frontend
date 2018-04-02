@@ -25,6 +25,7 @@ import { AuthenticationService } from './services/auth-guard/auth.service';
 import { AuthGuard } from './services/auth-guard/auth.guard';
 import { UserService } from './services/user/user.service';
 import { ProjectService } from "./services/project/project.service";
+import { SweetAlertComponent } from './views/components/sweetalert/sweetalert.component';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import { ProjectService } from "./services/project/project.service";
       AuthenticationService,
       AuthGuard,
       UserService,
-      ProjectService
+      ProjectService,
+      SweetAlertComponent
     ],
     bootstrap:    [ AppComponent ]
 })
