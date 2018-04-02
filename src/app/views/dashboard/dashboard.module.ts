@@ -11,6 +11,7 @@ import { ProjectAddComponent } from './project-list/project-add/project-add.comp
 
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutes } from './dashboard.routing';
+import { ProjectConfigComponent } from './project-config/project-config.component';
 
 @NgModule({
     imports: [
@@ -25,7 +26,8 @@ import { DashboardRoutes } from './dashboard.routing';
       DashboardComponent,
       ProjectListComponent,
       ProjectTableComponent,
-      ProjectAddComponent
+      ProjectAddComponent,
+      ProjectConfigComponent
     ]
 })
 

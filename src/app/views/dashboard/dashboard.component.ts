@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../../services/user/user';
 import { UserService } from '../../services/user/user.service';
 import { AuthenticationService } from '../../services/auth-guard/auth.service';
+import { Project } from '../../services/project/project';
 
 //import * as Chartist from 'chartist';
 
@@ -18,6 +19,8 @@ export class DashboardComponent {
   scannerSettings = false;
   user: User;
   loading: boolean = true;
+
+  editingProject: Project = null;
 
   private alive: boolean;
 

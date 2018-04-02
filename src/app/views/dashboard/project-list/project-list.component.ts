@@ -15,6 +15,9 @@ export class ProjectListComponent {
     @Input()
     user: User;
 
+    @Input()
+    editingProject: Project;
+
     addingProject: boolean = false;
 
     get firstName() {
