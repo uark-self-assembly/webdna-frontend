@@ -3,50 +3,60 @@ import { Router } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
 import { User } from '../../services/user/user';
 
-declare var $:any;
+declare var $: any;
 
 @Component({
-    moduleId:module.id,
+    moduleId: module.id,
     selector: 'register-cmp',
     templateUrl: './register.component.html'
 })
 
-export class RegisterComponent implements OnInit{
-    test : Date = new Date();
-    user : User = new User();
-    password_confirmation : String;
+export class RegisterComponent implements OnInit {
+    test: Date = new Date();
+    user: User = new User();
+    password_confirmation: String;
 
     constructor(
-        private router:Router, 
-        private userService:UserService){
-        
+        private router: Router,
+        private userService: UserService) {
+
     }
 
-    checkFullPageBackgroundImage(){
+    checkFullPageBackgroundImage() {
         var $page = $('.full-page');
         var image_src = $page.data('image');
 
-        if(image_src !== undefined){
+        if (image_src !== undefined) {
             var image_container = '<div class="full-page-background" style="background-image: url(' + image_src + ') "/>'
             $page.append(image_container);
         }
     };
 
-    ngOnInit(){
+    ngOnInit() {
         this.checkFullPageBackgroundImage();
 
-        setTimeout(function(){
+        setTimeout(function () {
             // after 1000 ms we add the class animated to the login/register card
             $('.card').removeClass('card-hidden');
         }, 700)
     }
 
-    register(){
+    register() {
         // Validate Register Form and Create Database entry
-
+        if (this.user.password == this.password_confirmation) {
+            this.userService.registerUser(this.user).then(data => {
+                if (data) {
+                    this.router.navigate(['dashboard']);
+                } else {
+                    console.log("User with that name already exists")
+                }
+            });
+        } else {
+            console.log("Passwords don't match")
+        }
     }
 
-    existing(){
+    existing() {
         // Navigate to login page
         this.router.navigate(['login']);
     }
