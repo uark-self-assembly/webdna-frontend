@@ -170,6 +170,7 @@ export class ProjectConfigComponent {
     }
 
     buildResults() {
+        this.result['refresh_vel'] = 1;
         this.result['box_size'] = this.boxSize;
         for (let option of this.genericOptions) {
             if (option.optionType == SimulationOptionType.CHOICE) {

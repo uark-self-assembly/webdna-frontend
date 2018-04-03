@@ -55,6 +55,7 @@
     "jw-bootstrap-switch-ng2": "^1.0.7",
     "ng2-accordion": "0.0.15",
     "ng2-dropdown": "0.0.21",
+    "ng2-modal": "0.0.25",
     "ng2-nouislider": "1.6.1",
     "ng2-select2": "^1.0.0-beta.10",
     "ngx-chips": "1.4.5",

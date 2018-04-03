@@ -41,6 +41,8 @@ export class ProjectTableComponent {
     };
 
     private outputString: string;
+    private selectedProject: Project = new Project();
+    private logText: string = '';
 
     constructor(private apiService: ApiService) {
 
@@ -84,9 +86,22 @@ export class ProjectTableComponent {
     }
 
     hyperlinkClicked(project: Project) {
+        this.selectedProject = project;
         this.apiService.getOutput(project.id).then((response) => {
-            console.log(response['log']);
-            console.log(response['stdout']);
+            let running = response['running'];
+            let stdout = response['stdout'];
+            let log = response['log'];
+
+            if (!running) {
+                this.logText = log + '\n\n\nCONSOLE OUTPUT:\n' + stdout;
+                return;
+            }
+
+            if (stdout.length == 0) {
+                this.logText = log;
+            } else {
+                this.logText = stdout;
+            }
         });
     }
 }

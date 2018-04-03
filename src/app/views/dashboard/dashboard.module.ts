@@ -14,6 +14,8 @@ import { DashboardRoutes } from './dashboard.routing';
 import { ProjectConfigComponent } from './project-config/project-config.component';
 import { PanelsComponent } from '../components/panels/panels.component';
 import { JWBootstrapSwitchModule } from 'jw-bootstrap-switch-ng2';
+import { ModalModule } from 'ng2-modal';
+import { LogOutputComponent } from './log-output/log-output.component';
 
 @NgModule({
     imports: [
@@ -24,6 +26,7 @@ import { JWBootstrapSwitchModule } from 'jw-bootstrap-switch-ng2';
         DropdownModule,
         AccordionModule,
         JWBootstrapSwitchModule,
+        ModalModule,
     ],
     declarations: [
       DashboardComponent,
@@ -31,7 +34,8 @@ import { JWBootstrapSwitchModule } from 'jw-bootstrap-switch-ng2';
       ProjectTableComponent,
       ProjectAddComponent,
       ProjectConfigComponent,
-      PanelsComponent
+      PanelsComponent,
+      LogOutputComponent
     ]
 })
 

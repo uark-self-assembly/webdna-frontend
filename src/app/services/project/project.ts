@@ -4,4 +4,8 @@ export class Project {
     name: string;
     data_file: string;
     created_on: Date;
+
+    constructor() {
+        
+    }
 }

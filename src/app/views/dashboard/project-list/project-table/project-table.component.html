@@ -14,7 +14,7 @@
                     <td>{{project.name}}</td>
                     <td>{{project.created_on}}</td>
                     <td style="cursor: pointer;">
-                        <a #hyperlink (click)="hyperlinkClicked(project)" (mouseenter)="hyperlinkEntered(hyperlink)" (mouseleave)="hyperlinkExited(hyperlink)">View output</a>
+                        <a #hyperlink (click)="hyperlinkClicked(project); logmodal.open();" (mouseenter)="hyperlinkEntered(hyperlink)" (mouseleave)="hyperlinkExited(hyperlink)">View output</a>
                         <i class="glyphicon glyphicon-menu-right" style="font-size: 12px; color: #23CCEF;"></i>
                     </td>
                     <td class="td-actions text-right">
@@ -23,10 +23,10 @@
                             Edit Project
                             <i class="fa fa-edit"></i>
                         </a>
-                        
+
                         <!-- Run Button -->
                         <div *ngIf="false;then waiting else idle"></div>
-                        
+
                         <!-- Delete Button -->
                         <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-xs" (click)="deleteClicked(project)">
                             Delete Project
@@ -53,3 +53,14 @@
         </table>
     </div>
 </div>
+<modal #logmodal>
+    <modal-header>
+        <h1>{{selectedProject.name}} Log</h1>
+    </modal-header>
+    <modal-content (onClose)="closeModal()">
+        <div>
+            <log-output [logText]="logText"></log-output>
+        </div>
+        <button class="btn btn-primary" (click)="logmodal.close()">close</button>
+    </modal-content>
+</modal>

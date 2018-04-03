@@ -20,12 +20,7 @@ export class DashboardComponent {
   user: User;
   loading: boolean = true;
 
-  editingProject: Project = {
-    user: null,
-    name: "Project Example",
-    data_file: "empty",
-    created_on: new Date()
-  };
+  editingProject: Project = null;
 
   private alive: boolean;
 

@@ -26,4 +26,3 @@ export class ProjectAddComponent {
         this.addProjectConfirmed(this._project);
     }
 }
-
