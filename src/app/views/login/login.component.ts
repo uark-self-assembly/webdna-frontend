@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService) {
+    private authenticationService: AuthenticationService){
 
   }
 
@@ -47,6 +47,7 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.responseMessage = '';
     this.responseOk = true;
+
     const user = {
       username: this.username,
       password: this.password
@@ -57,11 +58,13 @@ export class LoginComponent implements OnInit {
         this.responseOk = true;
         this.loading = false;
         this.authenticationService.storeUserData(data.response.token, data.response.user);
-
         this.router.navigate(['dashboard']);
       } else {
         this.loading = false;
         this.responseOk = false;
+
+        // Add a visual alert here that pops up, currently the server is providing the error
+
         console.log('No user found with username "' + this.username + '".');
       }
     });
