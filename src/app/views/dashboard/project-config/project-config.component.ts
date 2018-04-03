@@ -66,26 +66,33 @@ export class ProjectConfigComponent {
     @Input()
     public didClickBack: () => void;
 
+    private simulationFile: File;
+    private boxSize = 20;
+
     private genericOptions = [
         new SimulationOption('interaction_type', 'Interaction Type', SimulationOptionType.CHOICE, [['DNA', 'DNA (oxDNA Model)'], ['DNA2', 'DNA2 (oxDNA2 Model)'], ['RNA', 'RNA (oxRNA Model)'], ['LJ', 'LJ (Lennar-Jones)'], ['patchy', 'patchy']]),
         new SimulationOption('sim_type', 'Simulation Type', SimulationOptionType.CHOICE, [['MD', 'MD (Molecular Dynamics)'], ['MC', 'MC (Monte Carlo)'], ['VMMC', 'VMMC (Virtual Move Monte Carlo)']]),
-        new SimulationOption('backend', 'Backend Type', SimulationOptionType.CHOICE, [['',' '], ['CPU', 'CPU'], ['CUDA', 'CUDA (MD only)']], null, (options) => {
+        new SimulationOption('backend', 'Backend Type', SimulationOptionType.CHOICE, [['', ' '], ['CPU', 'CPU'], ['CUDA', 'CUDA (MD only)']], null, (options) => {
             if (options['backend'].value[0] == 'CUDA') {
                 options['sim_type'].choose(0);
                 options['sim_type'].validate(options);
             }
         }),
-        new SimulationOption('backend_precision', 'Floating Point Precision', SimulationOptionType.CHOICE, [['',' '], ['float', 'float (low)'], ['double', 'double (high)'], ['mixed', 'mixed (CUDA only)']], null, (options) => { 
+        new SimulationOption('backend_precision', 'Floating Point Precision', SimulationOptionType.CHOICE, [['', ' '], ['float', 'float (low)'], ['double', 'double (high)'], ['mixed', 'mixed (CUDA only)']], null, (options) => {
             if (options['backend_precision'].value[0] == 'mixed') {
                 options['backend'].choose(2);
                 options['backend'].validate(options);
-            } 
+            }
         }),
         new SimulationOption('debug', 'Debug', SimulationOptionType.BOOLEAN),
     ]
 
     private simulationOptions = [
-        
+        new SimulationOption('steps', 'Simulation Steps', SimulationOptionType.INTEGER)
+    ]
+
+    private mdSimulationOptions = [
+        new SimulationOption('dt', 'Integration Time Step', SimulationOptionType.FLOAT)
     ]
 
     private optionsMap = {};
@@ -157,6 +164,7 @@ export class ProjectConfigComponent {
     }
 
     check() {
+        this.result['box_size'] = this.boxSize;
         for (let option of this.genericOptions) {
             if (option.optionType == SimulationOptionType.CHOICE) {
                 this.result[option.propertyName] = option.value[0];
@@ -166,10 +174,19 @@ export class ProjectConfigComponent {
         }
 
         console.log(this.result);
+        console.log(this.simulationFile);
     }
 
     choose(option: SimulationOption, choice) {
         option.value = choice;
         option.validate(this.optionsMap);
+    }
+
+    fileChange(event) {
+        // do something
+        let fileList: FileList = event.target.files;
+        if (fileList.length > 0) {
+            this.simulationFile = fileList[0];
+        }
     }
 }

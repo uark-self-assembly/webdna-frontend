@@ -61,9 +61,7 @@ export class ProjectListComponent {
     }).bind(this);
 
     runClicked = ((project: Project) => {
-        project.job_running = true;
-        this.projectService.updateProject(project).then(status => {
-        });
+        console.log("Do something with this ...");
     }).bind(this);
 
     deleteClicked = ((project: Project) => {

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Project } from '../../../../services/project/project';
+import { ApiService } from '../../../../services/api-service/api.service';
 
 declare var $:any;
 
@@ -39,6 +40,12 @@ export class ProjectTableComponent {
         dataRows: []
     };
 
+    private outputString: string;
+
+    constructor(private apiService: ApiService) {
+
+    }
+
     ngOnInit() {
         this.updateTable();
     }
@@ -54,7 +61,7 @@ export class ProjectTableComponent {
             let project = this._projects[i];
             dataRows.push({
                 project: project,
-                displayed: [project.name, project.created_on, project.job_running]
+                displayed: [project.name, project.created_on]
             });
         }
 
@@ -77,6 +84,9 @@ export class ProjectTableComponent {
     }
 
     hyperlinkClicked(project: Project) {
+        this.apiService.getOutput(project.id).then((response) => {
+            
+        });
         // TODO Navigate to output for this project
     }
 }

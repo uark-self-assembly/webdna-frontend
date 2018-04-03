@@ -32,7 +32,7 @@ export class AdminLayoutComponent implements OnInit {
         if (isWindows){
             // if we are on windows OS we activate the perfectScrollbar function
             var $main_panel = $('.main-panel');
-            //$main_panel.perfectScrollbar();
+            // $main_panel.perfectScrollbar();
         }
 
     }
