@@ -24,8 +24,7 @@ export class DashboardComponent {
     user: null,
     name: "Project Example",
     data_file: "empty",
-    created_on: new Date(),
-    job_running: true
+    created_on: new Date()
   };
 
   private alive: boolean;

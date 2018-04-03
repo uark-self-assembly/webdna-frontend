@@ -36,8 +36,26 @@ export class ApiService {
             project_id: projectId
         }
         
-        return this.http.post(this.endpoint + 'execute/', body, {headers: this.headers})
+        return this.http.post(this.endpoint + 'checkstatus/', body, {headers: this.headers})
             .toPromise()
             .then(response => response.json());
+    }
+
+    setProjectSettings(projectId: string, settings: any): Promise<Response> {
+        settings['project_id'] = projectId;
+
+        console.log(settings);
+
+        return this.http.post(this.endpoint + 'applysettings/', settings, {headers: this.headers})
+            .toPromise();
+    }
+
+    runSimulation(projectId: string): Promise<Response> {
+        let body = {
+            project_id: projectId
+        }
+
+        return this.http.post(this.endpoint + 'execute/', body, {headers: this.headers})
+            .toPromise()
     }
 }

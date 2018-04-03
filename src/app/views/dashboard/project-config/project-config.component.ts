@@ -3,6 +3,7 @@ import { User } from "../../../services/user/user";
 import { Project } from '../../../services/project/project';
 import { ProjectService } from '../../../services/project/project.service';
 import { AuthenticationService } from '../../../services/auth-guard/auth.service';
+import { ApiService } from '../../../services/api-service/api.service';
 
 declare var $: any;
 
@@ -72,27 +73,34 @@ export class ProjectConfigComponent {
     private genericOptions = [
         new SimulationOption('interaction_type', 'Interaction Type', SimulationOptionType.CHOICE, [['DNA', 'DNA (oxDNA Model)'], ['DNA2', 'DNA2 (oxDNA2 Model)'], ['RNA', 'RNA (oxRNA Model)'], ['LJ', 'LJ (Lennar-Jones)'], ['patchy', 'patchy']]),
         new SimulationOption('sim_type', 'Simulation Type', SimulationOptionType.CHOICE, [['MD', 'MD (Molecular Dynamics)'], ['MC', 'MC (Monte Carlo)'], ['VMMC', 'VMMC (Virtual Move Monte Carlo)']]),
-        new SimulationOption('backend', 'Backend Type', SimulationOptionType.CHOICE, [['', ' '], ['CPU', 'CPU'], ['CUDA', 'CUDA (MD only)']], null, (options) => {
-            if (options['backend'].value[0] == 'CUDA') {
-                options['sim_type'].choose(0);
-                options['sim_type'].validate(options);
-            }
-        }),
-        new SimulationOption('backend_precision', 'Floating Point Precision', SimulationOptionType.CHOICE, [['', ' '], ['float', 'float (low)'], ['double', 'double (high)'], ['mixed', 'mixed (CUDA only)']], null, (options) => {
+        new SimulationOption('backend_precision', 'Floating Point Precision', SimulationOptionType.CHOICE, [['float', 'float (low)'], ['double', 'double (high)'], ['mixed', 'mixed (CUDA only)']], 1, (options) => {
             if (options['backend_precision'].value[0] == 'mixed') {
                 options['backend'].choose(2);
                 options['backend'].validate(options);
+            }
+        }),
+        new SimulationOption('backend', 'Backend Type', SimulationOptionType.CHOICE, [['CPU', 'CPU'], ['CUDA', 'CUDA (MD only)']], null, (options) => {
+            if (options['backend'].value[0] == 'CUDA') {
+                options['sim_type'].choose(0);
+                options['sim_type'].validate(options);
             }
         }),
         new SimulationOption('debug', 'Debug', SimulationOptionType.BOOLEAN),
     ]
 
     private simulationOptions = [
-        new SimulationOption('steps', 'Simulation Steps', SimulationOptionType.INTEGER)
+        new SimulationOption('steps', 'Simulation Steps', SimulationOptionType.INTEGER, null, 1e6),
+        new SimulationOption('seed', 'Simulation Seed', SimulationOptionType.INTEGER, null, 42),
+        new SimulationOption('T', 'Temperature (K)', SimulationOptionType.FLOAT, null, 243),
+        new SimulationOption('verlet_skin', 'Verlet Skin', SimulationOptionType.FLOAT, null, 0.05),
     ]
 
     private mdSimulationOptions = [
-        new SimulationOption('dt', 'Integration Time Step', SimulationOptionType.FLOAT)
+        new SimulationOption('thermostat', 'Thermostat', SimulationOptionType.CHOICE, [['no', 'None'], ['refresh', 'Refresh'], ['brownian', 'Brownian'], ['john', 'John']]),
+        new SimulationOption('dt', 'Integration Time Step', SimulationOptionType.FLOAT, null, 0.005),
+        new SimulationOption('newtonian_steps', 'Newtonian Steps', SimulationOptionType.INTEGER, null, 103),
+        new SimulationOption('diff_coeff', 'Diff Coeff', SimulationOptionType.INTEGER, null, 2.5),
+        new SimulationOption('print_conf_interval', 'Output Configuration every', SimulationOptionType.INTEGER, null, 10000),
     ]
 
     private optionsMap = {};
@@ -100,7 +108,9 @@ export class ProjectConfigComponent {
     private result = {
     };
 
-    constructor(private projectService: ProjectService) {
+    constructor(
+        private projectService: ProjectService,
+        private apiService: ApiService) {
         this.buildOptionsMap();
     }
 
@@ -159,11 +169,7 @@ export class ProjectConfigComponent {
         }
     }
 
-    backClicked() {
-        this.didClickBack();
-    }
-
-    check() {
+    buildResults() {
         this.result['box_size'] = this.boxSize;
         for (let option of this.genericOptions) {
             if (option.optionType == SimulationOptionType.CHOICE) {
@@ -172,6 +178,30 @@ export class ProjectConfigComponent {
                 this.result[option.propertyName] = option.value;
             }
         }
+
+        for (let option of this.simulationOptions) {
+            if (option.optionType == SimulationOptionType.CHOICE) {
+                this.result[option.propertyName] = option.value[0];
+            } else {
+                this.result[option.propertyName] = option.value;
+            }
+        }
+
+        for (let option of this.mdSimulationOptions) {
+            if (option.optionType == SimulationOptionType.CHOICE) {
+                this.result[option.propertyName] = option.value[0];
+            } else {
+                this.result[option.propertyName] = option.value;
+            }
+        }
+    }
+
+    backClicked() {
+        this.didClickBack();
+    }
+
+    check() {
+        this.buildResults();
 
         console.log(this.result);
         console.log(this.simulationFile);
@@ -188,5 +218,16 @@ export class ProjectConfigComponent {
         if (fileList.length > 0) {
             this.simulationFile = fileList[0];
         }
+    }
+
+    runSimulation() {
+        this.buildResults();
+        this.apiService.setProjectSettings(this.project.id, this.result).then(response => {
+            if (response.status == 201) {
+                console.log("settings added");
+            } else {
+                console.log("error");
+            }
+        })
     }
 }
