@@ -85,8 +85,8 @@ export class ProjectTableComponent {
 
     hyperlinkClicked(project: Project) {
         this.apiService.getOutput(project.id).then((response) => {
-            
+            console.log(response['log']);
+            console.log(response['stdout']);
         });
-        // TODO Navigate to output for this project
     }
 }

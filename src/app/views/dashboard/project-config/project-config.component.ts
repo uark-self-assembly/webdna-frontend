@@ -224,10 +224,19 @@ export class ProjectConfigComponent {
         this.buildResults();
         this.apiService.setProjectSettings(this.project.id, this.result).then(response => {
             if (response.status == 201) {
+
+                this.execute();
                 console.log("settings added");
             } else {
                 console.log("error");
             }
         })
+    }
+
+    execute() {
+        this.apiService.execute(this.project.id).then(response => {
+            console.log(response);
+            this.backClicked();
+        });
     }
 }
