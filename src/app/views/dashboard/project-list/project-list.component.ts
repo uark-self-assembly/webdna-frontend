@@ -16,7 +16,7 @@ export class ProjectListComponent {
     user: User;
 
     @Input()
-    editingProject: Project;
+    public projectClicked: (project: Project) => void;
 
     addingProject: boolean = false;
 
@@ -54,16 +54,10 @@ export class ProjectListComponent {
     }
 
     addProjectConfirmed = ((project: Project) => {
-        console.log("Adding project: " + project.name);
         this.projectService.createProject(project).then(response => {
             this.projects.push(response);
             this.addingProject = false;
         });
-    }).bind(this);
-
-    projectClicked = ((project: Project) => {
-        // TODO Move to edit project
-        console.log("Clicked project " + project.name);
     }).bind(this);
 
     runClicked = ((project: Project) => {

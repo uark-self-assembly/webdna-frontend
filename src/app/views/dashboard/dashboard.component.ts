@@ -20,7 +20,13 @@ export class DashboardComponent {
   user: User;
   loading: boolean = true;
 
-  editingProject: Project = null;
+  editingProject: Project = {
+    user: null,
+    name: "Project Example",
+    data_file: "empty",
+    created_on: new Date(),
+    job_running: true
+  };
 
   private alive: boolean;
 
@@ -40,4 +46,12 @@ export class DashboardComponent {
         return false;
       });
     }
+
+    projectClicked = ((project: Project) => {
+      this.editingProject = project;
+    }).bind(this);
+
+    didClickBackFromConfig = (() => {
+      this.editingProject = null;
+    }).bind(this);
 }

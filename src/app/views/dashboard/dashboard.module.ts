@@ -12,6 +12,8 @@ import { ProjectAddComponent } from './project-list/project-add/project-add.comp
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutes } from './dashboard.routing';
 import { ProjectConfigComponent } from './project-config/project-config.component';
+import { PanelsComponent } from '../components/panels/panels.component';
+import { JWBootstrapSwitchModule } from 'jw-bootstrap-switch-ng2';
 
 @NgModule({
     imports: [
@@ -20,14 +22,16 @@ import { ProjectConfigComponent } from './project-config/project-config.componen
         FormsModule,
         LbdModule,
         DropdownModule,
-        AccordionModule
+        AccordionModule,
+        JWBootstrapSwitchModule,
     ],
     declarations: [
       DashboardComponent,
       ProjectListComponent,
       ProjectTableComponent,
       ProjectAddComponent,
-      ProjectConfigComponent
+      ProjectConfigComponent,
+      PanelsComponent
     ]
 })
 
