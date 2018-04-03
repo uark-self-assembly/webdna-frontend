@@ -2,7 +2,6 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
 import { User } from '../../services/user/user';
-import { SweetAlertComponent } from '../components/sweetalert/sweetalert.component';
 
 declare var $: any;
 
@@ -19,8 +18,7 @@ export class RegisterComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private userService: UserService,
-        private alertService: SweetAlertComponent){
+        private userService: UserService){
 
     }
 
@@ -47,27 +45,34 @@ export class RegisterComponent implements OnInit {
 
         var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
 
-        // Validate Register Form and Create Database entry
-        if (this.user.password == this.password_confirmation) {
-            if (strongRegex.test(this.user.password)) {
-                this.userService.registerUser(this.user).then(data => {
-                    if (data) {
-                        this.router.navigate(['dashboard']);
-                    } else {
-                        // Add a visual alert here that pops up
-
-                        console.log("User with that name already exists")
-                    }
-                });
+        if (this.user.first_name == null || this.user.last_name == null || this.user.username == null || 
+        this.user.email == null || this.user.password == null)
+        {
+            alert("One or all fields are empty. Please finish filling out the form.")
+            console.log("One or all fields are empty. Please finish filling out the form.")
+        }else{
+             // Validate Register Form and Create Database entry
+            if (this.user.password == this.password_confirmation) {
+                if (strongRegex.test(this.user.password)) {
+                    this.userService.registerUser(this.user).then(data => {
+                        if (data) {
+                            this.router.navigate(['dashboard']);
+                        } else {
+                            // Add a visual alert here that pops up
+                            alert("User already exists")
+                            console.log("User already exists")
+                        }
+                    });
+                } else {
+                    // Add a visual alert here that pops up
+                    alert("Password must be at least 8 characters with at least one [A-Z], [a-z], [0-9]")
+                    console.log("Password must be at least 8 characters with at least one [A-Z], [a-z], [0-9]")
+                }
             } else {
                 // Add a visual alert here that pops up
-
-                console.log("Password doesn't match correct format.")
+                alert("Passwords don't match")
+                console.log("Passwords don't match")
             }
-        } else {
-            // Add a visual alert here that pops up
-
-            console.log("Passwords don't match")
         }
     }
 
