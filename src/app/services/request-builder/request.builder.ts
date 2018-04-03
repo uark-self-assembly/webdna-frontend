@@ -32,9 +32,9 @@ export class RequestBuilder {
 
   prepEndpoint(endpoint) {
     if (!this.isDev) {
-      return 'http://10.9.1.113/' + endpoint;
+      return 'http://localhost:8000/' + endpoint;
     } else {
-      return 'http://10.9.1.113/' + endpoint;
+      return 'http://localhost:8000/' + endpoint;
     }
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../../services/user/user';
 import { UserService } from '../../services/user/user.service';
 import { AuthenticationService } from '../../services/auth-guard/auth.service';
+import { Project } from '../../services/project/project';
 
 //import * as Chartist from 'chartist';
 
@@ -18,6 +19,14 @@ export class DashboardComponent {
   scannerSettings = false;
   user: User;
   loading: boolean = true;
+
+  editingProject: Project = {
+    user: null,
+    name: "Project Example",
+    data_file: "empty",
+    created_on: new Date(),
+    job_running: true
+  };
 
   private alive: boolean;
 
@@ -37,4 +46,12 @@ export class DashboardComponent {
         return false;
       });
     }
+
+    projectClicked = ((project: Project) => {
+      this.editingProject = project;
+    }).bind(this);
+
+    didClickBackFromConfig = (() => {
+      this.editingProject = null;
+    }).bind(this);
 }

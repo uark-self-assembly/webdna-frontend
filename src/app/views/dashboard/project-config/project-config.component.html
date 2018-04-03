@@ -1,0 +1,105 @@
+<div class="row" style="margin-bottom: 16px;">
+    <button type="button" class="btn btn-primary" style="border: 0px solid transparent; font-size: 18px; vertical-align: middle;"
+        (click)="backClicked()">
+        <span class="glyphicon glyphicon-menu-left"></span> Back
+    </button>
+
+    <span class="text-muted" style="font-size: 36px; vertical-align: middle;">
+        <strong>{{project.name}}</strong>
+    </span>
+</div>
+<button (click)="check()">Check</button>
+<div class="container-fluid">
+    <div class="card">
+        <div class="header">
+            <h4 class="title">Simulation Settings</h4>
+        </div>
+
+        <div class="content content-full-width">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-target="#collapseOneHover" data-toggle="collapse-hover">
+                                Generic Options
+                                <b class="caret"></b>
+                            </a>
+                        </h4>
+
+                    </div>
+                    <div id="collapseOneHover" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form>
+                                <div class="form-group" *ngFor="let option of genericOptions">
+                                    <label>{{option.displayText}}</label>
+                                    <div [ngSwitch]="option.optionType">
+                                        <!-- for string options -->
+                                        <input *ngSwitchCase="SimulationOptionType.STRING" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
+                                            class="form-control">
+
+                                        <!-- for multi choice options -->
+                                        <div *ngSwitchCase="SimulationOptionType.CHOICE" class="dropdown" dropdown>
+                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdown_{{option.propertyName}}" dropdown-open>
+                                                {{option.value[1]}}
+                                                <span class="caret"></span>
+                                            </button>
+
+                                            <ul class="dropdown-menu">
+                                                <li *ngFor="let choice of option.choices">
+                                                    <a (click)="choose(option, choice)" style="min-height: 36px;">{{choice[1]}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <!-- for on/off options (BOOLEAN) -->
+                                        <div *ngSwitchCase="SimulationOptionType.BOOLEAN" class="bootstrap-switch-container">
+                                            <bSwitch [switch-on-color]="'primary'" [ngModel]="option.value" (keyup)="option.validate(optionsMap)" name="option_{{option.propertyName}}"></bSwitch>
+                                        </div>
+
+                                        <input *ngSwitchCase="SimulationOptionType.INTEGER" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
+                                            class="form-control">
+
+                                        <!-- default option (same as string, for now) -->
+                                        <input *ngSwitchCase="SimulationOptionType.DEFAULT" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-target="#collapseTwoHover" data-toggle="collapse-hover">
+                                Simulation Options
+                                <b class="caret"></b>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwoHover" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            Placeholder text
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-target="#collapseThreeHover" data-toggle="collapse-hover">
+                                Molecular Dynamics Simulation Options
+                                <b class="caret"></b>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseThreeHover" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            Placeholder text
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

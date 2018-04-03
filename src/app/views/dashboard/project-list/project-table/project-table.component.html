@@ -5,6 +5,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Created On</th>
+                    <th>Status</th>
                     <th class="text-right">Actions</th>
                 </tr>
             </thead>
@@ -12,6 +13,10 @@
                 <tr *ngFor="let project of projects">
                     <td>{{project.name}}</td>
                     <td>{{project.created_on}}</td>
+                    <td>
+                        <a #hyperlink (click)="hyperlinkClicked(project)" (mouseenter)="hyperlinkEntered(hyperlink)" (mouseleave)="hyperlinkExited(hyperlink)">View output</a>
+                        <i class="glyphicon glyphicon-menu-right" style="font-size: 12px; color: #23CCEF;"></i>
+                    </td>
                     <td class="td-actions text-right">
                         <!-- Edit button -->
                         <a rel="tooltip" title="Edit" class="btn btn-primary btn-simple btn-xs" (click)="projectClicked(project)">

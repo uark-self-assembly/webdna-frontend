@@ -2,7 +2,15 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <project-list [user]="user"></project-list>
+                <div *ngIf="editingProject == null;then projectlist else projectconfig"></div>
+
+                <ng-template #projectlist>
+                    <project-list [user]="user" [projectClicked]="projectClicked"></project-list>
+                </ng-template>
+
+                <ng-template #projectconfig>
+                    <project-config [project]="editingProject" [didClickBack]="didClickBackFromConfig"></project-config>
+                </ng-template>
             </div>
         </div>
     </div>

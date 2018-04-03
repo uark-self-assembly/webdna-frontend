@@ -63,4 +63,20 @@ export class ProjectTableComponent {
             dataRows: dataRows
         };
     }
+
+    status(project: Project) {
+        return "Example"
+    }
+
+    hyperlinkEntered(object: HTMLAnchorElement) {
+        object.style['text-decoration'] = 'underline';
+    }
+
+    hyperlinkExited(object: HTMLAnchorElement) {
+        object.style['text-decoration'] = 'initial';
+    }
+
+    hyperlinkClicked(project: Project) {
+        // TODO Navigate to output for this project
+    }
 }
