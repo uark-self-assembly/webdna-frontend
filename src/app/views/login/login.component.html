@@ -1,14 +1,14 @@
 <div class="wrapper wrapper-full-page">
     <div class="full-page login-page" data-color="blue" data-image="../../../assets/img/genetic-dna-desktop-wallpaper-50090-51777-hd-wallpapers.jpg">
 
-    <!--   you can change the color of the filter page using: data-color="blue | azure | green | orange | red | purple" -->
+        <!--   you can change the color of the filter page using: data-color="blue | azure | green | orange | red | purple" -->
         <div class="content">
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
                         <form (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
 
-                        <!--   if you want to have the card without animation please remove the ".card-hidden" class   -->
+                            <!--   if you want to have the card without animation please remove the ".card-hidden" class   -->
                             <div class="card card-hidden">
                                 <div class="header text-center">Login</div>
                                 <div class="content">
@@ -33,10 +33,11 @@
             </div>
         </div>
 
-    	<footer class="footer footer-transparent">
+        <footer class="footer footer-transparent">
             <div class="container">
                 <p class="copyright text-center">
-                    &copy; {{test | date: 'yyyy'}} <a href="http://self-assembly.net/wiki/index.php?title=Main_Page">WebDNA</a>, University of Arkansas
+                    &copy; {{test | date: 'yyyy'}}
+                    <a href="http://self-assembly.net/wiki/index.php?title=Main_Page">WebDNA</a>, University of Arkansas
                 </p>
             </div>
         </footer>

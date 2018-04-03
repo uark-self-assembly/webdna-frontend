@@ -2,16 +2,16 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/auth-guard/auth.service';
 
-declare var $:any;
+declare var $: any;
 
 @Component({
-  moduleId:module.id,
+  moduleId: module.id,
   selector: 'login-cmp',
   templateUrl: './login.component.html'
 })
 
-export class LoginComponent implements OnInit{
-  test : Date = new Date();
+export class LoginComponent implements OnInit {
+  test: Date = new Date();
   loading = false;
   username: String;
   password: String;
@@ -19,25 +19,25 @@ export class LoginComponent implements OnInit{
   responseMessage = '';
 
   constructor(
-      private router: Router,
-      private authenticationService: AuthenticationService) {
+    private router: Router,
+    private authenticationService: AuthenticationService) {
 
   }
 
-  checkFullPageBackgroundImage(){
+  checkFullPageBackgroundImage() {
     var $page = $('.full-page');
     var image_src = $page.data('image');
 
-    if(image_src !== undefined) {
+    if (image_src !== undefined) {
       var image_container = '<div class="full-page-background" style="background-image: url(' + image_src + ') "/>'
       $page.append(image_container);
     }
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.checkFullPageBackgroundImage();
 
-    setTimeout(function(){
+    setTimeout(function () {
       // after 1000 ms we add the class animated to the login/register card
       $('.card').removeClass('card-hidden');
     }, 700)
@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit{
       } else {
         this.loading = false;
         this.responseOk = false;
-        console.log('No user found with username "' + this.username + '".'); 
+        console.log('No user found with username "' + this.username + '".');
       }
     });
   }
