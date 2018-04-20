@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Project } from '../../../../services/project/project';
-import { ApiService } from '../../../../services/api-service/api.service';
+import { ApiService, LogResponse } from '../../../../services/api-service/api.service';
 
-declare var $:any;
+declare var $: any;
 
 declare interface TableData {
     headerRow: string[];
@@ -13,7 +13,7 @@ declare interface TableData {
     selector: 'project-table',
     templateUrl: './project-table.component.html'
 })
-export class ProjectTableComponent {
+export class ProjectTableComponent implements OnInit {
     _projects: Project[];
 
     @Input()
@@ -42,7 +42,7 @@ export class ProjectTableComponent {
 
     private outputString: string;
     private selectedProject: Project = new Project();
-    private logText: string = '';
+    private logText = '';
 
     constructor(private apiService: ApiService) {
 
@@ -53,14 +53,14 @@ export class ProjectTableComponent {
     }
 
     updateTable() {
-        if (this._projects == undefined) {
+        if (this._projects === undefined) {
             return;
         }
 
-        let dataRows = []
+        const dataRows = []
 
         for (let i = 0; i < this._projects.length; i++) {
-            let project = this._projects[i];
+            const project = this._projects[i];
             dataRows.push({
                 project: project,
                 displayed: [project.name, project.created_on]
@@ -74,7 +74,7 @@ export class ProjectTableComponent {
     }
 
     status(project: Project) {
-        return "Example"
+        return 'Example';
     }
 
     hyperlinkEntered(object: HTMLAnchorElement) {
@@ -88,19 +88,21 @@ export class ProjectTableComponent {
     hyperlinkClicked(project: Project) {
         this.selectedProject = project;
         this.apiService.getOutput(project.id).then((response) => {
-            let running = response['running'];
-            let stdout = response['stdout'];
-            let log = response['log'];
-
-            if (!running) {
-                this.logText = log + '\n\n\nCONSOLE OUTPUT:\n' + stdout;
-                return;
-            }
-
-            if (stdout.length == 0) {
-                this.logText = log;
+            if (typeof response === 'string') {
+                this.logText = 'No logs found for this project.';
             } else {
-                this.logText = stdout;
+                const logResponse = response as LogResponse;
+
+                if (!logResponse.running) {
+                    this.logText = logResponse.log + '\n\n\nCONSOLE OUTPUT:\n' + logResponse.stdout;
+                    return;
+                }
+
+                if (logResponse.stdout.length === 0) {
+                    this.logText = logResponse.log;
+                } else {
+                    this.logText = logResponse.stdout;
+                }
             }
         });
     }

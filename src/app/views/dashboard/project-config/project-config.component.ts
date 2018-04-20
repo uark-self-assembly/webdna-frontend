@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { User } from "../../../services/user/user";
+import { User } from '../../../services/user/user';
 import { Project } from '../../../services/project/project';
 import { ProjectService } from '../../../services/project/project.service';
 import { AuthenticationService } from '../../../services/auth-guard/auth.service';
@@ -24,7 +24,13 @@ class SimulationOption {
     value: any;
     validate = (options) => { };
 
-    constructor(propertyName: string, displayText: string, optionType: SimulationOptionType, choices?: string[][], value?: any, validate?: (options) => void) {
+    constructor(
+        propertyName: string,
+        displayText: string,
+        optionType: SimulationOptionType,
+        choices?: string[][],
+        value?: any,
+        validate?: (options) => void) {
         this.propertyName = propertyName;
         this.displayText = displayText;
         this.optionType = optionType;
@@ -35,17 +41,17 @@ class SimulationOption {
             this.validate = validate;
         }
 
-        if (optionType == SimulationOptionType.CHOICE) {
+        if (optionType === SimulationOptionType.CHOICE) {
             this.value = choices[0];
         }
 
-        if (!value && optionType == SimulationOptionType.BOOLEAN) {
+        if (!value && optionType === SimulationOptionType.BOOLEAN) {
             this.value = false;
         }
     }
 
     choose(index: number) {
-        if (this.optionType != SimulationOptionType.CHOICE) {
+        if (this.optionType !== SimulationOptionType.CHOICE) {
             return;
         }
 
@@ -58,7 +64,7 @@ class SimulationOption {
     templateUrl: './project-config.component.html'
 })
 
-export class ProjectConfigComponent {
+export class ProjectConfigComponent implements OnInit {
     SimulationOptionType = SimulationOptionType
 
     @Input()
@@ -71,20 +77,33 @@ export class ProjectConfigComponent {
     private boxSize = 20;
 
     private genericOptions = [
-        new SimulationOption('interaction_type', 'Interaction Type', SimulationOptionType.CHOICE, [['DNA', 'DNA (oxDNA Model)'], ['DNA2', 'DNA2 (oxDNA2 Model)'], ['RNA', 'RNA (oxRNA Model)'], ['LJ', 'LJ (Lennar-Jones)'], ['patchy', 'patchy']]),
-        new SimulationOption('sim_type', 'Simulation Type', SimulationOptionType.CHOICE, [['MD', 'MD (Molecular Dynamics)'], ['MC', 'MC (Monte Carlo)'], ['VMMC', 'VMMC (Virtual Move Monte Carlo)']]),
-        new SimulationOption('backend_precision', 'Floating Point Precision', SimulationOptionType.CHOICE, [['float', 'float (low)'], ['double', 'double (high)'], ['mixed', 'mixed (CUDA only)']], 1, (options) => {
-            if (options['backend_precision'].value[0] == 'mixed') {
-                options['backend'].choose(2);
-                options['backend'].validate(options);
-            }
-        }),
-        new SimulationOption('backend', 'Backend Type', SimulationOptionType.CHOICE, [['CPU', 'CPU'], ['CUDA', 'CUDA (MD only)']], null, (options) => {
-            if (options['backend'].value[0] == 'CUDA') {
-                options['sim_type'].choose(0);
-                options['sim_type'].validate(options);
-            }
-        }),
+        new SimulationOption(
+            'interaction_type', 'Interaction Type', SimulationOptionType.CHOICE,
+            [
+                ['DNA', 'DNA (oxDNA Model)'],
+                ['DNA2', 'DNA2 (oxDNA2 Model)'],
+                ['RNA', 'RNA (oxRNA Model)'],
+                ['LJ', 'LJ (Lennar-Jones)'],
+                ['patchy', 'patchy']
+            ]),
+        new SimulationOption(
+            'sim_type', 'Simulation Type', SimulationOptionType.CHOICE,
+            [['MD', 'MD (Molecular Dynamics)'], ['MC', 'MC (Monte Carlo)'], ['VMMC', 'VMMC (Virtual Move Monte Carlo)']]),
+        new SimulationOption(
+            'backend_precision', 'Floating Point Precision', SimulationOptionType.CHOICE,
+            [['float', 'float (low)'], ['double', 'double (high)'], ['mixed', 'mixed (CUDA only)']], 1, (options) => {
+                if (options['backend_precision'].value[0] === 'mixed') {
+                    options['backend'].choose(2);
+                    options['backend'].validate(options);
+                }
+            }),
+        new SimulationOption('backend', 'Backend Type', SimulationOptionType.CHOICE,
+            [['CPU', 'CPU'], ['CUDA', 'CUDA (MD only)']], null, (options) => {
+                if (options['backend'].value[0] === 'CUDA') {
+                    options['sim_type'].choose(0);
+                    options['sim_type'].validate(options);
+                }
+            }),
         new SimulationOption('debug', 'Debug', SimulationOptionType.BOOLEAN),
     ]
 
@@ -96,7 +115,8 @@ export class ProjectConfigComponent {
     ]
 
     private mdSimulationOptions = [
-        new SimulationOption('thermostat', 'Thermostat', SimulationOptionType.CHOICE, [['no', 'None'], ['refresh', 'Refresh'], ['brownian', 'Brownian'], ['john', 'John']]),
+        new SimulationOption('thermostat', 'Thermostat', SimulationOptionType.CHOICE,
+            [['no', 'None'], ['refresh', 'Refresh'], ['brownian', 'Brownian'], ['john', 'John']]),
         new SimulationOption('dt', 'Integration Time Step', SimulationOptionType.FLOAT, null, 0.005),
         new SimulationOption('newtonian_steps', 'Newtonian Steps', SimulationOptionType.INTEGER, null, 103),
         new SimulationOption('diff_coeff', 'Diff Coeff', SimulationOptionType.INTEGER, null, 2.5),
@@ -116,12 +136,12 @@ export class ProjectConfigComponent {
 
     ngOnInit() {
         $('[data-toggle="collapse-hover"]').each(function () {
-            var thisdiv = $(this).attr("data-target");
-            $(thisdiv).addClass("collapse-hover");
+            const thisdiv = $(this).attr('data-target');
+            $(thisdiv).addClass('collapse-hover');
         });
 
         $('[data-toggle="collapse-hover"]').hover(function () {
-            var thisdiv = $(this).attr("data-target");
+            const thisdiv = $(this).attr('data-target');
             if (!$(this).hasClass('state-open')) {
                 $(this).addClass('state-hover');
                 $(thisdiv).css({
@@ -131,7 +151,7 @@ export class ProjectConfigComponent {
 
         },
             function () {
-                var thisdiv = $(this).attr("data-target");
+                const thisdiv = $(this).attr('data-target');
                 $(this).removeClass('state-hover');
 
                 if (!$(this).hasClass('state-open')) {
@@ -142,8 +162,8 @@ export class ProjectConfigComponent {
             }).click(function (event) {
                 event.preventDefault();
 
-                var thisdiv = $(this).attr("data-target");
-                var height = $(thisdiv).children('.panel-body').height();
+                const thisdiv = $(this).attr('data-target');
+                const height = $(thisdiv).children('.panel-body').height();
 
                 if ($(this).hasClass('state-open')) {
                     $(thisdiv).css({
@@ -164,7 +184,7 @@ export class ProjectConfigComponent {
     }
 
     buildOptionsMap() {
-        for (let option of this.genericOptions) {
+        for (const option of this.genericOptions) {
             this.optionsMap[option.propertyName] = option;
         }
     }
@@ -172,24 +192,24 @@ export class ProjectConfigComponent {
     buildResults() {
         this.result['refresh_vel'] = 1;
         this.result['box_size'] = this.boxSize;
-        for (let option of this.genericOptions) {
-            if (option.optionType == SimulationOptionType.CHOICE) {
+        for (const option of this.genericOptions) {
+            if (option.optionType === SimulationOptionType.CHOICE) {
                 this.result[option.propertyName] = option.value[0];
             } else {
                 this.result[option.propertyName] = option.value;
             }
         }
 
-        for (let option of this.simulationOptions) {
-            if (option.optionType == SimulationOptionType.CHOICE) {
+        for (const option of this.simulationOptions) {
+            if (option.optionType === SimulationOptionType.CHOICE) {
                 this.result[option.propertyName] = option.value[0];
             } else {
                 this.result[option.propertyName] = option.value;
             }
         }
 
-        for (let option of this.mdSimulationOptions) {
-            if (option.optionType == SimulationOptionType.CHOICE) {
+        for (const option of this.mdSimulationOptions) {
+            if (option.optionType === SimulationOptionType.CHOICE) {
                 this.result[option.propertyName] = option.value[0];
             } else {
                 this.result[option.propertyName] = option.value;
@@ -215,7 +235,7 @@ export class ProjectConfigComponent {
 
     fileChange(event) {
         // do something
-        let fileList: FileList = event.target.files;
+        const fileList: FileList = event.target.files;
         if (fileList.length > 0) {
             this.simulationFile = fileList[0];
         }
@@ -224,18 +244,17 @@ export class ProjectConfigComponent {
     runSimulation() {
         this.buildResults();
         this.apiService.setProjectSettings(this.project.id, this.result).then(response => {
-            if (response.status == 201) {
-
+            if (response === 'success') {
                 this.execute();
-                console.log("settings added");
+                console.log('settings added');
             } else {
-                console.log("error");
+                console.log('error');
             }
         })
     }
 
     execute() {
-        this.apiService.execute(this.project.id).then(response => {
+        this.apiService.runSimulation(this.project.id).then(response => {
             console.log(response);
             this.backClicked();
         });

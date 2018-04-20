@@ -3,8 +3,9 @@ import { ROUTES } from '../sidebar/sidebar.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { AuthenticationService } from '../../../services/auth-guard/auth.service';
+import { StorageService } from '../../../services/storage/storage.service';
 
-var misc:any ={
+const misc: any = {
     navbar_menu_visible: 0,
     active_collapse: true,
     disabled_collapse_init: 0,
@@ -17,92 +18,90 @@ declare var $: any;
     templateUrl: 'navbar.component.html'
 })
 
-export class NavbarComponent implements OnInit{
+export class NavbarComponent implements OnInit {
     private listTitles: any[];
     location: Location;
     private nativeElement: Node;
     private toggleButton;
     private sidebarVisible: boolean;
 
-    @ViewChild("navbar-cmp") button;
+    @ViewChild('navbar-cmp') button;
 
-    constructor(location:Location,
-                private renderer : Renderer,
-                private element : ElementRef,
-                private authService : AuthenticationService,
-                private router: Router) {
+    constructor(location: Location,
+        private renderer: Renderer,
+        private element: ElementRef,
+        private storageService: StorageService,
+        private router: Router) {
         this.location = location;
         this.nativeElement = element.nativeElement;
         this.sidebarVisible = false;
     }
 
-    ngOnInit(){
+    ngOnInit() {
         this.listTitles = ROUTES.filter(listTitle => listTitle);
 
-        var navbar : HTMLElement = this.element.nativeElement;
+        const navbar: HTMLElement = this.element.nativeElement;
         this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
-        if($('body').hasClass('sidebar-mini')){
+        if ($('body').hasClass('sidebar-mini')) {
             misc.sidebar_mini_active = true;
         }
-        $('#minimizeSidebar').click(function(){
-            var $btn = $(this);
+        $('#minimizeSidebar').click(function () {
+            const $btn = $(this);
 
-            if(misc.sidebar_mini_active == true){
+            if (misc.sidebar_mini_active === true) {
                 $('body').removeClass('sidebar-mini');
                 misc.sidebar_mini_active = false;
 
-            }else{
-                setTimeout(function(){
+            } else {
+                setTimeout(function () {
                     $('body').addClass('sidebar-mini');
 
                     misc.sidebar_mini_active = true;
-                },300);
+                }, 300);
             }
 
             // we simulate the window Resize so the charts will get updated in realtime.
-            var simulateWindowResize = setInterval(function(){
+            const simulateWindowResize = setInterval(function () {
                 window.dispatchEvent(new Event('resize'));
-            },180);
+            }, 180);
 
             // we stop the simulation of Window Resize after the animations are completed
-            setTimeout(function(){
+            setTimeout(function () {
                 clearInterval(simulateWindowResize);
-            },1000);
+            }, 1000);
         });
     }
 
-    isMobileMenu(){
-        if($(window).width() < 991){
+    isMobileMenu() {
+        if ($(window).width() < 991) {
             return false;
         }
         return true;
     }
 
-    logout(){
-      this.authService.logout();
-      this.router.navigate(['login']);
+    logout() {
+        this.storageService.logOut();
+        this.router.navigate(['login']);
     }
 
-    sidebarOpen(){
-        var toggleButton = this.toggleButton;
-        var body = document.getElementsByTagName('body')[0];
-        setTimeout(function(){
+    sidebarOpen() {
+        const toggleButton = this.toggleButton;
+        const body = document.getElementsByTagName('body')[0];
+        setTimeout(function () {
             toggleButton.classList.add('toggled');
-        },500);
+        }, 500);
         body.classList.add('nav-open');
         this.sidebarVisible = true;
     }
-    sidebarClose(){
-        var body = document.getElementsByTagName('body')[0];
+    sidebarClose() {
+        const body = document.getElementsByTagName('body')[0];
         this.toggleButton.classList.remove('toggled');
         this.sidebarVisible = false;
         body.classList.remove('nav-open');
     }
 
-    sidebarToggle(){
-        // var toggleButton = this.toggleButton;
-        // var body = document.getElementsByTagName('body')[0];
-        if(this.sidebarVisible == false){
+    sidebarToggle() {
+        if (this.sidebarVisible === false) {
             this.sidebarOpen();
         } else {
             this.sidebarClose();
@@ -111,21 +110,21 @@ export class NavbarComponent implements OnInit{
     /*********************************************
     **  Gets title to put on Navbar            ***
     *********************************************/
-    getTitle(){
-        var titlee = this.location.prepareExternalUrl(this.location.path());
+    getTitle() {
+        let titlee = this.location.prepareExternalUrl(this.location.path());
 
-        if(titlee.charAt(0) === '#'){
-            titlee = titlee.slice( 1 );
+        if (titlee.charAt(0) === '#') {
+            titlee = titlee.slice(1);
         }
 
-        for(var item = 0; item < this.listTitles.length; item++){
-            var parent = this.listTitles[item];
-            if(parent.path === titlee){
+        for (let item = 0; item < this.listTitles.length; item++) {
+            const parent = this.listTitles[item];
+            if (parent.path === titlee) {
                 return parent.title;
-            }else if(parent.children){
-                var children_from_url = titlee.split("/")[2];
-                for(var current = 0; current < parent.children.length; current++){
-                    if(parent.children[current].path === children_from_url ){
+            } else if (parent.children) {
+                const children_from_url = titlee.split('/')[2];
+                for (let current = 0; current < parent.children.length; current++) {
+                    if (parent.children[current].path === children_from_url) {
                         return parent.children[current].title;
                     }
                 }
@@ -134,7 +133,7 @@ export class NavbarComponent implements OnInit{
         return 'Dashboard';
     }
 
-    getPath(){
+    getPath() {
         return this.location.prepareExternalUrl(this.location.path());
     }
 }

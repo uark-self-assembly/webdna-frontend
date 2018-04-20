@@ -1,10 +1,11 @@
 import { Component, OnInit, AfterViewInit, AfterViewChecked, AfterContentInit } from '@angular/core';
-import {UserService} from '../../../services/user/user.service';
+import { UserService } from '../../../services/user/user.service';
 import { User } from '../../../services/user/user';
+import { StorageService } from '../../../services/storage/storage.service';
 
-declare var $:any;
+declare var $: any;
 
-//Metadata
+// Metadata
 export interface RouteInfo {
     path: string;
     title: string;
@@ -20,13 +21,13 @@ export interface ChildrenItems {
     type?: string;
 }
 
-//Menu Items
+// Menu Items
 export const ROUTES: RouteInfo[] = [{
-        path: '/dashboard',
-        title: 'Dashboard',
-        type: 'link',
-        icontype: 'pe-7s-graph'
-    }
+    path: '/dashboard',
+    title: 'Dashboard',
+    type: 'link',
+    icontype: 'pe-7s-graph'
+}
 ];
 
 @Component({
@@ -35,16 +36,16 @@ export const ROUTES: RouteInfo[] = [{
     templateUrl: 'sidebar.component.html',
 })
 
-export class SidebarComponent {
-    user:User = new User();
-
-    constructor(private userService:UserService) {
-
-    }
+export class SidebarComponent implements OnInit, AfterViewInit {
+    user: User = new User();
 
     public menuItems: any[];
 
-    isNotMobileMenu(){
+    constructor(private storageService: StorageService) {
+
+    }
+
+    isNotMobileMenu() {
         if ($(window).width() > 991) {
             return false;
         }
@@ -52,29 +53,20 @@ export class SidebarComponent {
     }
 
     ngOnInit() {
-        var isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;
+        const isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;
         this.menuItems = ROUTES.filter(menuItem => menuItem);
 
-        isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;
+        if (isWindows) {
+            $('html').addClass('perfect-scrollbar-off');
+        } else {
+            $('html').addClass('perfect-scrollbar-off');
+        }
 
-        if (isWindows){
-           // if we are on windows OS we activate the perfectScrollbar function
-           //$('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
-           $('html').addClass('perfect-scrollbar-off');
-       } else {
-           $('html').addClass('perfect-scrollbar-off');
-       }
-
-       this.userService.getUsers().then(profile => {
-         this.user = profile[0];
-       }, error => {
-         console.log(error);
-         return false;
-       });
+        this.user = this.storageService.user;
     }
 
-    ngAfterViewInit(){
-        var $sidebarParent = $('.sidebar .nav > li.active .collapse li.active > a').parent().parent().parent();
-        var collapseId = $sidebarParent.siblings('a').attr("href");
+    ngAfterViewInit() {
+        const $sidebarParent = $('.sidebar .nav > li.active .collapse li.active > a').parent().parent().parent();
+        const collapseId = $sidebarParent.siblings('a').attr('href');
     }
 }

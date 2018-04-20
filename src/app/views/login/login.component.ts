@@ -13,23 +13,21 @@ declare var $: any;
 export class LoginComponent implements OnInit {
   test: Date = new Date();
   loading = false;
-  username: String;
-  password: String;
+  username: string;
+  password: string;
   responseOk = true;
   responseMessage = '';
 
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService) {
-
-  }
+    private authenticationService: AuthenticationService) { }
 
   checkFullPageBackgroundImage() {
-    var $page = $('.full-page');
-    var image_src = $page.data('image');
+    const $page = $('.full-page');
+    const image_src = $page.data('image');
 
     if (image_src !== undefined) {
-      var image_container = '<div class="full-page-background" style="background-image: url(' + image_src + ') "/>'
+      const image_container = '<div class="full-page-background" style="background-image: url(' + image_src + ') "/>'
       $page.append(image_container);
     }
   }
@@ -48,24 +46,20 @@ export class LoginComponent implements OnInit {
     this.responseMessage = '';
     this.responseOk = true;
 
-    const user = {
-      username: this.username,
-      password: this.password
-    };
-
-    this.authenticationService.authenticateUser(user).then(data => {
-      if (data.message) {
-        this.responseOk = true;
-        this.loading = false;
-        this.authenticationService.storeUserData(data.response.token, data.response.user);
-        this.router.navigate(['dashboard']);
-      } else {
+    this.authenticationService.authenticateUser(this.username, this.password).then(response => {
+      if (typeof response === 'string') {
         this.loading = false;
         this.responseOk = false;
 
-        // Add a visual alert here that pops up, currently the server is providing the error
+        console.log(response);
 
-        console.log('No user found with username "' + this.username + '".');
+        // TODO (jace) Add a visual alert here that pops up, currently the server is providing the error
+
+        console.log('No user found with username: ' + this.username);
+      } else {
+        this.responseOk = true;
+        this.loading = false;
+        this.router.navigate(['dashboard']);
       }
     });
   }

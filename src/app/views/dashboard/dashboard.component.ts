@@ -3,22 +3,20 @@ import { User } from '../../services/user/user';
 import { UserService } from '../../services/user/user.service';
 import { AuthenticationService } from '../../services/auth-guard/auth.service';
 import { Project } from '../../services/project/project';
+import { StorageService } from '../../services/storage/storage.service';
 
-//import * as Chartist from 'chartist';
-
-declare var $:any;
+declare var $: any;
 
 @Component({
   selector: 'dashboard-cmp',
   templateUrl: './dashboard.component.html'
 })
-
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
 
   scannerList = true;
   scannerSettings = false;
-  user: User;
-  loading: boolean = true;
+  user: User = null;
+  loading = true;
 
   editingProject: Project = null;
 
@@ -26,26 +24,21 @@ export class DashboardComponent {
 
   private requestCancelled: boolean;
 
-    constructor(
-      private authService: AuthenticationService,
-      private userService: UserService) {
+  projectClicked = ((project: Project) => {
+    this.editingProject = project;
+  }).bind(this);
 
-    }
+  didClickBackFromConfig = (() => {
+    this.editingProject = null;
+  }).bind(this);
 
-    ngOnInit() {
-      this.userService.getUsers().then(profile => {
-        this.user = profile[0];
-      }, error => {
-        console.log(error);
-        return false;
-      });
-    }
+  constructor(
+    private storageService: StorageService,
+    private userService: UserService) {
 
-    projectClicked = ((project: Project) => {
-      this.editingProject = project;
-    }).bind(this);
+  }
 
-    didClickBackFromConfig = (() => {
-      this.editingProject = null;
-    }).bind(this);
+  ngOnInit() {
+    this.user = this.storageService.user;
+  }
 }

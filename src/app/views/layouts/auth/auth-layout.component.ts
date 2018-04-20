@@ -8,24 +8,23 @@ import { PagesnavbarComponent } from '../../shared/pagesnavbar/pagesnavbar.compo
 declare var $: any;
 
 @Component({
-    selector: 'app-layout',
-    templateUrl: './auth-layout.component.html'
+  selector: 'app-layout',
+  templateUrl: './auth-layout.component.html'
 })
 
-export class AuthLayoutComponent {
-    location: Location;
-    private _router: Subscription;
-    // url: string;
+export class AuthLayoutComponent implements OnInit {
+  location: Location;
+  private _router: Subscription;
+  // url: string;
 
-    @ViewChild(PagesnavbarComponent) pagesnavbar: PagesnavbarComponent;
-    constructor( private router: Router, location:Location ) {
-      this.location = location;
-    }
+  @ViewChild(PagesnavbarComponent) pagesnavbar: PagesnavbarComponent;
+  constructor(private router: Router, location: Location) {
+    this.location = location;
+  }
 
-    ngOnInit() {
-        this._router = this.router.events.filter(event => event instanceof NavigationEnd).subscribe(event => {
-        //   this.url = event.url;
-          this.pagesnavbar.sidebarClose();
-        });
-    }
+  ngOnInit() {
+    this._router = this.router.events.filter(event => event instanceof NavigationEnd).subscribe(event => {
+      this.pagesnavbar.sidebarClose();
+    });
+  }
 }

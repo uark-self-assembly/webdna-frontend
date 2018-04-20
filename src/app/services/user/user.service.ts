@@ -3,40 +3,22 @@ import { User } from './user';
 import { Http, Headers } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import { AuthenticationService } from '../auth-guard/auth.service';
-import { Request, RequestBuilder } from '../request-builder/request.builder';
+import { RequestService } from '../request/request.service';
+import { AuthenticationResponse } from '../auth-guard/auth.response';
 
 @Injectable()
 export class UserService {
+  private usersUrl = ['users'];
+  private registerUrl = ['register'];
 
-  isDev: boolean;
-  private usersUrl = 'api/users/';
-  private headers = new Headers({ 'Content-Type': 'application/json' });
-  request: RequestBuilder;
-  endpoint: string;
-
-  constructor(
-    private http: Http,
-    private authService: AuthenticationService
-  ) {
-    this.request = new RequestBuilder(this.authService);
-    this.request.getAuthToken();
-    this.endpoint = this.request.prepEndpoint(this.usersUrl);
-  }
+  constructor(private requestService: RequestService) { }
 
   // Register user method goes here
-  registerUser(user: User): Promise<User> {
-    return this.http.post(this.request.prepEndpoint('api/register/'), user, { headers: this.request.request.headers })
-      .toPromise()
-      .then(response => {
-        return response.json() as User
-      });
+  registerUser(user: User): Promise<AuthenticationResponse | string> {
+    return this.requestService.post(this.registerUrl, user);
   }
 
-  getUsers(): Promise<User[]> {
-    return this.http.get(this.endpoint, { headers: this.request.request.headers })
-      .toPromise()
-      .then(response => {
-        return response.json() as User[]
-      });
+  getUsers(): Promise<User[] | string> {
+    return this.requestService.get(this.usersUrl, true);
   }
 }

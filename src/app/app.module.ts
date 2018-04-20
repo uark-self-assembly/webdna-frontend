@@ -6,11 +6,11 @@ import { APP_BASE_HREF } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
-import { AppComponent }   from './app.component';
+import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './views/layouts/admin/admin-layout.component';
 
-import { DropdownModule } from "ng2-dropdown";
-import { AccordionModule } from "ng2-accordion";
+import { DropdownModule } from 'ng2-dropdown';
+import { AccordionModule } from 'ng2-accordion';
 import { SidebarModule } from './views/shared/sidebar/sidebar.module';
 import { FixedPluginModule } from './views/shared/fixedplugin/fixedplugin.module';
 import { NavbarModule} from './views/shared/navbar/navbar.module';
@@ -24,10 +24,12 @@ import { AppRoutes } from './app.routing';
 import { AuthenticationService } from './services/auth-guard/auth.service';
 import { AuthGuard } from './services/auth-guard/auth.guard';
 import { UserService } from './services/user/user.service';
-import { ProjectService } from "./services/project/project.service";
+import { ProjectService } from './services/project/project.service';
 import { SweetAlertComponent } from './views/components/sweetalert/sweetalert.component';
 import { AlertService } from './views/components/alert/alert.service';
 import { ApiService } from './services/api-service/api.service';
+import { RequestService } from './services/request/request.service';
+import { StorageService } from './services/storage/storage.service';
 
 
 @NgModule({
@@ -54,6 +56,8 @@ import { ApiService } from './services/api-service/api.service';
     providers: [
       {provide: LocationStrategy, useClass: HashLocationStrategy},
       AuthenticationService,
+      StorageService,
+      RequestService,
       AuthGuard,
       UserService,
       ProjectService,

@@ -5,7 +5,5 @@ export class Project {
     data_file: string;
     created_on: Date;
 
-    constructor() {
-        
-    }
+    constructor() { }
 }

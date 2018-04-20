@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Project } from '../../../../services/project/project';
 
-declare var $:any;
+declare var $: any;
 
 declare interface TableData {
     headerRow: string[];
@@ -12,7 +12,7 @@ declare interface TableData {
     selector: 'project-add',
     templateUrl: './project-add.component.html'
 })
-export class ProjectAddComponent {
+export class ProjectAddComponent implements OnInit {
     _project: Project;
 
     @Input()
