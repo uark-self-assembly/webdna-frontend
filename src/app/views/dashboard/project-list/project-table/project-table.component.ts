@@ -92,7 +92,6 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
 
     updateLogText() {
         this.apiService.getOutput(this.selectedProject.id).then((response) => {
-            console.log(response);
             if (typeof response === 'string') {
                 this.logText = 'No logs found for this project.';
             } else {
