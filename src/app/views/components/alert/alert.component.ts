@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Alert, AlertType } from './alert';
 import { AlertService } from './alert.service';
+import { TimerObservable } from 'rxjs/observable/TimerObservable';
 
 @Component({
     moduleId: module.id,
@@ -9,7 +10,7 @@ import { AlertService } from './alert.service';
     templateUrl: 'alert.component.html'
 })
 
-export class AlertComponent {
+export class AlertComponent implements OnInit {
     alerts: Alert[] = [];
 
     constructor(private alertService: AlertService) { }
@@ -24,6 +25,11 @@ export class AlertComponent {
 
             // add alert to array
             this.alerts.push(alert);
+            const timer = TimerObservable.create(3000, 0);
+            const subscription = timer.subscribe(t => {
+                this.removeAlert(alert);
+                subscription.unsubscribe();
+            });
         });
     }
 

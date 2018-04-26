@@ -21,12 +21,5 @@
                 <p>{{menuitem.title}}<b class="caret"></b></p>
             </a>
         </li>
-        <li routerLinkActive="active" *ngIf="user.accessLevel === 'ADMIN' || user.accessLevel === 'SUPER'">
-            <!--If is a single link-->
-            <a routerLink="/admin">
-                <i class="pe-7s-users"></i>
-                <p>Admin</p>
-            </a>
-        </li>
     </ul>
 </div>

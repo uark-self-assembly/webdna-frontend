@@ -6,16 +6,24 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginRoutes } from './login.routing';
 
 import { LoginComponent } from './login.component';
+import { ComponentsModule } from '../components/components.module';
+import { AlertService } from '../components/alert/alert.service';
+import { AuthenticationService } from '../../services/auth-guard/auth.service';
 
 @NgModule({
     imports: [
         CommonModule,
         RouterModule.forChild(LoginRoutes),
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        ComponentsModule
     ],
     declarations: [
         LoginComponent
+    ],
+    providers: [
+        AlertService,
+        AuthenticationService
     ]
 })
 
