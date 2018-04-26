@@ -261,6 +261,8 @@ export class ProjectConfigComponent implements OnInit {
             } else {
                 console.log('error');
             }
+        }, error => {
+            this.loading = false;
         })
     }
 
