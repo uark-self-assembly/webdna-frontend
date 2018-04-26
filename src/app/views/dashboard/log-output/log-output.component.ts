@@ -1,7 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Project } from '../../../services/project/project';
+import { Component, Input } from '@angular/core';
 
-declare var $:any;
+declare var $: any;
 
 declare interface TableData {
     headerRow: string[];
@@ -18,9 +17,5 @@ export class LogOutputComponent {
 
     get lines(): string[] {
         return this.logText.split('\n');
-    }
-
-    ngOnInit() {
-        console.log(this.logText);
     }
 }

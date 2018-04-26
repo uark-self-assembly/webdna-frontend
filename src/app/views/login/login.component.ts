@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/auth-guard/auth.service';
+import { AlertService } from '../components/alert/alert.service';
 
 declare var $: any;
 
@@ -20,6 +21,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private alertService: AlertService,
     private authenticationService: AuthenticationService) { }
 
   checkFullPageBackgroundImage() {
@@ -61,6 +63,8 @@ export class LoginComponent implements OnInit {
         this.loading = false;
         this.router.navigate(['dashboard']);
       }
+    }, error => {
+      this.alertService.error('Invalid login');
     });
   }
 };

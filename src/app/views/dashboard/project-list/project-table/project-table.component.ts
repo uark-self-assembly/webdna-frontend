@@ -1,6 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Project } from '../../../../services/project/project';
 import { ApiService, LogResponse } from '../../../../services/api-service/api.service';
+import { Observable } from 'rxjs/Observable';
+import { TimerObservable } from 'rxjs/observable/TimerObservable';
+import { Subscription } from 'rxjs/Subscription';
 
 declare var $: any;
 
@@ -13,8 +16,10 @@ declare interface TableData {
     selector: 'project-table',
     templateUrl: './project-table.component.html'
 })
-export class ProjectTableComponent implements OnInit {
+export class ProjectTableComponent implements OnInit, OnDestroy {
     _projects: Project[];
+
+    @ViewChild('logmodal') logmodal;
 
     @Input()
     projectClicked: (project: Project) => void;
@@ -41,15 +46,27 @@ export class ProjectTableComponent implements OnInit {
     };
 
     private outputString: string;
-    private selectedProject: Project = new Project();
+    private selectedProject: Project = null;
     private logText = '';
 
-    constructor(private apiService: ApiService) {
+    private timer: Observable<number>;
+    private subscription: Subscription;
 
+    constructor(private apiService: ApiService) {
     }
 
     ngOnInit() {
         this.updateTable();
+        this.timer = TimerObservable.create(0, 600);
+        this.subscription = this.timer.subscribe(value => {
+            if (this.selectedProject !== null) {
+                this.updateLogText();
+            }
+        });
+    }
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 
     updateTable() {
@@ -68,26 +85,13 @@ export class ProjectTableComponent implements OnInit {
         }
 
         this.tableData = {
-            headerRow: [ 'Name', 'Created On', 'Running'],
+            headerRow: ['Name', 'Created On', 'Running'],
             dataRows: dataRows
         };
     }
 
-    status(project: Project) {
-        return 'Example';
-    }
-
-    hyperlinkEntered(object: HTMLAnchorElement) {
-        object.style['text-decoration'] = 'underline';
-    }
-
-    hyperlinkExited(object: HTMLAnchorElement) {
-        object.style['text-decoration'] = 'initial';
-    }
-
-    hyperlinkClicked(project: Project) {
-        this.selectedProject = project;
-        this.apiService.getOutput(project.id).then((response) => {
+    updateLogText() {
+        this.apiService.getOutput(this.selectedProject.id).then((response) => {
             if (typeof response === 'string') {
                 this.logText = 'No logs found for this project.';
             } else {
@@ -104,6 +108,30 @@ export class ProjectTableComponent implements OnInit {
                     this.logText = logResponse.stdout;
                 }
             }
+        }, error => {
+            this.closeModal();
+            this.selectedProject = null;
         });
+    }
+
+    status(project: Project) {
+        return 'Example';
+    }
+
+    hyperlinkEntered(object: HTMLAnchorElement) {
+        object.style['text-decoration'] = 'underline';
+    }
+
+    hyperlinkExited(object: HTMLAnchorElement) {
+        object.style['text-decoration'] = 'initial';
+    }
+
+    hyperlinkClicked(project: Project) {
+        this.selectedProject = project;
+    }
+
+    closeModal() {
+        this.logmodal.close();
+        this.selectedProject = null;
     }
 }
