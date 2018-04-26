@@ -31,6 +31,10 @@ export const AppRoutes: Routes = [
             path: '',
             loadChildren: './views/dashboard/dashboard.module#DashboardModule'
         },
+        {
+            path: '',
+            loadChildren: './views/visualizer/visualizer.module#VisualizerModule'
+        },
         { path: '**', component: PageNotFoundComponent }]
     }];
 

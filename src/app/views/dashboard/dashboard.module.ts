@@ -16,6 +16,8 @@ import { PanelsComponent } from '../components/panels/panels.component';
 import { JWBootstrapSwitchModule } from 'jw-bootstrap-switch-ng2';
 import { ModalModule } from 'ng2-modal';
 import { LogOutputComponent } from './log-output/log-output.component';
+import { AppModule } from '../../app.module';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
     imports: [
@@ -27,15 +29,14 @@ import { LogOutputComponent } from './log-output/log-output.component';
         AccordionModule,
         JWBootstrapSwitchModule,
         ModalModule,
+        SharedModule
     ],
     declarations: [
       DashboardComponent,
       ProjectListComponent,
       ProjectTableComponent,
       ProjectAddComponent,
-      ProjectConfigComponent,
-      PanelsComponent,
-      LogOutputComponent
+      ProjectConfigComponent
     ]
 })
 

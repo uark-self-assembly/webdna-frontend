@@ -27,8 +27,12 @@ export const ROUTES: RouteInfo[] = [{
     title: 'Dashboard',
     type: 'link',
     icontype: 'pe-7s-graph'
-}
-];
+}, {
+    path: '/visualizer',
+    title: 'Visualizer',
+    type: 'link',
+    icontype: 'pe-7s-share'
+}];
 
 @Component({
     moduleId: module.id,

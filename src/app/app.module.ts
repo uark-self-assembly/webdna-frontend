@@ -30,6 +30,11 @@ import { AlertService } from './views/components/alert/alert.service';
 import { ApiService } from './services/api-service/api.service';
 import { RequestService } from './services/request/request.service';
 import { StorageService } from './services/storage/storage.service';
+import { PanelsComponent } from './views/components/panels/panels.component';
+import { LogOutputComponent } from './views/dashboard/log-output/log-output.component';
+import { DashboardModule } from './views/dashboard/dashboard.module';
+import { VisualizerModule } from './views/visualizer/visualizer.module';
+import { SharedModule } from './views/shared/shared.module';
 
 
 @NgModule({
@@ -63,7 +68,7 @@ import { StorageService } from './services/storage/storage.service';
       ProjectService,
       ApiService,
       SweetAlertComponent,
-      AlertService
+      AlertService,
     ],
     bootstrap:    [ AppComponent ]
 })
