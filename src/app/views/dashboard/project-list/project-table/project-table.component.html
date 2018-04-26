@@ -53,14 +53,15 @@
         </table>
     </div>
 </div>
-<modal #logmodal>
+<modal #logmodal (onClose)="closeModal()">
     <modal-header>
-        <h1>{{selectedProject.name}} Log</h1>
+
+        <h3 *ngIf="selectedProject !== null">{{selectedProject.name }} Console Output</h3>
     </modal-header>
     <modal-content (onClose)="closeModal()">
         <div>
             <log-output [logText]="logText"></log-output>
         </div>
-        <button class="btn btn-primary" (click)="logmodal.close()">close</button>
+        <button class="btn btn-primary" (click)="closeModal()">close</button>
     </modal-content>
 </modal>

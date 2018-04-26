@@ -73,6 +73,8 @@ export class ProjectConfigComponent implements OnInit {
     @Input()
     public didClickBack: () => void;
 
+    private loading = false;
+
     private simulationFile: File;
     private boxSize = 20;
 
@@ -218,6 +220,9 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     backClicked() {
+        if (this.loading) {
+            return;
+        }
         this.didClickBack();
     }
 
@@ -242,8 +247,14 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     runSimulation() {
+        if (this.loading) {
+            return;
+        }
+
+        this.loading = true;
         this.buildResults();
         this.apiService.setProjectSettings(this.project.id, this.result).then(response => {
+            this.loading = false;
             if (response === 'success') {
                 this.execute();
                 console.log('settings added');
