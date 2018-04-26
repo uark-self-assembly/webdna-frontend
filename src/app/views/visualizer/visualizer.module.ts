@@ -13,6 +13,7 @@ import { LogOutputComponent } from '../dashboard/log-output/log-output.component
 import { VisualizerComponent } from './visualizer.component';
 import { VisualizerRoutes } from './visualizer.routing';
 import { SharedModule } from '../shared/shared.module';
+import { HtmolComponent } from './htmol/htmol.component';
 
 @NgModule({
     imports: [
@@ -27,6 +28,7 @@ import { SharedModule } from '../shared/shared.module';
         SharedModule
     ],
     declarations: [
+      HtmolComponent,
       VisualizerComponent
     ]
 })
