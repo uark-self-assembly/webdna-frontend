@@ -12,7 +12,7 @@
             <tbody>
                 <tr *ngFor="let project of projects">
                     <td>{{project.name}}</td>
-                    <td>{{project.created_on}}</td>
+                    <td>{{dateString(project.created_on)}}</td>
                     <td style="cursor: pointer;">
                         <a #hyperlink (click)="hyperlinkClicked(project); logmodal.open();" (mouseenter)="hyperlinkEntered(hyperlink)" (mouseleave)="hyperlinkExited(hyperlink)">View output</a>
                         <i class="glyphicon glyphicon-menu-right" style="font-size: 12px; color: #23CCEF;"></i>

@@ -4,13 +4,9 @@ import { ApiService, LogResponse } from '../../../../services/api-service/api.se
 import { Observable } from 'rxjs/Observable';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
 import { Subscription } from 'rxjs/Subscription';
+import * as moment from 'moment';
 
 declare var $: any;
-
-declare interface TableData {
-    headerRow: string[];
-    dataRows: string[][];
-}
 
 @Component({
     selector: 'project-table',
@@ -32,18 +28,17 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
 
     @Input()
     set projects(newProjects) {
+        if (newProjects) {
+            newProjects.forEach(project => {
+                project.created_on = new Date(project.created_on);
+            });
+        }
         this._projects = newProjects;
-        this.updateTable();
     }
 
     get projects() {
         return this._projects;
     }
-
-    tableData: TableData = {
-        headerRow: [],
-        dataRows: []
-    };
 
     private outputString: string;
     private selectedProject: Project = null;
@@ -56,7 +51,6 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.updateTable();
         this.timer = TimerObservable.create(0, 600);
         this.subscription = this.timer.subscribe(value => {
             if (this.selectedProject !== null) {
@@ -69,25 +63,8 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
-    updateTable() {
-        if (this._projects === undefined) {
-            return;
-        }
-
-        const dataRows = []
-
-        for (let i = 0; i < this._projects.length; i++) {
-            const project = this._projects[i];
-            dataRows.push({
-                project: project,
-                displayed: [project.name, project.created_on]
-            });
-        }
-
-        this.tableData = {
-            headerRow: ['Name', 'Created On', 'Running'],
-            dataRows: dataRows
-        };
+    dateString(date: Date): string {
+        return moment(date).format('h:mm a; MMMM DD, YYYY');
     }
 
     updateLogText() {
@@ -112,10 +89,6 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
             this.closeModal();
             this.selectedProject = null;
         });
-    }
-
-    status(project: Project) {
-        return 'Example';
     }
 
     hyperlinkEntered(object: HTMLAnchorElement) {

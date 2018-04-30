@@ -7,29 +7,35 @@ import { StorageService } from '../../services/storage/storage.service';
 
 declare var $: any;
 
+export enum ProjectPage {
+  TABLE, SETTINGS, ANALYSIS
+}
+
 @Component({
   selector: 'dashboard-cmp',
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
+  private ProjectPage = ProjectPage;
 
-  scannerList = true;
-  scannerSettings = false;
-  user: User = null;
-  loading = true;
+  private user: User = null;
+  private loading = true;
 
-  editingProject: Project = null;
-
-  private alive: boolean;
-
-  private requestCancelled: boolean;
+  private currentPage: ProjectPage = ProjectPage.TABLE;
+  private editingProject: Project = null;
 
   projectClicked = ((project: Project) => {
     this.editingProject = project;
+    this.currentPage = ProjectPage.SETTINGS;
   }).bind(this);
 
   didClickBackFromConfig = (() => {
     this.editingProject = null;
+    this.currentPage = ProjectPage.TABLE;
+  }).bind(this);
+
+  didClickAnalysis = (() => {
+    this.currentPage = ProjectPage.ANALYSIS;
   }).bind(this);
 
   constructor(

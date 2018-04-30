@@ -73,6 +73,9 @@ export class ProjectConfigComponent implements OnInit {
     @Input()
     public didClickBack: () => void;
 
+    @Input()
+    public didClickAnalysis: () => void;
+
     private loading = false;
 
     private sequenceFile: File;
