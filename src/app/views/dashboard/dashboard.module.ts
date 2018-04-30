@@ -18,6 +18,7 @@ import { ModalModule } from 'ng2-modal';
 import { LogOutputComponent } from './log-output/log-output.component';
 import { AppModule } from '../../app.module';
 import { SharedModule } from '../shared/shared.module';
+import { ProjectAnalysisComponent } from './project-analysis/project-analysis.component';
 
 @NgModule({
     imports: [
@@ -36,7 +37,8 @@ import { SharedModule } from '../shared/shared.module';
       ProjectListComponent,
       ProjectTableComponent,
       ProjectAddComponent,
-      ProjectConfigComponent
+      ProjectConfigComponent,
+      ProjectAnalysisComponent
     ]
 })
 
