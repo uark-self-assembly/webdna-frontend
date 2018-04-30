@@ -24,28 +24,11 @@
                             <i class="fa fa-edit"></i>
                         </a>
 
-                        <!-- Run Button -->
-                        <div *ngIf="false;then waiting else idle"></div>
-
                         <!-- Delete Button -->
                         <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-xs" (click)="deleteClicked(project)">
                             Delete Project
                             <i class="fa fa-trash"></i>
                         </a>
-
-                        <ng-template #waiting>
-                            <a rel="tooltip" title="Running..." class="btn btn-success btn-simple btn-xs">
-                                Simulation Running...
-                                <i class="fa fa-spinner"></i>
-                            </a>
-                        </ng-template>
-
-                        <ng-template #idle>
-                            <a rel="tooltip" title="Run" class="btn btn-success btn-simple btn-xs" (click)="runClicked(project)">
-                                Run Simulation
-                                <i class="fa fa-play"></i>
-                            </a>
-                        </ng-template>
 
                     </td>
                 </tr>

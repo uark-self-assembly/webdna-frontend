@@ -212,7 +212,6 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     initializeOptions(response) {
-        console.log(this.optionsMap);
         Object.keys(response).forEach(key => {
             if (this.optionsMap[key]) {
                 const responseValue = response[key];
