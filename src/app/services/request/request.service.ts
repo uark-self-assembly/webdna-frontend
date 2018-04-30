@@ -69,9 +69,8 @@ export class RequestService {
 
   putFile(urlPieces: string[], formData: FormData, authenticated: boolean = false): Promise<Response> {
     const headers = this.buildHeaders(authenticated);
-    headers.set('Content-Type', 'multipart/form-data');
 
-    return this.http.put(this.buildUrl(urlPieces), formData, {headers: headers}).toPromise();
+    return this.http.put(this.buildUrl(urlPieces), formData).toPromise();
   }
 
   delete<T>(urlPieces: string[], authenticated: boolean = false): Promise<T | string> {

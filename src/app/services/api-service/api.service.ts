@@ -32,6 +32,14 @@ export class ApiService {
         return this.requestService.post(this.apiUrl.concat('checkstatus'), body, true);
     }
 
+    getProjectSettings(projectId: string): Promise<object | string> {
+        const body = {
+            project_id: projectId
+        }
+
+        return this.requestService.post(this.apiUrl.concat('getsettings'), body, true);
+    }
+
     setProjectSettings(projectId: string, settings: any): Promise<string> {
         settings['project_id'] = projectId;
 

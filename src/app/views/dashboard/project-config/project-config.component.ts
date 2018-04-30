@@ -75,7 +75,7 @@ export class ProjectConfigComponent implements OnInit {
 
     private loading = false;
 
-    private simulationFile: File;
+    private sequenceFile: File;
     private boxSize = 20;
 
     private genericOptions = [
@@ -125,7 +125,7 @@ export class ProjectConfigComponent implements OnInit {
         new SimulationOption('print_conf_interval', 'Output Configuration every', SimulationOptionType.INTEGER, null, 10000),
     ]
 
-    private optionsMap = {};
+    private optionsMap: Map<string, SimulationOption> = new Map<string, SimulationOption>();
 
     private result = {
     };
@@ -133,7 +133,6 @@ export class ProjectConfigComponent implements OnInit {
     constructor(
         private projectService: ProjectService,
         private apiService: ApiService) {
-        this.buildOptionsMap();
     }
 
     ngOnInit() {
@@ -183,12 +182,56 @@ export class ProjectConfigComponent implements OnInit {
         if ($('.dropdown').hasClass('show-dropdown')) {
             $('.dropdown').addClass('open');
         }
+
+        this.buildOptionsMap();
+        this.apiService.getProjectSettings(this.project.id).then(response => {
+            if (typeof response === 'string') {
+                console.log('error');
+            } else {
+                console.log('loaded options:');
+                console.log(response);
+                this.initializeOptions(response);
+            }
+        }, error => {
+            console.log('error');
+        });
     }
 
     buildOptionsMap() {
         for (const option of this.genericOptions) {
             this.optionsMap[option.propertyName] = option;
         }
+
+        for (const option of this.simulationOptions) {
+            this.optionsMap[option.propertyName] = option;
+        }
+
+        for (const option of this.mdSimulationOptions) {
+            this.optionsMap[option.propertyName] = option;
+        }
+    }
+
+    initializeOptions(response) {
+        console.log(this.optionsMap);
+        Object.keys(response).forEach(key => {
+            if (this.optionsMap[key]) {
+                const responseValue = response[key];
+                const option: SimulationOption = this.optionsMap[key];
+
+                if (option.optionType === SimulationOptionType.CHOICE) {
+                    for (const choice of option.choices) {
+                        if (choice[0] === response[key]) {
+                            option.value = choice;
+                        }
+                    }
+                } else if (option.optionType === SimulationOptionType.FLOAT) {
+                    const split = responseValue.split(/\s+/);
+                    option.value = Number(split[0]);
+                } else {
+                    option.value = response[key];
+                }
+            }
+        });
     }
 
     buildResults() {
@@ -230,7 +273,7 @@ export class ProjectConfigComponent implements OnInit {
         this.buildResults();
 
         console.log(this.result);
-        console.log(this.simulationFile);
+        console.log(this.sequenceFile);
     }
 
     choose(option: SimulationOption, choice) {
@@ -242,7 +285,7 @@ export class ProjectConfigComponent implements OnInit {
         // do something
         const fileList: FileList = event.target.files;
         if (fileList.length > 0) {
-            this.simulationFile = fileList[0];
+            this.sequenceFile = fileList[0];
         }
     }
 
@@ -253,17 +296,23 @@ export class ProjectConfigComponent implements OnInit {
 
         this.loading = true;
         this.buildResults();
-        this.apiService.setProjectSettings(this.project.id, this.result).then(response => {
-            this.loading = false;
-            if (response === 'success') {
-                this.execute();
-                console.log('settings added');
-            } else {
-                console.log('error');
-            }
+
+        this.apiService.uploadFile(this.project.id, this.sequenceFile, 'sequence.txt').then(response => {
+            this.apiService.setProjectSettings(this.project.id, this.result).then(response2 => {
+                this.loading = false;
+                if (response2 === 'success') {
+                    this.execute();
+                    console.log('settings added');
+                } else {
+                    console.log('error');
+                }
+            }, error => {
+                this.loading = false;
+            });
         }, error => {
             this.loading = false;
-        })
+            console.log('couldnt uplaod file');
+        });
     }
 
     execute() {
