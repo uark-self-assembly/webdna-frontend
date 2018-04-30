@@ -17,12 +17,12 @@
     <button *ngIf="loading" class="btn btn-fill pull-right" style="margin: 8px;" (click)="runSimulation()">Executing simulation (please wait)...
     </button>
 
-    <div class="card">
+    <div class="card" style="min-height: 54px;">
         <div class="header">
             <h4 class="title">Simulation Settings</h4>
         </div>
 
-        <div class="content content-full-width">
+        <div *ngIf="!loading" class="content content-full-width">
             <div class="panel-group" id="accordion">
                 <!-- GENERATION OPTIONS -->
                 <div class="panel panel-default">

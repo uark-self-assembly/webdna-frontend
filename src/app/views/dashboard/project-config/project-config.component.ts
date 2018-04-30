@@ -78,6 +78,8 @@ export class ProjectConfigComponent implements OnInit {
     private sequenceFile: File;
     private boxSize = 20;
 
+    private initializing = true;
+
     private genericOptions = [
         new SimulationOption(
             'interaction_type', 'Interaction Type', SimulationOptionType.CHOICE,
@@ -186,14 +188,12 @@ export class ProjectConfigComponent implements OnInit {
         this.buildOptionsMap();
         this.apiService.getProjectSettings(this.project.id).then(response => {
             if (typeof response === 'string') {
-                console.log('error');
             } else {
-                console.log('loaded options:');
-                console.log(response);
                 this.initializeOptions(response);
+
+                this.initializing = false
             }
         }, error => {
-            console.log('error');
         });
     }
 
@@ -297,21 +297,29 @@ export class ProjectConfigComponent implements OnInit {
         this.loading = true;
         this.buildResults();
 
-        this.apiService.uploadFile(this.project.id, this.sequenceFile, 'sequence.txt').then(response => {
-            this.apiService.setProjectSettings(this.project.id, this.result).then(response2 => {
-                this.loading = false;
-                if (response2 === 'success') {
-                    this.execute();
-                    console.log('settings added');
-                } else {
-                    console.log('error');
-                }
+        if (this.sequenceFile) {
+            this.apiService.uploadFile(this.project.id, this.sequenceFile, 'sequence.txt').then(response => {
+                this.applySettings();
             }, error => {
                 this.loading = false;
+                console.log('couldnt uplaod file');
             });
+        } else {
+            this.applySettings();
+        }
+    }
+
+    applySettings() {
+        this.apiService.setProjectSettings(this.project.id, this.result).then(response2 => {
+            this.loading = false;
+            if (response2 === 'success') {
+                this.execute();
+                console.log('settings added');
+            } else {
+                console.log('error');
+            }
         }, error => {
             this.loading = false;
-            console.log('couldnt uplaod file');
         });
     }
 
