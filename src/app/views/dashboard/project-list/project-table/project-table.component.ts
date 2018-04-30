@@ -64,7 +64,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     }
 
     dateString(date: Date): string {
-        return moment(date).format('h:mm a; MMMM DD, YYYY');
+        return moment(date).format('MMMM DD, YYYY @ h:mm a');
     }
 
     updateLogText() {

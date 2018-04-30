@@ -1,3 +1,47 @@
-<div>
-  <span>Example text.</span>
+<div class="row" style="margin-bottom: 16px;">
+  <button type="button" class="btn btn-primary" style="border: 0px solid transparent; font-size: 18px; vertical-align: middle;"
+    (click)="backClicked()">
+    <span class="glyphicon glyphicon-menu-left"></span> Back
+  </button>
+
+  <span class="text-muted" style="font-size: 36px; vertical-align: middle;">
+    <strong>{{project.name}}</strong>
+  </span>
+</div>
+
+<div class="container-fluid">
+  <div class="card col-md-4">
+    <div class="header">
+      <h4 class="title">Your Scripts</h4>
+    </div>
+
+    <div class="content table-responsive table-full-width" style="overflow-y: auto; max-height: 65vh; height:auto;">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Script Name</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let script of scripts">
+            <td>
+              <span style="font-family: 'Courier New';">{{script.name}}</span>
+              <br>
+              <span style="font-size: 12px;">{{script.description}}</span>
+            </td>
+            <td class="td-actions text-right">
+              <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-xs">
+                <i (click)="deleteScript(script)" class="glyphicon glyphicon-trash"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card col-md-8">
+
+  </div>
 </div>

@@ -38,9 +38,11 @@ export class DashboardComponent implements OnInit {
     this.currentPage = ProjectPage.ANALYSIS;
   }).bind(this);
 
-  constructor(
-    private storageService: StorageService,
-    private userService: UserService) {
+  didClickBackFromAnalysis = (() => {
+    this.currentPage = ProjectPage.SETTINGS;
+  }).bind(this);
+
+  constructor(private storageService: StorageService) {
 
   }
 
