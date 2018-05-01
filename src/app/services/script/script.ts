@@ -1,9 +1,10 @@
 export class Script {
-  name: String;
-  description: String;
+  id?: string;
+  file_name: string;
+  description: string;
 
-  constructor(name: string, description: string) {
-    this.name = name;
+  constructor(file_name?: string, description?: string) {
+    this.file_name = name;
     this.description = description;
   }
 }

@@ -16,7 +16,7 @@
     </div>
 
     <div class="content table-responsive table-full-width" style="overflow-y: auto; max-height: 65vh; height:auto;">
-      <table class="table">
+      <table *ngIf="scripts && scripts.length > 0" class="table">
         <thead>
           <tr>
             <th>Script Name</th>
@@ -27,9 +27,9 @@
         <tbody>
           <tr *ngFor="let script of scripts">
             <td>
-              <span style="font-family: 'Courier New';">{{script.name}}</span>
+              <span style="font-family: 'Courier New';">{{script.file_name}}</span>
               <br>
-              <span style="font-size: 12px;">{{script.description}}</span>
+              <span style="font-size: 14px; color: darkgray;">{{script.description}}</span>
             </td>
             <td class="td-actions text-right">
               <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-xs">
@@ -39,9 +39,53 @@
           </tr>
         </tbody>
       </table>
+
+      <button class="btn btn-fill btn-success mt-2" (click)="uploadClicked()">Upload New Script
+        <span class="glyphicon glyphicon-upload"></span>
+      </button>
     </div>
   </div>
+
+  <!-- Script configuration area -->
   <div class="card col-md-8">
 
   </div>
 </div>
+
+<modal #uploadModal>
+  <modal-header>
+    <h3>Upload New Script</h3>
+  </modal-header>
+  <modal-content>
+
+    <form>
+      <div class="form-group">
+        <label>Python Script File</label>
+        <br>
+        <span class="btn btn-default">
+          <input type="file" (change)="fileChange($event)" placeholder="Upload Python Script File" accept=".py" />
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Script Name</label>
+        <input type="text" [(ngModel)]="newScript.file_name" placeholder="example.py" name="option_scriptname" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Script Description</label>
+        <br>
+        <textarea name="scriptDescriptionInput" cols="60" rows="10" [(ngModel)]="newScript.description" placeholder="Example description of this script"></textarea>
+      </div>
+    </form>
+
+    <div class="row" style="padding: 12px;">
+      <button class="btn btn-default mt-1" (click)="closeModal()">Close</button>
+
+      <button type="button" class="btn btn-fill btn-success pull-right" (click)="uploadScriptClicked()">
+        Upload Script
+      </button>
+    </div>
+
+  </modal-content>
+</modal>
