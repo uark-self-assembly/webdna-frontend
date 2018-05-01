@@ -44,6 +44,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
 
     private outputString: string;
     private selectedProject: Project = null;
+    private projectRunning = true;
     private logText = '';
 
     private timer: Observable<number>;
@@ -55,7 +56,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.timer = TimerObservable.create(0, 600);
         this.subscription = this.timer.subscribe(value => {
-            if (this.selectedProject !== null) {
+            if (this.selectedProject !== null && this.projectRunning) {
                 this.updateLogText();
             }
         });
@@ -76,6 +77,8 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
             } else {
                 const logResponse = response as LogResponse;
 
+                this.projectRunning = logResponse.running;
+
                 if (!logResponse.running) {
                     this.logText = logResponse.log + '\n\n\nCONSOLE OUTPUT:\n' + logResponse.stdout;
                     return;
@@ -89,6 +92,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
             }
         }, error => {
             this.closeModal();
+            this.projectRunning = true;
             this.selectedProject = null;
         });
     }
@@ -103,10 +107,12 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
 
     hyperlinkClicked(project: Project) {
         this.selectedProject = project;
+        this.projectRunning = true;
     }
 
     closeModal() {
         this.logmodal.close();
         this.selectedProject = null;
+        this.projectRunning = true;
     }
 }

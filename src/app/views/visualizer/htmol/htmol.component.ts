@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core';
 import { Http } from '@angular/http';
 import { RequestService } from '../../../services/request/request.service';
 
@@ -11,17 +11,16 @@ declare var window: any;
 })
 export class HtmolComponent implements AfterViewInit {
 
-  private projectId = 'dfce4a51-091c-4ae8-ab37-11876180a544';
+  @Input()
+  public projectId: string;
 
   @ViewChild('htmolFrame') htmolFrame: ElementRef;
 
   constructor(private http: Http, private requestService: RequestService) {
-    window.PROJECT_ID = this.projectId;
   }
 
   ngAfterViewInit() {
-    // this.htmolFrame.nativeElement.src = './static/HTMoL.html';
-    this.htmolFrame.nativeElement.srcdoc = '<html><body>Loading visualizer...</body></html>';
+    this.htmolFrame.nativeElement.srcdoc = '<html><body>Loading...</body></html>';
     this.getMainHtmolPage();
   }
 
