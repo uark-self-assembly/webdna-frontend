@@ -3,6 +3,10 @@ import { Project } from 'app/services/project/project';
 import { Script } from 'app/services/script/script';
 import { ScriptService } from 'app/services/script/script.service';
 
+class PipelineNode {
+  script: Script;
+}
+
 @Component({
   selector: 'project-analysis',
   templateUrl: './project-analysis.component.html'
@@ -21,6 +25,7 @@ export class ProjectAnalysisComponent implements OnInit {
   private newScriptFile: File = null;
 
   private scripts: Script[] = [];
+  private nodes: PipelineNode[] = [];
 
   constructor(private scriptService: ScriptService) { }
 
@@ -54,6 +59,13 @@ export class ProjectAnalysisComponent implements OnInit {
         console.log(response);
       } else {
         this.scripts = response;
+
+        if (this.nodes.length === 0 && this.scripts.length > 0) {
+          const newNode = new PipelineNode();
+          newNode.script = this.scripts[0];
+          this.nodes.push(newNode);
+        }
+
         console.log(this.scripts);
       }
     }, error => {
@@ -87,5 +99,26 @@ export class ProjectAnalysisComponent implements OnInit {
     }, error => {
       console.log(error);
     });
+  }
+
+  insertRowClicked() {
+    if (this.scripts.length === 0) {
+      return;
+    }
+
+    const newNode = new PipelineNode();
+    newNode.script = this.scripts[0];
+    this.nodes.push(newNode);
+  }
+
+  deleteRowClicked(node: PipelineNode) {
+    const index = this.nodes.indexOf(node);
+    if (index !== -1) {
+      this.nodes.splice(index, 1);
+    }
+  }
+
+  chooseScript(node: PipelineNode, script: Script) {
+    node.script = script;
   }
 }

@@ -9,7 +9,7 @@
   </span>
 </div>
 
-<div class="container-fluid">
+<div class="row">
   <div class="card col-md-4">
     <div class="header">
       <h4 class="title">Your Scripts</h4>
@@ -47,8 +47,57 @@
   </div>
 
   <!-- Script configuration area -->
-  <div class="card col-md-8">
+  <div class="col-md-8">
+    <div class="card container-fluid">
 
+
+      <div class="header">
+        <h4 class="title">{{project.name}} Pipeline</h4>
+      </div>
+
+      <div class="content table-responsive table-full-width" style="overflow-y: auto; max-height: 65vh; height:auto;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Number</th>
+              <th>Script</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let node of nodes; let i = index">
+              <td>
+                <span style="color: darkgray;">{{i + 1}}</span>
+              </td>
+              <td>
+                <div class="dropdown" dropdown>
+                  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdown_{{i}}" dropdown-open>
+                    {{node.script.file_name}}
+                    <span class="caret"></span>
+                  </button>
+
+                  <ul class="dropdown-menu">
+                    <li *ngFor="let script of scripts">
+                      <a (click)="chooseScript(node, script)" style="min-height: 36px;">{{script.file_name}}</a>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+              <td class="td-actions text-right">
+                <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-xs">
+                  <i (click)="deleteRowClicked(node)" class="glyphicon glyphicon-remove"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button class="btn btn-fill btn-primary" style="margin-top: 10px;" (click)="insertRowClicked()">Insert Row
+          <span class="glyphicon glyphicon-plus"></span>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
