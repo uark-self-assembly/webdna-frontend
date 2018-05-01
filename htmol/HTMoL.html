@@ -17,31 +17,33 @@ v3.5 Leonardo Alvarez-Rivera
     <title>HTMoL v3.5</title>    
 
 <!-- Path to config.js it contains all the user defined variables, no need to change anything else -->    
-
-    <script src='local/config.js'></script>    
+    <script>
+        var PROJECT_ID = '%%PROJECTID%%';
+    </script>
+    <script src='static/local/config.js'></script>    
     
 <!-- ---------------------------------------------------------------------------------- -->    
     
     
-    <script src="js/jquery.js"></script>
-    <script src="js/Process.js"></script>
-    <script src="js/Support.js"></script>
-    <script src="js/Main.js"> </script>
-    <script src='js/Menu.js'></script>
-    <script src='js/camera.js'></script>
-    <script src='js/InicializarRepre.js'></script>
-    <script src='js/digitos.js'></script>
-    <script src='js/index.js'></script>
-    <script src='js/Shaders.js'></script>
-    <script src='js/plantilla_esfera.js'></script>
-    <script src='js/Buffers.js'></script>
-    <script src='js/Picking.js'></script>
-    <script src="js/glMatrix.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/ButtonsFunctions.js"></script>
-    <script src='js/SplineCatmullRom.js'></script>
+    <script src="static/js/jquery.js"></script>
+    <script src="static/js/Process.js"></script>
+    <script src="static/js/Support.js"></script>
+    <script src="static/js/Main.js"> </script>
+    <script src='static/js/Menu.js'></script>
+    <script src='static/js/camera.js'></script>
+    <script src='static/js/InicializarRepre.js'></script>
+    <script src='static/js/digitos.js'></script>
+    <script src='static/js/index.js'></script>
+    <script src='static/js/Shaders.js'></script>
+    <script src='static/js/plantilla_esfera.js'></script>
+    <script src='static/js/Buffers.js'></script>
+    <script src='static/js/Picking.js'></script>
+    <script src="static/js/glMatrix.js"></script>
+    <script src="static/js/utils.js"></script>
+    <script src="static/js/ButtonsFunctions.js"></script>
+    <script src='static/js/SplineCatmullRom.js'></script>
 
-    <link rel='stylesheet' href='styles/sizeHTMol.css' media='screen'>
+    <link rel='stylesheet' href='static/styles/sizeHTMol.css' media='screen'>
 
     <script id="shader-fs" type="x-shader/x-fragment">
     #ifdef GL_ES
@@ -161,7 +163,7 @@ v3.5 Leonardo Alvarez-Rivera
     }
 </script>
 
-<script src="js/MainHTMoL.js"></script>
+<script src="static/js/MainHTMoL.js"></script>
 
 
 <!-- =======================================  -->

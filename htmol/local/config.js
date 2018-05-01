@@ -15,17 +15,24 @@ v3.5 Leonardo Alvarez-Rivera
 // =================================== tripplab.com ======================================= // 
 // =============================== User defined variables ================================= //
 
+if (typeof PROJECT_ID === 'undefined') {
+  console.log('LOADING DEFAULT PROJECT ID');
+  PROJECT_ID = '66ae6a5d-2ea3-4ef2-92ef-fa9b6ead3888';
+}
+
 // Binary Server information
 var WebIP="localhost"; // Server Name or IP. Use 'localhost' for testing
-var NodePort="6969"; // Define internet port for communication, other than 80 (reserved for Apache)
+var WebPort="80"; // Define internet port for communication, other than 80 (reserved for Apache)
+
+var SIMULATION_DIR = '../webdna-django-server/server-data/server-sims/';
 
 var PDBDIR="pdbfiles/"; // path to coordinates file. It can be located in another Apache server: "http://"+WebIP+"/HTMoLv3.5/pdbfiles/";
 var TRJDIR="trjfiles/"; // path to trajectory file at BinServer. It is advisable to leave the directory structure as is.
 
 // Coordinates file name
-var pdbInicial='trajectory.pdb'; // Examples also included: 'lysozyme.pdb' 'mem_chol.pdb' 'amb.pdb' 'lido_dppc.pdb'
+var pdbInicial= PROJECT_ID + '.pdb'; // Examples also included: 'lysozyme.pdb' 'mem_chol.pdb' 'amb.pdb' 'lido_dppc.pdb'
 // Trajectory file name
-var trjInicial= 'trajectory.xtc'; // Examples also included: 'lysozyme.xtc' 'mem_chol.dcd' 'amb.xtc' 'lido_dppc.xtc'
+var trjInicial= PROJECT_ID + '.xtc'; // Examples also included: 'lysozyme.xtc' 'mem_chol.dcd' 'amb.xtc' 'lido_dppc.xtc'
 
 var autoplay=false; // How to start the MD visualization
 

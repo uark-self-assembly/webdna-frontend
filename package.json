@@ -46,6 +46,7 @@
     "bootstrap-tagsinput": "0.7.1",
     "chartist": "0.9.4",
     "core-js": "^2.5.5",
+    "cors": "^2.8.4",
     "datatables": "1.10.12",
     "datatables.net-bs": "1.10.12",
     "datatables.net-responsive": "2.1.1",

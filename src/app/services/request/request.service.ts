@@ -5,14 +5,13 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class RequestService {
-  isDev = true;
+  isDev = false;
 
-  get baseUrl(): string {
+  get host(): string {
     if (this.isDev) {
-      return 'http://localhost:8000/api';
+      return 'http://localhost:8000';
     } else {
-      // TODO Need to change to production URL
-      return 'http://localhost:8000/api';
+      return 'http://192.168.1.2';
     }
   }
 
@@ -21,7 +20,7 @@ export class RequestService {
     private storageService: StorageService) { }
 
   buildUrl(urlPieces: string[]): string {
-    const url = this.baseUrl + '/' + urlPieces.join('/');
+    const url = this.host + '/api/' + urlPieces.join('/');
     if (url.indexOf('?') >= 0) {
       return url;
     } else {

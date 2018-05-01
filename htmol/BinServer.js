@@ -62,5 +62,5 @@ bs.on('connection', function (client) {
 	});
 });
 
-server.listen(NodePort);
-console.log("HTMoLv3.5: BinServer started on port " + NodePort);
+server.listen(WebPort);
+console.log("HTMoLv3.5: BinServer started on port " + WebPort);

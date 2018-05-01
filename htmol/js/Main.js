@@ -48,7 +48,7 @@ function Main() {
     } else {
         //Para modificar worker1.js y evitar caché
         var marcaTime = parseInt(Math.random() * 1000000);
-        worker1 = new Worker("js/worker.js?=" + marcaTime);
+        worker1 = new Worker("static/js/worker.js?=" + marcaTime);
         worker1.postMessage = worker1.webkitPostMessage || worker1.postMessage;
         worker1.onerror = function (e) {
             data.innerHTML = "HTMoL: " + e.message;
@@ -61,7 +61,8 @@ function Main() {
 
     //--------------------------
     console.log(PDBDIR + pdbInicial);
-    molecule = this.ObjP.ReadFile(PDBDIR + pdbInicial);
+    var pdbUrl = 'http://' + WebIP + ':' + '/simfiles/' + pdbInicial;
+    molecule = this.ObjP.ReadFile(pdbUrl);
     var about = "<a href='http://htmol.tripplab.com/' target='_blank' style='color:orange;font-weight: bold;'>HTMoL</a>"; // Please do not change nor remove
     info.innerHTML = about + htmolver + ": " + pdbInicial + " (" + molecule.LstAtoms.length + " atoms)";
     //    info.innerHTML=molecule.LstAtoms.length+" atoms";
@@ -845,16 +846,16 @@ function Main() {
     var menuStyle = "";
     var mediaquery = window.matchMedia("(max-width: 700px)");
     if (mediaquery.matches) {
-        menuStyle += '<link rel="stylesheet" type="text/css" href="styles/style_tiny.css" />'
+        menuStyle += '<link rel="stylesheet" type="text/css" href="static/styles/style_tiny.css" />'
         maxTam = "150px";
     } else {
-        menuStyle += '<link rel="stylesheet" type="text/css" href="styles/style.css" />'
+        menuStyle += '<link rel="stylesheet" type="text/css" href="static/styles/style.css" />'
         maxTam = "250px";
     }
     this.MakeMenu = function (container) {
         var many = CAmino(); //Esta en Buttons Function
-        var hope = "<link rel='stylesheet' type='text/css' href='styles/component.css' />" +
-            "<link rel='stylesheet' type='text/css' href='styles/Styles.css' />" +
+        var hope = "<link rel='stylesheet' type='text/css' href='static/styles/component.css' />" +
+            "<link rel='stylesheet' type='text/css' href='static/styles/Styles.css' />" +
             menuStyle +
             "  <div id='Menus'>" +
             "<div id='controles'></div>" +
@@ -1144,7 +1145,7 @@ function Main() {
     }
 
     function bitratespeed() {
-        var imageAddr = "speedtest.jpg" + "?n=" + Math.random();
+        var imageAddr = "static/speedtest.jpg" + "?n=" + Math.random();
         var startTime, endTime;
         var downloadSize = 81877;
         var download = new Image();
