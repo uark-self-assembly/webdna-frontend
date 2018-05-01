@@ -8,6 +8,15 @@ import * as moment from 'moment';
 
 declare var $: any;
 
+export class ProjectRow {
+    project: Project;
+    running = false;
+
+    constructor(project: Project) {
+        this.project = project;
+    }
+}
+
 @Component({
     selector: 'project-table',
     templateUrl: './project-table.component.html'
@@ -34,6 +43,8 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
             });
         }
         this._projects = newProjects;
+        this.projectRows = this._projects.map(p => new ProjectRow(p));
+        this.checkRunning();
     }
 
     get projects() {
@@ -46,6 +57,8 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     private selectedProject: Project = null;
     private projectRunning = true;
     private logText = '';
+
+    private projectRows: ProjectRow[] = [];
 
     private timer: Observable<number>;
     private subscription: Subscription;
@@ -60,6 +73,18 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
                 this.updateLogText();
             }
         });
+    }
+
+    checkRunning() {
+        for (const row of this.projectRows) {
+            this.apiService.checkRunning(row.project.id).then(response => {
+                if (typeof response !== 'string') {
+                    row.running = response.running;
+                }
+            }, error => {
+                row.running = false;
+            });
+        }
     }
 
     ngOnDestroy() {
@@ -114,5 +139,13 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
         this.logmodal.close();
         this.selectedProject = null;
         this.projectRunning = true;
+    }
+
+    projectCancelled(row: ProjectRow) {
+        this.apiService.terminate(row.project.id).then(response => {
+            row.running = false;
+        }, error => {
+            row.running = false;
+        });
     }
 }

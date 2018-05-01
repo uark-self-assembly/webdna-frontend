@@ -24,6 +24,10 @@ export class ApiService {
         return this.requestService.putFile(this.apiUrl.concat('file', 'upload'), formData, true);
     }
 
+    checkRunning(projectId: string): Promise<LogResponse | string> {
+        return this.requestService.get(this.apiUrl.concat('checkrunning', '?project_id=' + projectId), true);
+    }
+
     getOutput(projectId: string): Promise<LogResponse | string> {
         const body = {
             project_id: projectId
@@ -56,5 +60,12 @@ export class ApiService {
 
     forceVisualization(projectId: string): Promise<string> {
         return this.requestService.get(this.apiUrl.concat('trajectory', '?project_id=' + projectId), true);
+    }
+
+    terminate(projectId: string): Promise<string> {
+        const body = {
+            project_id: projectId
+        };
+        return this.requestService.post(this.apiUrl.concat('terminate'), body, true);
     }
 }

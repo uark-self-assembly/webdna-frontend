@@ -10,22 +10,27 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let project of projects">
-                    <td>{{project.name}}</td>
-                    <td>{{dateString(project.created_on)}}</td>
+                <tr *ngFor="let row of projectRows">
+                    <td>{{row.project.name}}</td>
+                    <td>{{dateString(row.project.created_on)}}</td>
                     <td style="cursor: pointer;">
-                        <a #hyperlink (click)="hyperlinkClicked(project); logmodal.open();" (mouseenter)="hyperlinkEntered(hyperlink)" (mouseleave)="hyperlinkExited(hyperlink)">View output</a>
+                        <a #hyperlink (click)="hyperlinkClicked(row.project); logmodal.open();" (mouseenter)="hyperlinkEntered(hyperlink)" (mouseleave)="hyperlinkExited(hyperlink)">View output</a>
                         <i class="glyphicon glyphicon-menu-right" style="font-size: 12px; color: #23CCEF;"></i>
                     </td>
                     <td class="td-actions text-right">
+                        <a *ngIf="row.running" rel="tooltip" title="Cancel" class="btn btn-danger btn-simple btn-xs" (click)="projectCancelled(row)">
+                            Cancel Simulation
+                            <i class="fa fa-remove"></i>
+                        </a>
+
                         <!-- Edit button -->
-                        <a rel="tooltip" title="Edit" class="btn btn-primary btn-simple btn-xs" (click)="projectClicked(project)">
+                        <a rel="tooltip" title="Edit" class="btn btn-primary btn-simple btn-xs" (click)="projectClicked(row.project)">
                             Edit Project
                             <i class="fa fa-edit"></i>
                         </a>
 
                         <!-- Delete Button -->
-                        <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-xs" (click)="deleteClicked(project)">
+                        <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-xs" (click)="deleteClicked(row.project)">
                             Delete Project
                             <i class="fa fa-trash"></i>
                         </a>
