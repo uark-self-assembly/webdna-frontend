@@ -21,7 +21,7 @@ if (typeof PROJECT_ID === 'undefined') {
 }
 
 // Binary Server information
-var WebIP="localhost"; // Server Name or IP. Use 'localhost' for testing
+var WebIP="52.15.126.236"; // Server Name or IP. Use 'localhost' for testing
 var WebPort="80"; // Define internet port for communication, other than 80 (reserved for Apache)
 
 var SIMULATION_DIR = '../webdna-django-server/server-data/server-sims/';
