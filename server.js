@@ -19,9 +19,9 @@ app.use(favicon(__dirname + "/src/favicon.ico"));
 
 app.use('/simfiles', express.static(join(__dirname, SIMULATION_DIR)));
 app.use('/static', express.static(join(__dirname, 'htmol')));
-app.use('/api', proxy('http://192.168.1.2:8000/api'));
+app.use('/api', proxy('http://172.31.3.126:8000/api'));
 
-var server = app.listen(port, () => {
+var server = app.listen(port, '172.31.3.126', () => {
     var server_port = server.address().port;
     console.log("App now running on port " + server_port);
 });

@@ -11,7 +11,7 @@ export class RequestService {
     if (this.isDev) {
       return 'http://localhost:8000';
     } else {
-      return 'http://192.168.1.2';
+      return 'http://52.15.126.236';
     }
   }
 
