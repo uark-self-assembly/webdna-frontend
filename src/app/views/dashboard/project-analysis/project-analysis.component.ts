@@ -40,6 +40,7 @@ export class ProjectAnalysisComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.refreshScripts();
+    this.refreshAnalysis();
   }
 
   ngOnDestroy() {

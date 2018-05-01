@@ -49,8 +49,12 @@ export class ApiService {
     runSimulation(projectId: string): Promise<string> {
         const body = {
             project_id: projectId
-        }
+        };
 
         return this.requestService.post(this.apiUrl.concat('execute'), body);
+    }
+
+    forceVisualization(projectId: string): Promise<string> {
+        return this.requestService.get(this.apiUrl.concat('trajectory', '?project_id=' + projectId), true);
     }
 }

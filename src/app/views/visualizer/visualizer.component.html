@@ -1,8 +1,44 @@
 <div class="main-content" layout="column" flex style="max-height: 92%; overflow: scroll; overflow-x: hidden; margin-bottom: 0px">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card col-md-3">
+          <div class="header">
+            <h4>Choose a project</h4>
+          </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <htmol-cmp></htmol-cmp>
+          <div *ngIf="projects && projects.length > 0" class="dropdown" dropdown>
+            <button class="btn btn-primary dropdown-toggle" type="button" id="project_visualize_dropdown" dropdown-open>
+              {{selectedProject.name}}
+              <span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu">
+              <li *ngFor="let project of projects">
+                <a (click)="selectProject(project)" style="min-height: 36px;">{{project.name}}</a>
+              </li>
+            </ul>
+          </div>
+
+          <ng-container *ngIf="forcing; then forcingButton else loadButton"></ng-container>
+
+          <ng-template #forcingButton>
+            <button class="btn btn-default" style="margin-top: 12px; margin-bottom: 12px;">
+              Creating simulation...
+            </button>
+          </ng-template>
+
+          <ng-template #loadButton>
+            <button class="btn btn-fill btn-primary" style="margin-top: 12px; margin-bottom: 12px;" (click)="loadProject()">
+              Load Project
+            </button>
+          </ng-template>
+        </div>
+
+        <div *ngIf="!loading" class="col-md-9">
+          <htmol-cmp [projectId]="selectedProject.id"></htmol-cmp>
+        </div>
+      </div>
     </div>
   </div>
 </div>
