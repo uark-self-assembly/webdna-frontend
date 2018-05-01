@@ -1,0 +1,156 @@
+<div class="row" style="margin-bottom: 16px;">
+  <button type="button" class="btn btn-primary" style="border: 0px solid transparent; font-size: 18px; vertical-align: middle;"
+    (click)="backClicked()">
+    <span class="glyphicon glyphicon-menu-left"></span> Back
+  </button>
+
+  <span class="text-muted" style="font-size: 36px; vertical-align: middle;">
+    <strong>{{project.name}}</strong>
+  </span>
+
+  <button type="button" class="btn btn-fill btn-success pull-right" (click)="executeAnalysisClicked()">
+    Execute Analysis
+    <span class="glyphicon glyphicon-check"></span>
+  </button>
+</div>
+
+<div class="row">
+  <div class="card col-md-4">
+    <div class="header">
+      <h4 class="title">Your Scripts</h4>
+    </div>
+
+    <div class="content table-responsive table-full-width" style="overflow-y: auto; max-height: 30vh; height:auto;">
+      <table *ngIf="scripts && scripts.length > 0" class="table">
+        <thead>
+          <tr>
+            <th>Script Name</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let script of scripts">
+            <td>
+              <span style="font-family: 'Courier New';">{{script.file_name}}</span>
+              <br>
+              <span style="font-size: 14px; color: darkgray;">{{script.description}}</span>
+            </td>
+            <td class="td-actions text-right">
+              <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-xs">
+                <i (click)="deleteScript(script)" class="glyphicon glyphicon-trash"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <button class="btn btn-fill btn-success" style="margin-top: 10px; margin-bottom: 10px;" (click)="uploadClicked()">Upload New Script
+      <span class="glyphicon glyphicon-upload"></span>
+    </button>
+  </div>
+
+  <!-- Script configuration area -->
+  <div class="col-md-8">
+    <div class="card container-fluid">
+      <div class="header">
+        <h4 class="title">{{project.name}} Pipeline</h4>
+      </div>
+
+      <div class="content table-responsive table-full-width" style="overflow-y: auto; max-height: 30vh; height:auto;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Number</th>
+              <th>Script</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let node of nodes; let i = index">
+              <td>
+                <span style="color: darkgray;">{{i + 1}}</span>
+              </td>
+              <td>
+                <div class="dropdown" dropdown>
+                  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdown_{{i}}" dropdown-open>
+                    {{node.script.file_name}}
+                    <span class="caret"></span>
+                  </button>
+
+                  <ul class="dropdown-menu">
+                    <li *ngFor="let script of scripts">
+                      <a (click)="chooseScript(node, script)" style="min-height: 36px;">{{script.file_name}}</a>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+              <td class="td-actions text-right">
+                <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-xs">
+                  <i (click)="deleteRowClicked(node)" class="glyphicon glyphicon-remove"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-fill btn-primary" style="margin-top: 10px; margin-bottom: 10px;" (click)="insertRowClicked()">Insert Row
+        <span class="glyphicon glyphicon-plus"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="card col-md-12" style="padding-top: 10px; padding-bottom: 10px;">
+    <div class="row header">
+      <span class="title">Pipeline Output</span>
+      <button type="button" class="btn btn-primary pull-right" style="border: 0px solid transparent;" (click)="refreshAnalysis()">
+          Refresh
+          <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+    </div>
+
+    <log-output [logText]="logText" [height]="logHeight"></log-output>
+  </div>
+</div>
+
+<modal #uploadModal>
+  <modal-header>
+    <h3>Upload New Script</h3>
+  </modal-header>
+  <modal-content>
+
+    <form>
+      <div class="form-group">
+        <label>Python Script File</label>
+        <br>
+        <span class="btn btn-default">
+          <input type="file" (change)="fileChange($event)" placeholder="Upload Python Script File" accept=".py" />
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Script Name</label>
+        <input type="text" [(ngModel)]="newScript.file_name" placeholder="example.py" name="option_scriptname" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Script Description</label>
+        <br>
+        <textarea name="scriptDescriptionInput" cols="60" rows="10" [(ngModel)]="newScript.description" placeholder="Example description of this script"></textarea>
+      </div>
+    </form>
+
+    <div class="row" style="padding: 12px;">
+      <button class="btn btn-default mt-1" (click)="closeModal()">Close</button>
+
+      <button type="button" class="btn btn-fill btn-success pull-right" (click)="uploadScriptClicked()">
+        Upload Script
+      </button>
+    </div>
+
+  </modal-content>
+</modal>

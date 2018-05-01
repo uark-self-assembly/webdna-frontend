@@ -73,6 +73,9 @@ export class ProjectConfigComponent implements OnInit {
     @Input()
     public didClickBack: () => void;
 
+    @Input()
+    public didClickAnalysis: () => void;
+
     private loading = false;
 
     private sequenceFile: File;
@@ -212,7 +215,6 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     initializeOptions(response) {
-        console.log(this.optionsMap);
         Object.keys(response).forEach(key => {
             if (this.optionsMap[key]) {
                 const responseValue = response[key];
@@ -328,5 +330,13 @@ export class ProjectConfigComponent implements OnInit {
             console.log(response);
             this.backClicked();
         });
+    }
+
+    analysisClicked() {
+        if (this.loading) {
+            return;
+        } else {
+            this.didClickAnalysis();
+        }
     }
 }

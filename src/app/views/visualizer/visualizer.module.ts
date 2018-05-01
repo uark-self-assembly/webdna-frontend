@@ -3,12 +3,12 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LbdModule } from '../components/lbd/lbd.module';
-import { DropdownModule } from 'ng2-dropdown';
-import { AccordionModule } from 'ng2-accordion';
+import { DropdownModule } from 'ngx-dropdown';
+import { AccordionModule } from 'ngx-accordion';
 
 import { PanelsComponent } from '../components/panels/panels.component';
 import { JWBootstrapSwitchModule } from 'jw-bootstrap-switch-ng2';
-import { ModalModule } from 'ng2-modal';
+import { ModalModule } from 'ngx-modal';
 import { LogOutputComponent } from '../dashboard/log-output/log-output.component';
 import { VisualizerComponent } from './visualizer.component';
 import { VisualizerRoutes } from './visualizer.routing';
