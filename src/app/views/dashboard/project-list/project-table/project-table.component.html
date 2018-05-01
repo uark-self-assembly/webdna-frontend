@@ -12,7 +12,7 @@
             <tbody>
                 <tr *ngFor="let project of projects">
                     <td>{{project.name}}</td>
-                    <td>{{project.created_on}}</td>
+                    <td>{{dateString(project.created_on)}}</td>
                     <td style="cursor: pointer;">
                         <a #hyperlink (click)="hyperlinkClicked(project); logmodal.open();" (mouseenter)="hyperlinkEntered(hyperlink)" (mouseleave)="hyperlinkExited(hyperlink)">View output</a>
                         <i class="glyphicon glyphicon-menu-right" style="font-size: 12px; color: #23CCEF;"></i>
@@ -24,28 +24,11 @@
                             <i class="fa fa-edit"></i>
                         </a>
 
-                        <!-- Run Button -->
-                        <div *ngIf="false;then waiting else idle"></div>
-
                         <!-- Delete Button -->
                         <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-xs" (click)="deleteClicked(project)">
                             Delete Project
                             <i class="fa fa-trash"></i>
                         </a>
-
-                        <ng-template #waiting>
-                            <a rel="tooltip" title="Running..." class="btn btn-success btn-simple btn-xs">
-                                Simulation Running...
-                                <i class="fa fa-spinner"></i>
-                            </a>
-                        </ng-template>
-
-                        <ng-template #idle>
-                            <a rel="tooltip" title="Run" class="btn btn-success btn-simple btn-xs" (click)="runClicked(project)">
-                                Run Simulation
-                                <i class="fa fa-play"></i>
-                            </a>
-                        </ng-template>
 
                     </td>
                 </tr>
@@ -60,8 +43,8 @@
     </modal-header>
     <modal-content (onClose)="closeModal()">
         <div>
-            <log-output [logText]="logText"></log-output>
+            <log-output [logText]="logText" [height]="logHeight"></log-output>
         </div>
-        <button class="btn btn-primary" (click)="closeModal()">close</button>
+        <button class="btn btn-primary margin-top" (click)="closeModal()">Close</button>
     </modal-content>
 </modal>

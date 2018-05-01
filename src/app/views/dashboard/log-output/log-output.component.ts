@@ -15,6 +15,9 @@ export class LogOutputComponent {
     @Input()
     private logText: string;
 
+    @Input()
+    private height: number;
+
     get lines(): string[] {
         return this.logText.split('\n');
     }

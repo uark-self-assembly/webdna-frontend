@@ -9,14 +9,13 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './views/layouts/admin/admin-layout.component';
 
-import { DropdownModule } from 'ng2-dropdown';
-import { AccordionModule } from 'ng2-accordion';
+import { DropdownModule } from 'ngx-dropdown';
+import { AccordionModule } from 'ngx-accordion';
 import { SidebarModule } from './views/shared/sidebar/sidebar.module';
 import { FixedPluginModule } from './views/shared/fixedplugin/fixedplugin.module';
 import { NavbarModule} from './views/shared/navbar/navbar.module';
 import { PagesnavbarModule} from './views/shared/pagesnavbar/pagesnavbar.module';
 import { AngularDateTimePickerModule } from 'angular2-datetimepicker';
-import { Select2Module } from 'ng2-select2';
 
 import { AuthLayoutComponent } from './views/layouts/auth/auth-layout.component';
 import { PageNotFoundComponent } from './views/page-not-found.component';
@@ -35,6 +34,8 @@ import { LogOutputComponent } from './views/dashboard/log-output/log-output.comp
 import { DashboardModule } from './views/dashboard/dashboard.module';
 import { VisualizerModule } from './views/visualizer/visualizer.module';
 import { SharedModule } from './views/shared/shared.module';
+import { ScriptService } from './services/script/script.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -50,7 +51,7 @@ import { SharedModule } from './views/shared/shared.module';
         DropdownModule,
         AccordionModule,
         AngularDateTimePickerModule,
-        Select2Module
+        MatTooltipModule
     ],
     declarations: [
         AppComponent,
@@ -69,6 +70,7 @@ import { SharedModule } from './views/shared/shared.module';
       ApiService,
       SweetAlertComponent,
       AlertService,
+      ScriptService
     ],
     bootstrap:    [ AppComponent ]
 })

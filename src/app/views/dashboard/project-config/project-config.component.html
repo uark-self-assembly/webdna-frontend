@@ -7,6 +7,11 @@
     <span class="text-muted" style="font-size: 36px; vertical-align: middle;">
         <strong>{{project.name}}</strong>
     </span>
+
+    <button type="button" class="btn btn-primary pull-right" style="border: 0px solid transparent; font-size: 18px; vertical-align: middle;"
+        (click)="analysisClicked()">
+        Configure Analysis <span class="glyphicon glyphicon-menu-right"></span>
+    </button>
 </div>
 
 <div class="container-fluid">
@@ -17,7 +22,7 @@
     <button *ngIf="loading" class="btn btn-fill pull-right" style="margin: 8px;" (click)="runSimulation()">Executing simulation (please wait)...
     </button>
 
-    <div class="card">
+    <div class="card" style="min-height: 54px;">
         <div class="header">
             <h4 class="title">Simulation Settings</h4>
         </div>

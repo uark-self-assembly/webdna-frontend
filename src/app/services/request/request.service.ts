@@ -21,7 +21,12 @@ export class RequestService {
     private storageService: StorageService) { }
 
   buildUrl(urlPieces: string[]): string {
-    return this.baseUrl + '/' + urlPieces.join('/') + '/';
+    const url = this.baseUrl + '/' + urlPieces.join('/');
+    if (url.indexOf('?') >= 0) {
+      return url;
+    } else {
+      return url + '/';
+    }
   }
 
   buildHeaders(authenticated: boolean = false): Headers {

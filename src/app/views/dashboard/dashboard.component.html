@@ -2,15 +2,19 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div *ngIf="editingProject == null;then projectlist else projectconfig"></div>
+                <div [ngSwitch]="currentPage">
+                    <div *ngSwitchCase="ProjectPage.TABLE">
+                        <project-list [user]="user" [projectClicked]="projectClicked"></project-list>
+                    </div>
 
-                <ng-template #projectlist>
-                    <project-list [user]="user" [projectClicked]="projectClicked"></project-list>
-                </ng-template>
+                    <div *ngSwitchCase="ProjectPage.SETTINGS">
+                        <project-config [project]="editingProject" [didClickBack]="didClickBackFromConfig" [didClickAnalysis]="didClickAnalysis"></project-config>
+                    </div>
 
-                <ng-template #projectconfig>
-                    <project-config [project]="editingProject" [didClickBack]="didClickBackFromConfig"></project-config>
-                </ng-template>
+                    <div *ngSwitchCase="ProjectPage.ANALYSIS">
+                        <project-analysis [project]="editingProject" [didClickBack]="didClickBackFromAnalysis"></project-analysis>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
