@@ -43,7 +43,7 @@
     </modal-header>
     <modal-content (onClose)="closeModal()">
         <div>
-            <log-output [logText]="logText"></log-output>
+            <log-output [logText]="logText" [height]="logHeight"></log-output>
         </div>
         <button class="btn btn-primary margin-top" (click)="closeModal()">Close</button>
     </modal-content>

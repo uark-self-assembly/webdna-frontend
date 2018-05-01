@@ -331,4 +331,12 @@ export class ProjectConfigComponent implements OnInit {
             this.backClicked();
         });
     }
+
+    analysisClicked() {
+        if (this.loading) {
+            return;
+        } else {
+            this.didClickAnalysis();
+        }
+    }
 }

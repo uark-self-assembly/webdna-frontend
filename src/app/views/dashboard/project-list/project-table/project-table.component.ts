@@ -40,6 +40,8 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
         return this._projects;
     }
 
+    private logHeight = 500;
+
     private outputString: string;
     private selectedProject: Project = null;
     private logText = '';

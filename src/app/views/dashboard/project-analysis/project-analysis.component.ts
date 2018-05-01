@@ -1,7 +1,10 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, OnDestroy } from '@angular/core';
 import { Project } from 'app/services/project/project';
 import { Script } from 'app/services/script/script';
 import { ScriptService } from 'app/services/script/script.service';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { TimerObservable } from 'rxjs/observable/TimerObservable';
 
 class PipelineNode {
   script: Script;
@@ -11,7 +14,7 @@ class PipelineNode {
   selector: 'project-analysis',
   templateUrl: './project-analysis.component.html'
 })
-export class ProjectAnalysisComponent implements OnInit {
+export class ProjectAnalysisComponent implements OnInit, OnDestroy {
 
   @ViewChild('uploadModal') uploadModal;
 
@@ -27,10 +30,19 @@ export class ProjectAnalysisComponent implements OnInit {
   private scripts: Script[] = [];
   private nodes: PipelineNode[] = [];
 
+  private logText = 'Analysis not started.';
+  private logHeight = '300';
+
+  private timer: Observable<number>;
+  private subscription: Subscription;
+
   constructor(private scriptService: ScriptService) { }
 
   ngOnInit() {
     this.refreshScripts();
+  }
+
+  ngOnDestroy() {
   }
 
   backClicked() {
@@ -38,8 +50,11 @@ export class ProjectAnalysisComponent implements OnInit {
   }
 
   deleteScript(script: Script) {
-    // TODO (jace) delete this script
-    console.log(script);
+    this.scriptService.deleteScript(script.id).then(response => {
+      this.refreshScripts();
+    }, error => {
+      console.log(this);
+    })
   }
 
   fileChange(event) {
@@ -48,6 +63,18 @@ export class ProjectAnalysisComponent implements OnInit {
     if (fileList.length > 0) {
       this.newScriptFile = fileList[0];
       this.newScript.file_name = this.newScriptFile.name;
+    }
+  }
+
+  scriptWithName(name: string): Script {
+    const index = this.scripts.findIndex((value) => {
+      return value.file_name === name
+    });
+
+    if (index >= 0) {
+      return this.scripts[index];
+    } else {
+      return null;
     }
   }
 
@@ -60,13 +87,40 @@ export class ProjectAnalysisComponent implements OnInit {
       } else {
         this.scripts = response;
 
+        this.fetchPipeline();
+
         if (this.nodes.length === 0 && this.scripts.length > 0) {
           const newNode = new PipelineNode();
           newNode.script = this.scripts[0];
           this.nodes.push(newNode);
         }
 
-        console.log(this.scripts);
+        let i = 0;
+        while (i < this.nodes.length) {
+          const foundScript = this.scriptWithName(this.nodes[i].script.file_name);
+          if (foundScript === null) {
+            this.nodes = this.nodes.splice(i, 1);
+          } else {
+            i++;
+          }
+        }
+      }
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  fetchPipeline() {
+    this.scriptService.getPipeline(this.project.id).then(response => {
+      const scripts = response.split(',');
+      this.nodes = [];
+      for (const script of scripts) {
+        const foundScript = this.scriptWithName(script);
+        if (foundScript !== null) {
+          const newNode = new PipelineNode();
+          newNode.script = foundScript;
+          this.nodes.push(newNode);
+        }
       }
     }, error => {
       console.log(error);
@@ -101,6 +155,18 @@ export class ProjectAnalysisComponent implements OnInit {
     });
   }
 
+  refreshAnalysis() {
+    this.scriptService.getAnalysisLog(this.project.id).then(response => {
+      if (typeof response === 'string') {
+        this.logText = response;
+      } else {
+        this.logText = response.join('\n');
+      }
+    }, error => {
+      this.logText = 'Analysis not started.';
+    });
+  }
+
   insertRowClicked() {
     if (this.scripts.length === 0) {
       return;
@@ -120,5 +186,13 @@ export class ProjectAnalysisComponent implements OnInit {
 
   chooseScript(node: PipelineNode, script: Script) {
     node.script = script;
+  }
+
+  executeAnalysisClicked() {
+    this.scriptService.setPipeline(this.project.id, this.nodes.map(n => n.script)).then(response => {
+      console.log(response);
+    }, error => {
+      console.log(error);
+    })
   }
 }

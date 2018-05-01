@@ -8,3 +8,7 @@ export class Script {
     this.description = description;
   }
 }
+
+export class ScriptChain {
+  scripts: string[];
+}

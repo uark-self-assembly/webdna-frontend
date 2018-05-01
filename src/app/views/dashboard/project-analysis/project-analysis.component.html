@@ -7,6 +7,11 @@
   <span class="text-muted" style="font-size: 36px; vertical-align: middle;">
     <strong>{{project.name}}</strong>
   </span>
+
+  <button type="button" class="btn btn-fill btn-success pull-right" (click)="executeAnalysisClicked()">
+    Execute Analysis
+    <span class="glyphicon glyphicon-check"></span>
+  </button>
 </div>
 
 <div class="row">
@@ -15,7 +20,7 @@
       <h4 class="title">Your Scripts</h4>
     </div>
 
-    <div class="content table-responsive table-full-width" style="overflow-y: auto; max-height: 65vh; height:auto;">
+    <div class="content table-responsive table-full-width" style="overflow-y: auto; max-height: 30vh; height:auto;">
       <table *ngIf="scripts && scripts.length > 0" class="table">
         <thead>
           <tr>
@@ -39,23 +44,21 @@
           </tr>
         </tbody>
       </table>
-
-      <button class="btn btn-fill btn-success mt-2" (click)="uploadClicked()">Upload New Script
-        <span class="glyphicon glyphicon-upload"></span>
-      </button>
     </div>
+
+    <button class="btn btn-fill btn-success" style="margin-top: 10px; margin-bottom: 10px;" (click)="uploadClicked()">Upload New Script
+      <span class="glyphicon glyphicon-upload"></span>
+    </button>
   </div>
 
   <!-- Script configuration area -->
   <div class="col-md-8">
     <div class="card container-fluid">
-
-
       <div class="header">
         <h4 class="title">{{project.name}} Pipeline</h4>
       </div>
 
-      <div class="content table-responsive table-full-width" style="overflow-y: auto; max-height: 65vh; height:auto;">
+      <div class="content table-responsive table-full-width" style="overflow-y: auto; max-height: 30vh; height:auto;">
         <table class="table">
           <thead>
             <tr>
@@ -92,12 +95,25 @@
             </tr>
           </tbody>
         </table>
-
-        <button class="btn btn-fill btn-primary" style="margin-top: 10px;" (click)="insertRowClicked()">Insert Row
-          <span class="glyphicon glyphicon-plus"></span>
-        </button>
       </div>
+      <button class="btn btn-fill btn-primary" style="margin-top: 10px; margin-bottom: 10px;" (click)="insertRowClicked()">Insert Row
+        <span class="glyphicon glyphicon-plus"></span>
+      </button>
     </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="card col-md-12" style="padding-top: 10px; padding-bottom: 10px;">
+    <div class="row header">
+      <span class="title">Pipeline Output</span>
+      <button type="button" class="btn btn-primary pull-right" style="border: 0px solid transparent;" (click)="refreshAnalysis()">
+          Refresh
+          <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+    </div>
+
+    <log-output [logText]="logText" [height]="logHeight"></log-output>
   </div>
 </div>
 

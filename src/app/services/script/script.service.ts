@@ -1,5 +1,5 @@
 import { RequestService } from 'app/services/request/request.service';
-import { Script } from './script';
+import { Script, ScriptChain } from './script';
 import { Response } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { StorageService } from '../storage/storage.service';
@@ -24,5 +24,39 @@ export class ScriptService {
     formData.append('description', script.description);
 
     return this.requestService.putFile(this.scriptsUrl.concat('upload'), formData, true);
+  }
+
+  getPipeline(projectId: string): Promise<string> {
+    return this.requestService.get(this.scriptsUrl.concat('getscriptchain', '?project_id=' + projectId), true).then(value => {
+      if (Array.isArray(value) && value.length > 0) {
+        return value[0];
+      } else {
+        return value;
+      }
+    });
+  }
+
+  setPipeline(projectId: string, scripts: Script[]): Promise<string> {
+    const body = {
+      project_id: projectId,
+      script_list: scripts.map(s => s.file_name).join(',')
+    };
+
+    return this.requestService.post(this.scriptsUrl.concat('setscriptchain'), body, true);
+  }
+
+  getAnalysisLog(projectId: string): Promise<string[] | string> {
+    return this.requestService.get(this.scriptsUrl.concat('userlog', '?project_id=' + projectId), true)
+  }
+
+  runAnalysis(projectId: string): Promise<string> {
+    const body = {
+      project_id: projectId
+    }
+    return this.requestService.post(this.scriptsUrl.concat('runanalysis'), body, true);
+  }
+
+  deleteScript(scriptId: string): Promise<string> {
+    return this.requestService.delete(this.scriptsUrl.concat('delete', '?script_id=' + scriptId), true);
   }
 }
