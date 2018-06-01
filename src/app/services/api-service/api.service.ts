@@ -50,9 +50,10 @@ export class ApiService {
         return this.requestService.post(this.apiUrl.concat('applysettings'), settings);
     }
 
-    runSimulation(projectId: string): Promise<string> {
+    runSimulation(projectId: string, shouldRegenerate: boolean = false): Promise<string> {
         const body = {
-            project_id: projectId
+            project_id: projectId,
+            should_regenerate: shouldRegenerate
         };
 
         return this.requestService.post(this.apiUrl.concat('execute'), body);

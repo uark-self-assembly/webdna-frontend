@@ -18,13 +18,13 @@
                         <i class="glyphicon glyphicon-menu-right" style="font-size: 12px; color: #23CCEF;"></i>
                     </td>
                     <td class="td-actions text-right">
-                        <a *ngIf="row.running" rel="tooltip" title="Cancel" class="btn btn-danger btn-simple btn-xs" (click)="projectCancelled(row)">
+                        <a *ngIf="row.running" rel="tooltip" title="Cancel" class="btn btn-default btn-simple btn-xs" (click)="projectCancelled(row)">
                             Cancel Simulation
                             <i class="fa fa-remove"></i>
                         </a>
 
                         <!-- Edit button -->
-                        <a rel="tooltip" title="Edit" class="btn btn-primary btn-simple btn-xs" (click)="projectClicked(row.project)">
+                        <a *ngIf="!row.running" rel="tooltip" title="Edit" class="btn btn-primary btn-simple btn-xs" (click)="projectClicked(row.project)">
                             Edit Project
                             <i class="fa fa-edit"></i>
                         </a>

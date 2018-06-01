@@ -230,6 +230,8 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     initializeOptions(response) {
+        console.log(response);
+
         Object.keys(response).forEach(key => {
             if (key === 'box_size') {
                 this.boxSize = response[key];
@@ -248,6 +250,8 @@ export class ProjectConfigComponent implements OnInit {
                 } else if (option.optionType === SimulationOptionType.FLOAT) {
                     const split = responseValue.split(/\s+/);
                     option.value = Number(split[0]);
+                } else if (option.optionType === SimulationOptionType.BOOLEAN) {
+                    option.value = response[key] === 1;
                 } else {
                     option.value = response[key];
                 }
@@ -313,6 +317,7 @@ export class ProjectConfigComponent implements OnInit {
         if (fileList.length > 0) {
             this.sequenceFile = fileList[0];
         }
+        this.shouldRegenerate = true;
     }
 
     runSimulation() {
@@ -328,7 +333,7 @@ export class ProjectConfigComponent implements OnInit {
                 this.applySettings();
             }, error => {
                 this.loading = false;
-                console.log('couldnt uplaod file');
+                console.log('Couldn\'t upload file');
             });
         } else {
             this.applySettings();
@@ -336,9 +341,9 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     applySettings() {
-        this.apiService.setProjectSettings(this.project.id, this.result).then(response2 => {
+        this.apiService.setProjectSettings(this.project.id, this.result).then(response => {
             this.loading = false;
-            if (response2 === 'success') {
+            if (response === 'success') {
                 this.execute();
                 console.log('settings added');
             } else {
@@ -350,7 +355,7 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     execute() {
-        this.apiService.runSimulation(this.project.id).then(response => {
+        this.apiService.runSimulation(this.project.id, this.shouldRegenerate).then(response => {
             console.log(response);
             this.backClicked();
         });

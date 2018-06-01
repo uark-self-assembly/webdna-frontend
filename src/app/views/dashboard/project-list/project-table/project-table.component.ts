@@ -92,6 +92,14 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
         }
     }
 
+    setRunning(projectId: string, running: boolean) {
+        for (const row of this.projectRows) {
+            if (row.project.id === projectId) {
+                row.running = running;
+            }
+        }
+    }
+
     ngOnDestroy() {
         this.subscription.unsubscribe();
     }
@@ -110,6 +118,8 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
                 this.projectRunning = logResponse.running;
                 this.oxDNALogText = logResponse.stdout;
                 this.programLogText = logResponse.log;
+
+                this.setRunning(this.selectedProject.id, logResponse.running);
             }
         }, error => {
             this.closeModal();
