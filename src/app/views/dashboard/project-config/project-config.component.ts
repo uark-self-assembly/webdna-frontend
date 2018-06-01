@@ -79,7 +79,20 @@ export class ProjectConfigComponent implements OnInit {
     private loading = false;
 
     private sequenceFile: File;
-    private boxSize = 20;
+
+    private get boxSize() {
+        if (this.result && this.result['box_size']) {
+            return this.result['box_size'];
+        } else {
+            this.result['box_size'] = 20;
+            return 20;
+        }
+    }
+    private set boxSize(size) {
+        this.result['box_size'] = size;
+    }
+
+    private shouldRegenerate: boolean;
 
     private initializing = true;
 
@@ -218,6 +231,10 @@ export class ProjectConfigComponent implements OnInit {
 
     initializeOptions(response) {
         Object.keys(response).forEach(key => {
+            if (key === 'box_size') {
+                this.boxSize = response[key];
+            }
+
             if (this.optionsMap[key]) {
                 const responseValue = response[key];
                 const option: SimulationOption = this.optionsMap[key];

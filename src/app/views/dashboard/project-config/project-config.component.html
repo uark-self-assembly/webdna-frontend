@@ -10,7 +10,8 @@
 
     <button type="button" class="btn btn-primary pull-right" style="border: 0px solid transparent; font-size: 18px; vertical-align: middle;"
         (click)="analysisClicked()">
-        Configure Analysis <span class="glyphicon glyphicon-menu-right"></span>
+        Configure Analysis
+        <span class="glyphicon glyphicon-menu-right"></span>
     </button>
 </div>
 
@@ -54,6 +55,13 @@
                                 <div class="form-group">
                                     <label>Box Size</label>
                                     <input type="number" [(ngModel)]="boxSize" placeholder="Box Size" name="option_boxsize" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Regenerate Initial Topology</label>
+                                    <div class="bootstrap-switch-container">
+                                        <bSwitch [switch-on-color]="'primary'" [switch-on-text]="'YES'" [switch-off-text]="'NO'" [(ngModel)]="shouldRegenerate" name="option_shouldRegenerate"></bSwitch>
+                                    </div>
                                 </div>
                             </form>
                         </div>

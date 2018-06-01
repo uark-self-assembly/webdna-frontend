@@ -5,11 +5,11 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class RequestService {
-  isDev = false;
+  isDev = true;
 
   get host(): string {
     if (this.isDev) {
-      return 'http://localhost:8000';
+      return 'http://192.168.1.5:8000';
     } else {
       return 'http://52.15.126.236';
     }
