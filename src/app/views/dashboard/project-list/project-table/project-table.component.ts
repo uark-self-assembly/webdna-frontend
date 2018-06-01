@@ -44,6 +44,10 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
             this._projects = newProjects;
             this.projectRows = this._projects.map(p => new ProjectRow(p));
         }
+        this._projects = newProjects;
+        if (this._projects) {
+            this.projectRows = this._projects.map(p => new ProjectRow(p));
+        }
         this.checkRunning();
     }
 
