@@ -97,7 +97,7 @@
 
                                         <!-- for on/off options (BOOLEAN) -->
                                         <div *ngSwitchCase="SimulationOptionType.BOOLEAN" class="bootstrap-switch-container">
-                                            <bSwitch [switch-on-color]="'primary'" [ngModel]="option.value" (keyup)="option.validate(optionsMap)" name="option_{{option.propertyName}}"></bSwitch>
+                                            <bSwitch [switch-on-color]="'primary'" [(ngModel)]="option.value" (keyup)="option.validate(optionsMap)" name="option_{{option.propertyName}}"></bSwitch>
                                         </div>
 
                                         <input *ngSwitchCase="SimulationOptionType.INTEGER" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
@@ -150,7 +150,7 @@
 
                                         <!-- for on/off options (BOOLEAN) -->
                                         <div *ngSwitchCase="SimulationOptionType.BOOLEAN" class="bootstrap-switch-container">
-                                            <bSwitch [switch-on-color]="'primary'" [ngModel]="option.value" (keyup)="option.validate(optionsMap)" name="option_{{option.propertyName}}"></bSwitch>
+                                            <bSwitch [switch-on-color]="'primary'" [(ngModel)]="option.value" (keyup)="option.validate(optionsMap)" name="option_{{option.propertyName}}"></bSwitch>
                                         </div>
 
                                         <input *ngSwitchCase="SimulationOptionType.INTEGER" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
@@ -203,7 +203,7 @@
 
                                         <!-- for on/off options (BOOLEAN) -->
                                         <div *ngSwitchCase="SimulationOptionType.BOOLEAN" class="bootstrap-switch-container">
-                                            <bSwitch [switch-on-color]="'primary'" [ngModel]="option.value" (keyup)="option.validate(optionsMap)" name="option_{{option.propertyName}}"></bSwitch>
+                                            <bSwitch [switch-on-color]="'primary'" [(ngModel)]="option.value" (keyup)="option.validate(optionsMap)" name="option_{{option.propertyName}}"></bSwitch>
                                         </div>
 
                                         <input *ngSwitchCase="SimulationOptionType.INTEGER" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"

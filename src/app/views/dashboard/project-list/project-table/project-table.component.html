@@ -41,15 +41,22 @@
         </table>
     </div>
 </div>
-<modal #logmodal (onClose)="closeModal()">
+<modal #logmodal (onClose)="closeModal()" cancelButtonLabel="Close" modalClass="modal-lg">
     <modal-header>
-
-        <h3 *ngIf="selectedProject !== null">{{selectedProject.name }} Console Output</h3>
+        <h3 *ngIf="selectedProject !== null"><strong>{{selectedProject.name}}</strong> (console output)</h3>
     </modal-header>
     <modal-content (onClose)="closeModal()">
-        <div>
-            <log-output [logText]="logText" [height]="logHeight"></log-output>
+        <div class="content">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>oxDNA Progress</h5>
+                    <log-output [logText]="oxDNALogText" [height]="logHeight"></log-output>
+                </div>
+                <div class="col-md-6">
+                    <h5>Program Output</h5>
+                    <log-output [logText]="programLogText" [height]="logHeight"></log-output>
+                </div>
+            </div>
         </div>
-        <button class="btn btn-primary margin-top" (click)="closeModal()">Close</button>
     </modal-content>
 </modal>

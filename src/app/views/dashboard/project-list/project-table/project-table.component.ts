@@ -41,9 +41,9 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
             newProjects.forEach(project => {
                 project.created_on = new Date(project.created_on);
             });
+            this._projects = newProjects;
+            this.projectRows = this._projects.map(p => new ProjectRow(p));
         }
-        this._projects = newProjects;
-        this.projectRows = this._projects.map(p => new ProjectRow(p));
         this.checkRunning();
     }
 
@@ -56,7 +56,8 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     private outputString: string;
     private selectedProject: Project = null;
     private projectRunning = true;
-    private logText = '';
+    private oxDNALogText = '';
+    private programLogText = '';
 
     private projectRows: ProjectRow[] = [];
 
@@ -98,22 +99,13 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     updateLogText() {
         this.apiService.getOutput(this.selectedProject.id).then((response) => {
             if (typeof response === 'string') {
-                this.logText = 'No logs found for this project.';
+                this.oxDNALogText = 'No logs found for this project.';
             } else {
                 const logResponse = response as LogResponse;
 
                 this.projectRunning = logResponse.running;
-
-                if (!logResponse.running) {
-                    this.logText = logResponse.log + '\n\n\nCONSOLE OUTPUT:\n' + logResponse.stdout;
-                    return;
-                }
-
-                if (logResponse.stdout.length === 0) {
-                    this.logText = logResponse.log;
-                } else {
-                    this.logText = logResponse.stdout;
-                }
+                this.oxDNALogText = logResponse.stdout;
+                this.programLogText = logResponse.log;
             }
         }, error => {
             this.closeModal();

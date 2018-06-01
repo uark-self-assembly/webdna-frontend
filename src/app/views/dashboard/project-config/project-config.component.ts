@@ -119,6 +119,8 @@ export class ProjectConfigComponent implements OnInit {
         new SimulationOption('seed', 'Simulation Seed', SimulationOptionType.INTEGER, null, 42),
         new SimulationOption('T', 'Temperature (K)', SimulationOptionType.FLOAT, null, 243),
         new SimulationOption('verlet_skin', 'Verlet Skin', SimulationOptionType.FLOAT, null, 0.05),
+        new SimulationOption('external_forces', 'Use External Forces', SimulationOptionType.BOOLEAN),
+        new SimulationOption('external_forces_file', 'External Forces File Name', SimulationOptionType.STRING),
     ]
 
     private mdSimulationOptions = [
@@ -242,6 +244,8 @@ export class ProjectConfigComponent implements OnInit {
         for (const option of this.genericOptions) {
             if (option.optionType === SimulationOptionType.CHOICE) {
                 this.result[option.propertyName] = option.value[0];
+            } else if (option.optionType === SimulationOptionType.BOOLEAN) {
+                this.result[option.propertyName] = option.value ? 1 : 0;
             } else {
                 this.result[option.propertyName] = option.value;
             }
@@ -250,6 +254,8 @@ export class ProjectConfigComponent implements OnInit {
         for (const option of this.simulationOptions) {
             if (option.optionType === SimulationOptionType.CHOICE) {
                 this.result[option.propertyName] = option.value[0];
+            } else if (option.optionType === SimulationOptionType.BOOLEAN) {
+                this.result[option.propertyName] = option.value ? 1 : 0;
             } else {
                 this.result[option.propertyName] = option.value;
             }
@@ -258,6 +264,8 @@ export class ProjectConfigComponent implements OnInit {
         for (const option of this.mdSimulationOptions) {
             if (option.optionType === SimulationOptionType.CHOICE) {
                 this.result[option.propertyName] = option.value[0];
+            } else if (option.optionType === SimulationOptionType.BOOLEAN) {
+                this.result[option.propertyName] = option.value ? 1 : 0;
             } else {
                 this.result[option.propertyName] = option.value;
             }
@@ -284,7 +292,6 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     fileChange(event) {
-        // do something
         const fileList: FileList = event.target.files;
         if (fileList.length > 0) {
             this.sequenceFile = fileList[0];
