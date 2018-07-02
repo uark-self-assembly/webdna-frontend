@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { StorageService } from '../../services/storage/storage.service';
 import { Project } from '../../services/project/project';
 import { ProjectService } from '../../services/project/project.service';
-import { ApiService } from '../../services/api-service/api.service';
 
 declare var $: any;
 
@@ -18,7 +16,7 @@ export class VisualizerComponent implements OnInit {
   private selectedProject: Project;
   private forcing = false;
 
-  constructor(private projectService: ProjectService, private apiService: ApiService) {
+  constructor(private projectService: ProjectService) {
 
   }
 
@@ -48,14 +46,14 @@ export class VisualizerComponent implements OnInit {
   loadProject() {
     this.loading = true;
     const projectId = this.selectedProject.id;
-    this.apiService.getOutput(projectId).then(response => {
+    this.projectService.getCurrentOutput(projectId).then(response => {
       if (typeof response !== 'string') {
         if (response.running) {
           this.forcing = true;
-          this.apiService.forceVisualization(projectId).then(res => {
+          this.projectService.generateVisualization(projectId).then(_ => {
             this.forcing = false;
             this.showHTMOL();
-          }, error => {
+          }, _ => {
             this.showHTMOL();
           });
         } else {

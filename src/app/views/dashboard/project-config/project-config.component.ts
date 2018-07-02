@@ -1,19 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { User } from '../../../services/user/user';
-import { Project } from '../../../services/project/project';
+import { Project, ProjectFileType } from '../../../services/project/project';
 import { ProjectService } from '../../../services/project/project.service';
-import { AuthenticationService } from '../../../services/auth-guard/auth.service';
-import { ApiService } from '../../../services/api-service/api.service';
 
 declare var $: any;
 
 enum SimulationOptionType {
     FLOAT, BOOLEAN, INTEGER, STRING, CHOICE
-}
-
-class SimulationOptionChoice {
-    propertyValue: string;
-    displayText: string;
 }
 
 class SimulationOption {
@@ -22,7 +14,7 @@ class SimulationOption {
     optionType: SimulationOptionType;
     choices?: string[][];
     value: any;
-    validate = (options) => { };
+    validate = (_) => { };
 
     constructor(
         propertyName: string,
@@ -81,7 +73,7 @@ export class ProjectConfigComponent implements OnInit {
     private sequenceFile: File;
 
     private get boxSize() {
-        if (this.result && this.result['box_size']) {
+        if (this.result && this.result['box_size'] !== undefined) {
             return this.result['box_size'];
         } else {
             this.result['box_size'] = 20;
@@ -147,12 +139,9 @@ export class ProjectConfigComponent implements OnInit {
 
     private optionsMap: Map<string, SimulationOption> = new Map<string, SimulationOption>();
 
-    private result = {
-    };
+    private result = {};
 
-    constructor(
-        private projectService: ProjectService,
-        private apiService: ApiService) {
+    constructor(private projectService: ProjectService) {
     }
 
     ngOnInit() {
@@ -204,7 +193,7 @@ export class ProjectConfigComponent implements OnInit {
         }
 
         this.buildOptionsMap();
-        this.apiService.getProjectSettings(this.project.id).then(response => {
+        this.projectService.getSettings(this.project.id).then(response => {
             if (typeof response === 'string') {
             } else {
                 this.initializeOptions(response);
@@ -329,9 +318,9 @@ export class ProjectConfigComponent implements OnInit {
         this.buildResults();
 
         if (this.sequenceFile) {
-            this.apiService.uploadFile(this.project.id, this.sequenceFile, 'sequence.txt').then(response => {
+            this.projectService.uploadFile(this.project.id, this.sequenceFile, ProjectFileType.SEQUENCE).then(_ => {
                 this.applySettings();
-            }, error => {
+            }, _ => {
                 this.loading = false;
                 console.log('Couldn\'t upload file');
             });
@@ -341,7 +330,7 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     applySettings() {
-        this.apiService.setProjectSettings(this.project.id, this.result).then(response => {
+        this.projectService.putSettings(this.project.id, this.result).then(response => {
             this.loading = false;
             if (response === 'success') {
                 this.execute();
@@ -349,13 +338,13 @@ export class ProjectConfigComponent implements OnInit {
             } else {
                 console.log('error');
             }
-        }, error => {
+        }, _ => { /* error */
             this.loading = false;
         });
     }
 
     execute() {
-        this.apiService.runSimulation(this.project.id, this.shouldRegenerate).then(response => {
+        this.projectService.runSimulation(this.project.id, this.shouldRegenerate).then(response => {
             console.log(response);
             this.backClicked();
         });

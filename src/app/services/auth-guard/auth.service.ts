@@ -18,7 +18,7 @@ import { StorageService } from '../storage/storage.service';
 
 @Injectable()
 export class AuthenticationService {
-  private loginUrl = ['login'];
+  private loginUrl = ['users', 'login'];
 
   constructor(
     private requestService: RequestService,

@@ -72,8 +72,6 @@ export class RequestService {
   }
 
   putFile(urlPieces: string[], formData: FormData, authenticated: boolean = false): Promise<Response> {
-    const headers = this.buildHeaders(authenticated);
-
     return this.http.put(this.buildUrl(urlPieces), formData).toPromise();
   }
 

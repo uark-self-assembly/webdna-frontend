@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
-import { Project } from '../../../../services/project/project';
-import { ApiService, LogResponse } from '../../../../services/api-service/api.service';
+import { Project, LogResponse } from '../../../../services/project/project';
 import { Observable } from 'rxjs/Observable';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
 import { Subscription } from 'rxjs/Subscription';
 import * as moment from 'moment';
+import { ProjectService } from '../../../../services/project/project.service';
 
 declare var $: any;
 
@@ -68,12 +68,11 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     private timer: Observable<number>;
     private subscription: Subscription;
 
-    constructor(private apiService: ApiService) {
-    }
+    constructor(private projectService: ProjectService) { }
 
     ngOnInit() {
         this.timer = TimerObservable.create(0, 600);
-        this.subscription = this.timer.subscribe(value => {
+        this.subscription = this.timer.subscribe(_ => {
             if (this.selectedProject !== null && this.projectRunning) {
                 this.updateLogText();
             }
@@ -82,11 +81,11 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
 
     checkRunning() {
         for (const row of this.projectRows) {
-            this.apiService.checkRunning(row.project.id).then(response => {
+            this.projectService.getRunningStatus(row.project.id).then(response => {
                 if (typeof response !== 'string') {
                     row.running = response.running;
                 }
-            }, error => {
+            }, _ => {
                 row.running = false;
             });
         }
@@ -109,7 +108,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     }
 
     updateLogText() {
-        this.apiService.getOutput(this.selectedProject.id).then((response) => {
+        this.projectService.getCurrentOutput(this.selectedProject.id).then(response => {
             if (typeof response === 'string') {
                 this.oxDNALogText = 'No logs found for this project.';
             } else {
@@ -121,7 +120,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
 
                 this.setRunning(this.selectedProject.id, logResponse.running);
             }
-        }, error => {
+        }, _ => {
             this.closeModal();
             this.projectRunning = true;
             this.selectedProject = null;
@@ -148,9 +147,9 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     }
 
     projectCancelled(row: ProjectRow) {
-        this.apiService.terminate(row.project.id).then(response => {
+        this.projectService.stopSimulation(row.project.id).then(response => {
             row.running = false;
-        }, error => {
+        }, _ => {
             row.running = false;
         });
     }

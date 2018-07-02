@@ -32,10 +32,8 @@ var binaryServer = binaryjs.BinaryServer({
 
 binaryServer.on('connection', client => {
     client.on('stream', (stream, meta) => {
-        console.log(meta);
         if (meta.reqsize == true) {
             var path = join(__dirname, SIMULATION_DIR, meta.fpath);
-            console.log(path);
             fs.exists(path, function (exists) {
                 if (exists) {
                     var stats = fs.statSync(path);
@@ -47,7 +45,6 @@ binaryServer.on('connection', client => {
             });
         } else {
             var path = join(__dirname, SIMULATION_DIR, meta.fpath)
-            console.log(path);
             fs.exists(path, function (exists) {
                 if (exists) {
                     if (meta.verif == true) {

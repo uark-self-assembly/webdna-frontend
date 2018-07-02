@@ -9,11 +9,10 @@ import { AuthenticationResponse } from '../auth-guard/auth.response';
 @Injectable()
 export class UserService {
   private usersUrl = ['users'];
-  private registerUrl = ['register'];
+  private registerUrl = this.usersUrl.concat('register');
 
   constructor(private requestService: RequestService) { }
 
-  // Register user method goes here
   registerUser(user: User): Promise<AuthenticationResponse | string> {
     return this.requestService.post(this.registerUrl, user);
   }
