@@ -13,9 +13,14 @@
                 <tr *ngFor="let row of projectRows">
                     <td>{{row.project.name}}</td>
                     <td>{{dateString(row.project.created_on)}}</td>
-                    <td style="cursor: pointer;">
-                        <a #hyperlink (click)="hyperlinkClicked(row.project); logmodal.open();" (mouseenter)="hyperlinkEntered(hyperlink)" (mouseleave)="hyperlinkExited(hyperlink)">View output</a>
+                    <td *ngIf="row.hasOutput" style="cursor: pointer;">
+                        <a #hyperlink (click)="hyperlinkClicked(row.project); logmodal.open();" (mouseenter)="hyperlinkEntered(hyperlink)" (mouseleave)="hyperlinkExited(hyperlink)">
+                            ({{row.executionTime}}) View Output
+                        </a>
                         <i class="glyphicon glyphicon-menu-right" style="font-size: 12px; color: #23CCEF;"></i>
+                    </td>
+                    <td *ngIf="!row.hasOutput">
+                        Never run
                     </td>
                     <td class="td-actions text-right">
                         <a *ngIf="row.running" rel="tooltip" title="Cancel" class="btn btn-default btn-simple btn-xs" (click)="projectCancelled(row)">
@@ -24,7 +29,7 @@
                         </a>
 
                         <!-- Edit button -->
-                        <a *ngIf="!row.running" rel="tooltip" title="Edit" class="btn btn-primary btn-simple btn-xs" (click)="projectClicked(row.project)">
+                        <a *ngIf="!row.running" rel="tooltip" title="Edit" class="btn btn-primary btn-simple btn-xs" (click)="editClicked(row)">
                             Edit Project
                             <i class="fa fa-edit"></i>
                         </a>

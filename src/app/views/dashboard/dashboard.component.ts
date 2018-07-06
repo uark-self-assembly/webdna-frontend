@@ -31,16 +31,21 @@ export class DashboardComponent implements OnInit {
 
   didClickBackFromConfig = (() => {
     this.editingProject = null;
+    this.isTableCurrentPage = true;
     this.currentPage = ProjectPage.TABLE;
   }).bind(this);
 
   didClickAnalysis = (() => {
+    this.isTableCurrentPage = false;
     this.currentPage = ProjectPage.ANALYSIS;
   }).bind(this);
 
   didClickBackFromAnalysis = (() => {
+    this.isTableCurrentPage = false;
     this.currentPage = ProjectPage.SETTINGS;
   }).bind(this);
+
+  isTableCurrentPage = true;
 
   constructor(private storageService: StorageService) {
 

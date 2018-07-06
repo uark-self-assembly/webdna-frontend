@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div [ngSwitch]="currentPage">
                     <div *ngSwitchCase="ProjectPage.TABLE">
-                        <project-list [user]="user" [projectClicked]="projectClicked"></project-list>
+                        <project-list [user]="user" [projectClicked]="projectClicked" [isCurrentPage]="isTableCurrentPage"></project-list>
                     </div>
 
                     <div *ngSwitchCase="ProjectPage.SETTINGS">

@@ -1,8 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { User } from '../../../services/user/user';
 import { Project } from '../../../services/project/project';
 import { ProjectService } from '../../../services/project/project.service';
-import { AuthenticationService } from '../../../services/auth-guard/auth.service';
+import { Observable } from 'rxjs/Observable';
+import { TimerObservable } from 'rxjs/observable/TimerObservable';
+import { Subscription } from 'rxjs/Subscription';
 
 declare var $: any;
 
@@ -11,7 +13,7 @@ declare var $: any;
     templateUrl: './project-list.component.html'
 })
 
-export class ProjectListComponent implements OnInit {
+export class ProjectListComponent implements OnInit, OnDestroy {
     @Input()
     user: User;
 
@@ -19,6 +21,14 @@ export class ProjectListComponent implements OnInit {
     public projectClicked: (project: Project) => void;
 
     addingProject = false;
+    editingProject = false;
+
+    @Input()
+    set isCurrentPage(value: boolean) {
+        if (value) {
+            this.editingProject = false;
+        }
+    }
 
     get firstName() {
         if (!this.user) {
@@ -41,10 +51,6 @@ export class ProjectListComponent implements OnInit {
         });
     }).bind(this);
 
-    runClicked = ((project: Project) => {
-        console.log('Do something with this ...');
-    }).bind(this);
-
     deleteClicked = ((project: Project) => {
         this.projectService.deleteProject(project).then(deleted => {
             if (deleted) {
@@ -55,13 +61,32 @@ export class ProjectListComponent implements OnInit {
         });
     }).bind(this);
 
-    constructor(
-        private authService: AuthenticationService,
-        private projectService: ProjectService) {
+    private projectsTimer: Observable<number>;
+    private projectsSubscription: Subscription;
+
+    projectClickedList = ((project: Project) => {
+        this.editingProject = true;
+        this.projectClicked(project);
+    }).bind(this);
+
+    constructor(private projectService: ProjectService) {
 
     }
 
     ngOnInit() {
+        this.projectsTimer = TimerObservable.create(0, 1000);
+        this.projectsSubscription = this.projectsTimer.subscribe(_ => {
+            if (!this.addingProject && !this.isCurrentPage) {
+                this.refreshAllProjects();
+            }
+        });
+    }
+
+    ngOnDestroy() {
+        this.projectsSubscription.unsubscribe();
+    }
+
+    refreshAllProjects() {
         this.projectService.getProjects().then(response => {
             if (typeof response === 'string') {
                 console.log(response);

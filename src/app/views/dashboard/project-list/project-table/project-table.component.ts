@@ -10,7 +10,37 @@ declare var $: any;
 
 export class ProjectRow {
     project: Project;
-    running = false;
+
+    get running() {
+        return this.project.job && !this.project.job.finish_time;
+    }
+
+    get hasOutput() {
+        return this.project.job;
+    }
+
+    get executionTime() {
+        if (this.hasOutput) {
+            if (!this.running) {
+                const finishTime = new Date(this.project.job.finish_time).getTime();
+                const startTime = new Date(this.project.job.start_time).getTime();
+                const minutes = Math.floor((finishTime - startTime) / 60000);
+
+                if (this.project.job.terminated) {
+                    return 'Terminated after ' + minutes + ' min';
+                } else {
+                    return 'Finished after ' + minutes + ' min';
+                }
+            }
+
+            const currentTime = new Date().getTime();
+            const startTime = new Date(this.project.job.start_time).getTime();
+
+            return '' + Math.floor((currentTime - startTime) / 60000) + ' min'
+        } else {
+            return 'Never run.';
+        }
+    }
 
     constructor(project: Project) {
         this.project = project;
@@ -48,7 +78,6 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
         if (this._projects) {
             this.projectRows = this._projects.map(p => new ProjectRow(p));
         }
-        this.checkRunning();
     }
 
     get projects() {
@@ -65,46 +94,40 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
 
     private projectRows: ProjectRow[] = [];
 
-    private timer: Observable<number>;
-    private subscription: Subscription;
+    private logTimer: Observable<number>;
+    private logSubscription: Subscription;
 
     constructor(private projectService: ProjectService) { }
 
     ngOnInit() {
-        this.timer = TimerObservable.create(0, 600);
-        this.subscription = this.timer.subscribe(_ => {
+        this.logTimer = TimerObservable.create(0, 600);
+        this.logSubscription = this.logTimer.subscribe(_ => {
             if (this.selectedProject !== null && this.projectRunning) {
                 this.updateLogText();
             }
         });
     }
 
-    checkRunning() {
-        for (const row of this.projectRows) {
-            this.projectService.getRunningStatus(row.project.id).then(response => {
-                if (typeof response !== 'string') {
-                    row.running = response.running;
-                }
-            }, _ => {
-                row.running = false;
-            });
-        }
-    }
-
-    setRunning(projectId: string, running: boolean) {
-        for (const row of this.projectRows) {
-            if (row.project.id === projectId) {
-                row.running = running;
-            }
-        }
-    }
-
     ngOnDestroy() {
-        this.subscription.unsubscribe();
+        this.logSubscription.unsubscribe();
     }
 
     dateString(date: Date): string {
         return moment(date).format('MMMM DD, YYYY @ h:mm a');
+    }
+
+    refreshSelectedProject() {
+        if (!this.selectedProject) {
+            return;
+        }
+
+        this.projectService.getProjectById(this.selectedProject.id).then(response => {
+            if (typeof response === 'string') {
+                this.selectedProject = null;
+            } else {
+                this.selectedProject = response;
+            }
+        });
     }
 
     updateLogText() {
@@ -114,16 +137,14 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
             } else {
                 const logResponse = response as LogResponse;
 
-                this.projectRunning = logResponse.running;
                 this.oxDNALogText = logResponse.stdout;
                 this.programLogText = logResponse.log;
 
-                this.setRunning(this.selectedProject.id, logResponse.running);
+                if (this.projectRunning !== logResponse.running) {
+                    this.refreshSelectedProject();
+                    this.projectRunning = logResponse.running;
+                }
             }
-        }, _ => {
-            this.closeModal();
-            this.projectRunning = true;
-            this.selectedProject = null;
         });
     }
 
@@ -147,10 +168,16 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     }
 
     projectCancelled(row: ProjectRow) {
-        this.projectService.stopSimulation(row.project.id).then(response => {
-            row.running = false;
-        }, _ => {
-            row.running = false;
+        this.projectService.stopSimulation(row.project.id).then(_ => {
+            this.projectService.getProjectById(row.project.id).then(response => {
+                if (typeof response !== 'string') {
+                    row.project = response;
+                }
+            });
         });
+    }
+
+    editClicked(row: ProjectRow) {
+        this.projectClicked(row.project);
     }
 }

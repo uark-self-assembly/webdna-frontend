@@ -23,6 +23,10 @@ export class ProjectService {
     return this.requestService.get(this.projectsUrl);
   }
 
+  getProjectById(projectId: string): Promise<Project | string> {
+    return this.requestService.get(this.projectsUrl.concat(projectId));
+  }
+
   createProject(project: Project): Promise<Project | string> {
     project.user = this.storageService.user.id;
     return this.requestService.post(this.projectsUrl, project, true);
@@ -34,10 +38,6 @@ export class ProjectService {
 
   deleteProject(project: Project): Promise<Project | string> {
     return this.requestService.delete(this.projectsUrl.concat(project.id), true);
-  }
-
-  getRunningStatus(projectId: string): Promise<LogResponse | string> {
-    return this.requestService.get(this.projectsUrl.concat(projectId, 'running-status'), true);
   }
 
   getCurrentOutput(projectId: string): Promise<LogResponse | string> {
