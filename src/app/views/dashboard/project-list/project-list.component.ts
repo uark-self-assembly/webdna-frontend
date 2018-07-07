@@ -5,6 +5,7 @@ import { ProjectService } from '../../../services/project/project.service';
 import { Observable } from 'rxjs/Observable';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
 import { Subscription } from 'rxjs/Subscription';
+import { ProjectPage } from '../dashboard.component';
 
 declare var $: any;
 
@@ -20,15 +21,10 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     @Input()
     public projectClicked: (project: Project) => void;
 
-    addingProject = false;
-    editingProject = false;
-
     @Input()
-    set isCurrentPage(value: boolean) {
-        if (value) {
-            this.editingProject = false;
-        }
-    }
+    currentPage: ProjectPage;
+
+    addingProject = false;
 
     get firstName() {
         if (!this.user) {
@@ -64,19 +60,14 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     private projectsTimer: Observable<number>;
     private projectsSubscription: Subscription;
 
-    projectClickedList = ((project: Project) => {
-        this.editingProject = true;
-        this.projectClicked(project);
-    }).bind(this);
-
     constructor(private projectService: ProjectService) {
 
     }
 
     ngOnInit() {
-        this.projectsTimer = TimerObservable.create(0, 1000);
+        this.projectsTimer = TimerObservable.create(0, 5000);
         this.projectsSubscription = this.projectsTimer.subscribe(_ => {
-            if (!this.addingProject && !this.isCurrentPage) {
+            if (!this.addingProject && this.currentPage === ProjectPage.TABLE) {
                 this.refreshAllProjects();
             }
         });

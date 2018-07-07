@@ -1,54 +1,54 @@
 <div class="card">
-    <div class="content table-responsive table-full-width">
-        <table class="table table-hover table-striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Created On</th>
-                    <th>Status</th>
-                    <th class="text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let row of projectRows">
-                    <td>{{row.project.name}}</td>
-                    <td>{{dateString(row.project.created_on)}}</td>
-                    <td *ngIf="row.hasOutput" style="cursor: pointer;">
-                        <a #hyperlink (click)="hyperlinkClicked(row.project); logmodal.open();" (mouseenter)="hyperlinkEntered(hyperlink)" (mouseleave)="hyperlinkExited(hyperlink)">
-                            ({{row.executionTime}}) View Output
-                        </a>
-                        <i class="glyphicon glyphicon-menu-right" style="font-size: 12px; color: #23CCEF;"></i>
-                    </td>
-                    <td *ngIf="!row.hasOutput">
-                        Never run
-                    </td>
-                    <td class="td-actions text-right">
-                        <a *ngIf="row.running" rel="tooltip" title="Cancel" class="btn btn-default btn-simple btn-xs" (click)="projectCancelled(row)">
-                            Cancel Simulation
-                            <i class="fa fa-remove"></i>
-                        </a>
+    <div class="header">
+        <h4 class="title">Projects</h4>
+    </div>
 
-                        <!-- Edit button -->
-                        <a *ngIf="!row.running" rel="tooltip" title="Edit" class="btn btn-primary btn-simple btn-xs" (click)="editClicked(row)">
-                            Edit Project
+    <div class="content content-full-width">
+        <accordion>
+            <accordion-group *ngFor="let row of projectRows" id="acc_{{row.project.id}}" (onOpen)="groupOpened(row)" (onClose)="groupClosed(row)" [isOpened]="row.project.id === openedProjectId">
+                <accordion-heading>
+                    <h5 class="content">
+                        {{row.project.name}}
+                        <small class="ml-2">{{row.executionTime}}</small>
+                        <b class="caret"></b>
+                    </h5>
+                </accordion-heading>
+                <table>
+                    <tr>
+                        <a *ngIf="row.hasOutput" rel="tooltip" title="Restart" class="btn btn-success btn-simple btn-s" (click)="restartClicked(row)">
+                            <i class="fa fa-undo"></i>
+                            Restart Simulation
+                        </a>
+                        <a *ngIf="!row.hasOutput"rel="tooltip" title="Start" class="btn btn-success btn-simple btn-s" (click)="startClicked(row)">
+                            <i class="fa fa-play"></i>
+                            Start Simulation
+                        </a>
+                        <a rel="tooltip" title="View Output" class="btn {{!row.hasOutput ? 'btn-default btn-s disabled' : 'btn-info'}} btn-simple btn-s" (click)="viewOutputClicked(row)">
+                            <i class="fa fa-terminal"></i>
+                            View Output
+                        </a>
+                        <a rel="tooltip" title="Edit" class="btn {{row.running ? 'btn-default btn-s disabled' : 'btn-primary'}} btn-simple btn-s" (click)="editClicked(row)">
                             <i class="fa fa-edit"></i>
+                            Edit
                         </a>
-
-                        <!-- Delete Button -->
-                        <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-xs" (click)="deleteClicked(row.project)">
-                            Delete Project
+                        <a *ngIf="row.running" rel="tooltip" title="Cancel" class="btn btn-default btn-simple btn-s" (click)="cancelClicked(row)">
+                            <i class="fa fa-remove"></i>
+                            Cancel
+                        </a>
+                        <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-s" (click)="deleteClicked(row.project)">
                             <i class="fa fa-trash"></i>
+                            Delete
                         </a>
-
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    </tr>
+                </table>
+            </accordion-group>
+        </accordion>
     </div>
 </div>
 <modal #logmodal (onClose)="closeModal()" cancelButtonLabel="Close" modalClass="modal-lg">
     <modal-header>
-        <h3 *ngIf="selectedProject !== null"><strong>{{selectedProject.name}}</strong> (console output)</h3>
+        <h3 *ngIf="selectedProject !== null">
+            <strong>{{selectedProject.name}}</strong> (console output)</h3>
     </modal-header>
     <modal-content (onClose)="closeModal()">
         <div class="content">

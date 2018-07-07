@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild, AfterViewChecked } from '@angular/core';
 import { Project, LogResponse } from '../../../../services/project/project';
 import { Observable } from 'rxjs/Observable';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
@@ -27,16 +27,16 @@ export class ProjectRow {
                 const minutes = Math.floor((finishTime - startTime) / 60000);
 
                 if (this.project.job.terminated) {
-                    return 'Terminated after ' + minutes + ' min';
+                    return 'Terminated: ' + minutes + ' min';
                 } else {
-                    return 'Finished after ' + minutes + ' min';
+                    return 'Finished: ' + minutes + ' min';
                 }
             }
 
             const currentTime = new Date().getTime();
             const startTime = new Date(this.project.job.start_time).getTime();
 
-            return '' + Math.floor((currentTime - startTime) / 60000) + ' min'
+            return 'Running: ' + Math.floor((currentTime - startTime) / 60000) + ' min'
         } else {
             return 'Never run.';
         }
@@ -51,7 +51,7 @@ export class ProjectRow {
     selector: 'project-table',
     templateUrl: './project-table.component.html'
 })
-export class ProjectTableComponent implements OnInit, OnDestroy {
+export class ProjectTableComponent implements OnInit, OnDestroy, AfterViewChecked {
     _projects: Project[];
 
     @ViewChild('logmodal') logmodal;
@@ -86,6 +86,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
 
     private logHeight = 500;
 
+    private openedProjectId: string;
     private outputString: string;
     private selectedProject: Project = null;
     private projectRunning = true;
@@ -108,6 +109,58 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
         });
     }
 
+    setDropdownBehavior() {
+        $('[data-toggle="collapse-hover"]').each(() => {
+            const thisdiv = $(this).attr('data-target');
+            $(thisdiv).addClass('collapse-hover');
+        });
+
+        $('[data-toggle="collapse-hover"]').hover(() => {
+            const thisdiv = $(this).attr('data-target');
+            if (!$(this).hasClass('state-open')) {
+                $(this).addClass('state-hover');
+                $(thisdiv).css({
+                    'height': '30px'
+                });
+            }
+
+        }, () => {
+            const thisdiv = $(this).attr('data-target');
+            $(this).removeClass('state-hover');
+
+            if (!$(this).hasClass('state-open')) {
+                $(thisdiv).css({
+                    'height': '0px'
+                });
+            }
+        }).click(event => {
+            event.preventDefault();
+
+            const thisdiv = $(this).attr('data-target');
+            const height = $(thisdiv).children('.panel-body').height();
+
+            if ($(this).hasClass('state-open')) {
+                $(thisdiv).css({
+                    'height': '0px',
+                });
+                $(this).removeClass('state-open');
+            } else {
+                $(thisdiv).css({
+                    'height': height + 30,
+                });
+                $(this).addClass('state-open');
+            }
+        });
+
+        if ($('.dropdown').hasClass('show-dropdown')) {
+            $('.dropdown').addClass('open');
+        }
+    }
+
+    ngAfterViewChecked() {
+        this.setDropdownBehavior();
+    }
+
     ngOnDestroy() {
         this.logSubscription.unsubscribe();
     }
@@ -128,6 +181,16 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
                 this.selectedProject = response;
             }
         });
+    }
+
+    groupOpened(row: ProjectRow) {
+        this.openedProjectId = row.project.id;
+    }
+
+    groupClosed(row: ProjectRow) {
+        if (this.openedProjectId === row.project.id) {
+            this.openedProjectId = '';
+        }
     }
 
     updateLogText() {
@@ -167,7 +230,22 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
         this.projectRunning = true;
     }
 
-    projectCancelled(row: ProjectRow) {
+    restartClicked(row: ProjectRow) {
+        // TODO (jace) restart simulation
+    }
+
+    startClicked(row: ProjectRow) {
+        // TODO (jace) start simulation
+    }
+
+    viewOutputClicked(row: ProjectRow) {
+        console.log('View output clicked on ' + row.project.id);
+        // TODO (jace) view output
+        this.hyperlinkClicked(row.project);
+        this.logmodal.open();
+    }
+
+    cancelClicked(row: ProjectRow) {
         this.projectService.stopSimulation(row.project.id).then(_ => {
             this.projectService.getProjectById(row.project.id).then(response => {
                 if (typeof response !== 'string') {

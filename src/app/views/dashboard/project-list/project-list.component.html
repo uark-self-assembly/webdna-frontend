@@ -4,7 +4,7 @@
     </span>
 </div>
 <button *ngIf="!addingProject" type="button" class="btn btn-fill btn-primary" style="margin-bottom: 20px;" (click)="addProjectClicked()">Add New Project</button>
-<project-table *ngIf="!addingProject" [projects]="projects" [projectClicked]="projectClickedList" [runClicked]="runClicked" [deleteClicked]="deleteClicked"></project-table>
+<project-table *ngIf="!addingProject" [projects]="projects" [projectClicked]="projectClicked" [runClicked]="runClicked" [deleteClicked]="deleteClicked"></project-table>
 
 <button *ngIf="addingProject" type="button" class="btn btn-default" style="margin-bottom: 20px;" (click)="cancelAddProjectClicked()">Cancel</button>
 <div *ngIf="addingProject">
