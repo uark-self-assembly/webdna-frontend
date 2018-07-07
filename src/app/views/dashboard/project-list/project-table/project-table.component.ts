@@ -10,6 +10,7 @@ declare var $: any;
 
 export class ProjectRow {
     project: Project;
+    downloading = false;
 
     get running() {
         return this.project.job && !this.project.job.finish_time;
@@ -240,7 +241,6 @@ export class ProjectTableComponent implements OnInit, OnDestroy, AfterViewChecke
 
     viewOutputClicked(row: ProjectRow) {
         console.log('View output clicked on ' + row.project.id);
-        // TODO (jace) view output
         this.hyperlinkClicked(row.project);
         this.logmodal.open();
     }
@@ -252,6 +252,22 @@ export class ProjectTableComponent implements OnInit, OnDestroy, AfterViewChecke
                     row.project = response;
                 }
             });
+        });
+    }
+
+    downloadClicked(row: ProjectRow) {
+        row.downloading = true;
+        this.projectService.downloadZipFile(row.project).then(value => {
+            const url = window.URL.createObjectURL(value.data);
+            const a = document.createElement('a');
+            document.body.appendChild(a);
+            a.setAttribute('style', 'display: none');
+            a.href = url;
+            a.download = value.fileName;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove(); // remove the element
+            row.downloading = false;
         });
     }
 

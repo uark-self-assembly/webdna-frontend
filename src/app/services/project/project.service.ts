@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Project, ProjectFileType, LogResponse } from './project';
-import { RequestService } from '../request/request.service';
+import { RequestService, FileResponse } from '../request/request.service';
 import { StorageService } from '../storage/storage.service';
 import { Response } from '@angular/http';
 
@@ -71,5 +71,9 @@ export class ProjectService {
     formData.append('type', projectFileType.toString());
 
     return this.requestService.putFile(this.filesUrl(projectId).concat('upload'), formData, true);
+  }
+
+  downloadZipFile(project: Project): Promise<FileResponse> {
+    return this.requestService.getFile(this.filesUrl(project.id).concat('zip'), project.name + '.zip', true);
   }
 }

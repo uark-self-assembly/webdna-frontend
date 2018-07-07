@@ -2,8 +2,10 @@
     <span *ngIf="firstName" class="text-muted" style="font-size: 36px; vertical-align: middle;">
         <strong>{{firstName}}'s Projects</strong>
     </span>
+
+    <button *ngIf="!addingProject" type="button" class="btn btn-fill btn-primary pull-right" style="margin-bottom: 20px;" (click)="addProjectClicked()">
+        <i class="fa fa-plus"></i> New</button>
 </div>
-<button *ngIf="!addingProject" type="button" class="btn btn-fill btn-primary" style="margin-bottom: 20px;" (click)="addProjectClicked()">Add New Project</button>
 <project-table *ngIf="!addingProject" [projects]="projects" [projectClicked]="projectClicked" [runClicked]="runClicked" [deleteClicked]="deleteClicked"></project-table>
 
 <button *ngIf="addingProject" type="button" class="btn btn-default" style="margin-bottom: 20px;" (click)="cancelAddProjectClicked()">Cancel</button>

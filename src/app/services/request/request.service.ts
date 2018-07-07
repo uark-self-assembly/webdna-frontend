@@ -1,7 +1,17 @@
-import { Headers, Http, Response, RequestOptionsArgs } from '@angular/http';
+import { Headers, Http, Response, RequestOptionsArgs, ResponseContentType } from '@angular/http';
 import { StorageService } from '../storage/storage.service';
 import { Injectable } from '@angular/core';
 
+
+export class FileResponse {
+  fileName: string;
+  data: Blob;
+
+  constructor(fileName: string, data: Blob) {
+    this.fileName = fileName;
+    this.data = data;
+  }
+}
 
 @Injectable()
 export class RequestService {
@@ -69,6 +79,14 @@ export class RequestService {
     return this.http.put(this.buildUrl(urlPieces), body, this.buildOptions(authenticated))
       .toPromise()
       .then(this.doPromiseResult);
+  }
+
+  getFile(urlPieces: string[], fileName: string = 'file', authenticated: boolean = false): Promise<FileResponse> {
+    return this.http.get(this.buildUrl(urlPieces), {
+      responseType: ResponseContentType.Blob,
+    }).map(res => {
+      return new FileResponse(fileName, res.blob());
+    }).toPromise();
   }
 
   putFile(urlPieces: string[], formData: FormData, authenticated: boolean = false): Promise<Response> {
