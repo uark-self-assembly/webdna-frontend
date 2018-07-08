@@ -38,9 +38,11 @@ export class RequestService {
     }
   }
 
-  buildHeaders(authenticated: boolean = false): Headers {
+  buildHeaders(authenticated: boolean = false, isFile: boolean = false): Headers {
     const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
+    if (!isFile) {
+      headers.append('Content-Type', 'application/json');
+    }
 
     if (authenticated) {
       const authenticationToken = this.storageService.token;
@@ -50,8 +52,8 @@ export class RequestService {
     return headers;
   }
 
-  buildOptions(authenticated: boolean = false): RequestOptionsArgs {
-    return { headers: this.buildHeaders(authenticated) };
+  buildOptions(authenticated: boolean = false, isFile: boolean = false): RequestOptionsArgs {
+    return { headers: this.buildHeaders(authenticated, isFile) };
   }
 
   doPromiseResult = <T>(response) => {
@@ -63,19 +65,19 @@ export class RequestService {
     }
   }
 
-  get<T>(urlPieces: string[], authenticated: boolean = false): Promise<T | string> {
+  get<T>(urlPieces: string[], authenticated: boolean = false): Promise<T> {
     return this.http.get(this.buildUrl(urlPieces), this.buildOptions(authenticated))
       .toPromise()
       .then(this.doPromiseResult);
   }
 
-  post<T>(urlPieces: string[], body?: any, authenticated: boolean = false): Promise<T | string> {
+  post<T>(urlPieces: string[], body?: any, authenticated: boolean = false): Promise<T> {
     return this.http.post(this.buildUrl(urlPieces), body, this.buildOptions(authenticated))
       .toPromise()
       .then(this.doPromiseResult);
   }
 
-  put<T>(urlPieces: string[], body?: any, authenticated: boolean = false): Promise<T | string> {
+  put<T>(urlPieces: string[], body?: any, authenticated: boolean = false): Promise<T> {
     return this.http.put(this.buildUrl(urlPieces), body, this.buildOptions(authenticated))
       .toPromise()
       .then(this.doPromiseResult);
@@ -84,16 +86,17 @@ export class RequestService {
   getFile(urlPieces: string[], fileName: string = 'file', authenticated: boolean = false): Promise<FileResponse> {
     return this.http.get(this.buildUrl(urlPieces), {
       responseType: ResponseContentType.Blob,
+      headers: this.buildHeaders(authenticated, true)
     }).map(res => {
       return new FileResponse(fileName, res.blob());
     }).toPromise();
   }
 
   putFile(urlPieces: string[], formData: FormData, authenticated: boolean = false): Promise<Response> {
-    return this.http.put(this.buildUrl(urlPieces), formData).toPromise();
+    return this.http.put(this.buildUrl(urlPieces), formData, this.buildOptions(authenticated, true)).toPromise();
   }
 
-  delete<T>(urlPieces: string[], authenticated: boolean = false): Promise<T | string> {
+  delete<T>(urlPieces: string[], authenticated: boolean = false): Promise<T> {
     return this.http.delete(this.buildUrl(urlPieces), this.buildOptions(authenticated))
       .toPromise()
       .then(this.doPromiseResult);

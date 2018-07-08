@@ -13,11 +13,7 @@ export class UserService {
 
   constructor(private requestService: RequestService) { }
 
-  registerUser(user: User): Promise<AuthenticationResponse | string> {
+  registerUser(user: User): Promise<AuthenticationResponse> {
     return this.requestService.post(this.registerUrl, user);
-  }
-
-  getUsers(): Promise<User[] | string> {
-    return this.requestService.get(this.usersUrl, true);
   }
 }

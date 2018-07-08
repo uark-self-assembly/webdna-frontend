@@ -41,7 +41,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
             if (typeof response === 'string') {
                 console.log(response);
             } else {
-                this.projects.push(response as Project);
+                this.projects.unshift(response);
                 this.addingProject = false;
             }
         });

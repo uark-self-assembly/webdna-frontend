@@ -22,21 +22,21 @@ export class AuthenticationService {
 
   constructor(
     private requestService: RequestService,
-    private storageService: StorageService) {}
+    private storageService: StorageService) { }
 
   /********************************************************
   **  authenticateUser(user:User)
   **
   **  Sends username and password to API to authenticate
   ********************************************************/
-  authenticateUser(username: string, password: string): Promise<AuthenticationResponse | string> {
+  authenticateUser(username: string, password: string): Promise<AuthenticationResponse> {
     const body = {
       'username': username,
       'password': password
     }
 
     return this.requestService.post(this.loginUrl, body)
-      .then<AuthenticationResponse | string>((response: AuthenticationResponse | string) => {
+      .then((response: AuthenticationResponse) => {
         if (typeof response !== 'string') {
           const authentication = response as AuthenticationResponse;
           this.storageService.setAuthentication(authentication);

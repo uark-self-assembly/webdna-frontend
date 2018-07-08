@@ -17,34 +17,46 @@ export class ProjectService {
     return this.projectsUrl.concat(projectId, 'files');
   }
 
+  projectMapper(value: Project) {
+    return new Project(value);
+  }
+
+  projectArrayMapper(value: Project[]) {
+    if (value) {
+      return value.map(val => new Project(val));
+    } else {
+      return [];
+    }
+  }
+
   constructor(private requestService: RequestService, private storageService: StorageService) { }
 
-  getProjects(): Promise<Project[] | string> {
-    return this.requestService.get(this.projectsUrl);
+  getProjects(): Promise<Project[]> {
+    return this.requestService.get(this.projectsUrl, true).then(this.projectArrayMapper);
   }
 
-  getProjectById(projectId: string): Promise<Project | string> {
-    return this.requestService.get(this.projectsUrl.concat(projectId));
+  getProjectById(projectId: string): Promise<Project> {
+    return this.requestService.get(this.projectsUrl.concat(projectId), true).then(this.projectMapper);
   }
 
-  createProject(project: Project): Promise<Project | string> {
+  createProject(project: Project): Promise<Project> {
     project.user = this.storageService.user.id;
-    return this.requestService.post(this.projectsUrl, project, true);
+    return this.requestService.post(this.projectsUrl, project, true).then(this.projectMapper);
   }
 
-  updateProject(project: Project): Promise<Project | string> {
-    return this.requestService.put(this.projectsUrl.concat(project.id), project, true);
+  updateProject(project: Project): Promise<Project> {
+    return this.requestService.put(this.projectsUrl.concat(project.id), project, true).then(this.projectMapper);
   }
 
-  deleteProject(project: Project): Promise<Project | string> {
-    return this.requestService.delete(this.projectsUrl.concat(project.id), true);
+  deleteProject(project: Project): Promise<Project> {
+    return this.requestService.delete(this.projectsUrl.concat(project.id), true).then(this.projectMapper);
   }
 
-  getCurrentOutput(projectId: string): Promise<LogResponse | string> {
+  getCurrentOutput(projectId: string): Promise<LogResponse> {
     return this.requestService.get(this.projectsUrl.concat(projectId, 'current-output'), true);
   }
 
-  getSettings(projectId: string): Promise<object | string> {
+  getSettings(projectId: string): Promise<object> {
     return this.requestService.get(this.settingsUrl(projectId), true);
   }
 

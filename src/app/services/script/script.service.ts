@@ -12,7 +12,7 @@ export class ScriptService {
 
   }
 
-  getScripts(): Promise<Script[] | string> {
+  getScripts(): Promise<Script[]> {
     return this.requestService.get(this.scriptsUrl, true);
   }
 
@@ -45,7 +45,7 @@ export class ScriptService {
     return this.requestService.post(this.scriptsUrl.concat('setscriptchain'), body, true);
   }
 
-  getAnalysisLog(projectId: string): Promise<string[] | string> {
+  getAnalysisLog(projectId: string): Promise<string[]> {
     return this.requestService.get(this.scriptsUrl.concat('userlog', '?project_id=' + projectId), true)
   }
 
