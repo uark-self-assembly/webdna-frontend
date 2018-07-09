@@ -132,6 +132,8 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     closeModal() {
         this.logModal.close();
         this.logOpen = false;
+        this.oxDNALogText = '';
+        this.programLogText = '';
     }
 
     startSimulation(row: ProjectRow) {
