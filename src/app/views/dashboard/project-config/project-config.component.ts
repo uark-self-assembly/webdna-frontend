@@ -251,6 +251,7 @@ export class ProjectConfigComponent implements OnInit {
     buildResults() {
         this.result['refresh_vel'] = 1;
         this.result['box_size'] = this.boxSize;
+        this.result['generation_method'] = 'generate-sa';
         for (const option of this.genericOptions) {
             if (option.optionType === SimulationOptionType.CHOICE) {
                 this.result[option.propertyName] = option.value[0];
