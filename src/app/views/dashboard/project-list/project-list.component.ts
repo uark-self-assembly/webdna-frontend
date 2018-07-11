@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { User } from '../../../services/user/user';
-import { Project } from '../../../services/project/project';
-import { ProjectService } from '../../../services/project/project.service';
+import { Project } from 'app/services/project/project';
+import { ProjectService } from 'app/services/project/project.service';
 import { Observable } from 'rxjs/Observable';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
 import { Subscription } from 'rxjs/Subscription';
-import { ProjectPage } from '../dashboard.component';
+import { ProjectPage } from 'app/views/dashboard/dashboard.component';
+import { StorageService } from 'app/services/storage/storage.service';
+import { User } from 'app/services/user/user';
 
 declare var $: any;
 
@@ -16,23 +17,12 @@ declare var $: any;
 
 export class ProjectListComponent implements OnInit, OnDestroy {
     @Input()
-    user: User;
-
-    @Input()
     public projectClicked: (project: Project) => void;
 
     @Input()
     currentPage: ProjectPage;
 
     addingProject = false;
-
-    get firstName() {
-        if (!this.user) {
-            return '';
-        } else {
-            return this.user.first_name;
-        }
-    }
 
     projects: Project[];
 
@@ -57,10 +47,28 @@ export class ProjectListComponent implements OnInit, OnDestroy {
         });
     }).bind(this);
 
+    duplicateClicked = ((project: Project) => {
+        this.projectService.duplicateProject(project.id).then(response => {
+            console.log('duplicated');
+            console.log(response);
+            this.projects.unshift(response);
+            const tempProjects = this.projects;
+            this.projects = new Array<Project>();
+            tempProjects.forEach(p => this.projects.push(p));
+            console.log(this.projects);
+        });
+    }).bind(this);
+
+    get user(): User {
+        return this.storageService.user;
+    }
+
     private projectsTimer: Observable<number>;
     private projectsSubscription: Subscription;
 
-    constructor(private projectService: ProjectService) {
+    constructor(
+        private storageService: StorageService,
+        private projectService: ProjectService) {
 
     }
 

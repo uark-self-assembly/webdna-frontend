@@ -88,4 +88,8 @@ export class ProjectService {
   downloadZipFile(project: Project): Promise<FileResponse> {
     return this.requestService.getFile(this.filesUrl(project.id).concat('zip'), project.name + '.zip', true);
   }
+
+  duplicateProject(projectId: string): Promise<Project> {
+    return this.requestService.get(this.projectsUrl.concat(projectId, 'duplicate'), true).then(this.projectMapper);
+  }
 }

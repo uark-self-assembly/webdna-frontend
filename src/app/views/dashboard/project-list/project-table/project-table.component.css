@@ -1,0 +1,9 @@
+h5.background-hover:hover {
+    background: #eee;
+    margin-top: 0px;
+    padding-top: 25px;
+    margin-bottom: 0px;
+    padding-bottom: 30px;
+    border-top-width: 1px;
+    border-top-color: #dddddd;
+}

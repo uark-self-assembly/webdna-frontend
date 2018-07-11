@@ -20,7 +20,8 @@ export class ProjectRow {
 
 @Component({
     selector: 'project-table',
-    templateUrl: './project-table.component.html'
+    templateUrl: './project-table.component.html',
+    styleUrls: ['./project-table.component.css']
 })
 export class ProjectTableComponent implements OnInit, OnDestroy {
     _projects: Project[];
@@ -37,7 +38,11 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     deleteClicked: (project: Project) => void;
 
     @Input()
+    duplicateClicked: (project: Project) => void;
+
+    @Input()
     set projects(newProjects) {
+        console.log('setter ' + newProjects);
         if (newProjects) {
             newProjects.forEach(project => {
                 project.created_on = new Date(project.created_on);
@@ -59,9 +64,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     private logOpen = false;
 
     private openedProjectId: string;
-    private outputString: string;
-    private selectedProject: Project = null;
-    private projectRunning = true;
+    private selectedRow: ProjectRow = null;
     private oxDNALogText = '';
     private programLogText = '';
 
@@ -75,7 +78,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.logTimer = TimerObservable.create(0, 600);
         this.logSubscription = this.logTimer.subscribe(_ => {
-            if (this.selectedProject !== null && this.projectRunning && this.logOpen) {
+            if (this.selectedRow && this.selectedRow.project.running && this.logOpen) {
                 this.updateLogText();
             }
         });
@@ -86,33 +89,33 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     }
 
     refreshSelectedProject() {
-        if (!this.selectedProject) {
+        if (!this.selectedRow) {
             return;
         }
 
-        this.projectService.getProjectById(this.selectedProject.id).then(response => {
+        this.projectService.getProjectById(this.selectedRow.project.id).then(response => {
             if (typeof response === 'string') {
-                this.selectedProject = null;
+                this.selectedRow = null;
             } else {
-                this.selectedProject = response;
+                this.selectedRow.project = response;
             }
         });
     }
 
     groupOpened(row: ProjectRow) {
         this.openedProjectId = row.project.id;
-        this.selectedProject = row.project;
+        this.selectedRow = row;
     }
 
     groupClosed(row: ProjectRow) {
         if (this.openedProjectId === row.project.id) {
             this.openedProjectId = '';
-            this.selectedProject = null;
+            this.selectedRow = null;
         }
     }
 
     updateLogText() {
-        this.projectService.getCurrentOutput(this.selectedProject.id).then(response => {
+        this.projectService.getCurrentOutput(this.selectedRow.project.id).then(response => {
             if (typeof response === 'string') {
                 this.oxDNALogText = 'No logs found for this project.';
             } else {
@@ -121,9 +124,8 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
                 this.oxDNALogText = logResponse.stdout;
                 this.programLogText = logResponse.log;
 
-                if (this.projectRunning !== logResponse.running) {
+                if (this.selectedRow.project.running !== logResponse.running) {
                     this.refreshSelectedProject();
-                    this.projectRunning = logResponse.running;
                 }
             }
         });
@@ -167,9 +169,10 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     }
 
     viewOutputClicked(row: ProjectRow) {
-        console.log('View output clicked on ' + row.project.id);
         this.logOpen = true;
         this.logModal.open();
+        this.selectedRow = row;
+        this.updateLogText();
     }
 
     cancelClicked(row: ProjectRow) {

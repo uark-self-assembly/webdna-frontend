@@ -1,12 +1,14 @@
 <div class="row" style="padding-left: 16px; padding-bottom: 8px;">
     <span *ngIf="firstName" class="text-muted" style="font-size: 36px; vertical-align: middle;">
-        <strong>{{firstName}}'s Projects</strong>
+        <strong *ngIf="user && user.firstName">{{firstName}}'s Projects</strong>
+        <strong *ngIf="!user || !user.firstName">Projects</strong>
     </span>
+    
 
     <button *ngIf="!addingProject" type="button" class="btn btn-fill btn-primary pull-right" style="margin-bottom: 20px;" (click)="addProjectClicked()">
         <i class="fa fa-plus"></i> New</button>
 </div>
-<project-table *ngIf="!addingProject" [projects]="projects" [projectClicked]="projectClicked" [runClicked]="runClicked" [deleteClicked]="deleteClicked"></project-table>
+<project-table *ngIf="!addingProject" [projects]="projects" [projectClicked]="projectClicked" [runClicked]="runClicked" [deleteClicked]="deleteClicked" [duplicateClicked]="duplicateClicked"></project-table>
 
 <button *ngIf="addingProject" type="button" class="btn btn-default" style="margin-bottom: 20px;" (click)="cancelAddProjectClicked()">Cancel</button>
 <div *ngIf="addingProject">
