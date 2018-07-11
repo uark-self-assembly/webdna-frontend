@@ -68,12 +68,12 @@ export class ProjectService {
     return this.requestService.get(this.projectsUrl.concat(projectId, 'generate-visualization'), true);
   }
 
-  runSimulation(projectId: string, regenerate: boolean = false): Promise<string> {
+  execute(projectId: string, regenerate: boolean = false): Promise<string> {
     const url = this.simulationUrl(projectId).concat('execute', '?regenerate=' + regenerate);
     return this.requestService.get(url, true);
   }
 
-  stopSimulation(projectId: string): Promise<string> {
+  terminate(projectId: string): Promise<string> {
     return this.requestService.get(this.simulationUrl(projectId).concat('terminate'), true);
   }
 

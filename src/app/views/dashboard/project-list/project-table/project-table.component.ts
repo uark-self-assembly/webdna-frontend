@@ -139,7 +139,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     }
 
     startSimulation(row: ProjectRow) {
-        this.projectService.runSimulation(row.project.id, false).then(_ => {
+        this.projectService.execute(row.project.id, false).then(_ => {
             this.projectService.getProjectById(row.project.id).then(response => {
                 if (typeof response !== 'string') {
                     row.project = response;
@@ -153,7 +153,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     restartClicked(row: ProjectRow) {
         row.restarting = true;
         if (row.project.running) {
-            this.projectService.stopSimulation(row.project.id).then(_ => {
+            this.projectService.terminate(row.project.id).then(_ => {
                 this.startSimulation(row);
             }, error => {
                 this.startSimulation(row);
@@ -176,7 +176,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     }
 
     cancelClicked(row: ProjectRow) {
-        this.projectService.stopSimulation(row.project.id).then(_ => {
+        this.projectService.terminate(row.project.id).then(_ => {
             this.projectService.getProjectById(row.project.id).then(response => {
                 if (typeof response !== 'string') {
                     row.project = response;

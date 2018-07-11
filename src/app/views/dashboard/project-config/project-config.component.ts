@@ -344,7 +344,7 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     execute() {
-        this.projectService.runSimulation(this.project.id, this.shouldRegenerate).then(response => {
+        this.projectService.execute(this.project.id, this.shouldRegenerate).then(response => {
             console.log(response);
             this.backClicked();
         });
