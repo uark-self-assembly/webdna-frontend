@@ -1,0 +1,26 @@
+.content-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.content-container {
+    position: absolute;
+    top: 60px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.content-sidenav {
+    width: 200px;
+}
+
+.toolbar-fill-remaining-space {
+    flex: 1 1 auto;
+}
+
+.sidenav-content-container {
+    padding: 30px;
+}

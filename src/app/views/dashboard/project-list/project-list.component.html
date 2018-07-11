@@ -1,16 +1,18 @@
-<div class="row" style="padding-left: 16px; padding-bottom: 8px;">
-    <span *ngIf="firstName" class="text-muted" style="font-size: 36px; vertical-align: middle;">
-        <strong *ngIf="user && user.firstName">{{firstName}}'s Projects</strong>
-        <strong *ngIf="!user || !user.firstName">Projects</strong>
+<div class="row project-list-header">
+    <span class="text-muted project-list-header-title">
+        <strong *ngIf="user && user.first_name">{{user.first_name}}'s Projects</strong>
+        <strong *ngIf="!user || !user.first_name">Projects</strong>
     </span>
-    
 
-    <button *ngIf="!addingProject" type="button" class="btn btn-fill btn-primary pull-right" style="margin-bottom: 20px;" (click)="addProjectClicked()">
+
+    <button mat-raised-button color="primary" *ngIf="!addingProject" type="button" class="pull-right"
+        (click)="addProjectClicked()">
         <i class="fa fa-plus"></i> New</button>
 </div>
-<project-table *ngIf="!addingProject" [projects]="projects" [projectClicked]="projectClicked" [runClicked]="runClicked" [deleteClicked]="deleteClicked" [duplicateClicked]="duplicateClicked"></project-table>
+<project-table *ngIf="!addingProject" [projects]="projects" [projectClicked]="projectClicked" [runClicked]="runClicked" [deleteClicked]="deleteClicked"
+    [duplicateClicked]="duplicateClicked"></project-table>
 
-<button *ngIf="addingProject" type="button" class="btn btn-default" style="margin-bottom: 20px;" (click)="cancelAddProjectClicked()">Cancel</button>
+<button mat-button *ngIf="addingProject" type="button" style="margin-bottom: 20px;" (click)="cancelAddProjectClicked()">Cancel</button>
 <div *ngIf="addingProject">
     <project-add [addProjectConfirmed]="addProjectConfirmed"></project-add>
 </div>

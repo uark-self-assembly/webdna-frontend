@@ -39,7 +39,10 @@ export class AuthenticationService {
       .then((response: AuthenticationResponse) => {
         if (typeof response !== 'string') {
           const authentication = response as AuthenticationResponse;
+          console.log(authentication);
           this.storageService.setAuthentication(authentication);
+          console.log(this.storageService.token);
+          console.log(this.storageService.user);
         }
 
         return response;

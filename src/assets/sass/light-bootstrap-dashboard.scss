@@ -10,16 +10,12 @@
  *
  * ========================================================= */
 
-
 // variables and mixins
 @import "lbd/variables";
 @import "lbd/mixins";
-
-
 //plugins css
 @import "lbd/plugins/animate";
 @import "lbd/plugins/sweetalert2";
-
 @import "lbd/plugins/jquery.jvectormap";
 @import "lbd/plugins/bootstrap-table";
 @import "lbd/plugins/datatables.net";
@@ -30,8 +26,6 @@
 @import "lbd/plugins/fixed-plugin";
 @import "lbd/plugins/nouislider";
 @import "lbd/plugins/tags";
-
-
 // Core CSS
 @import "lbd/typography";
 @import "lbd/sidebar-and-main-panel";
@@ -47,22 +41,15 @@
 @import "lbd/checkbox-radio-switch";
 @import "lbd/navbars";
 @import "lbd/footers";
-
-
 // Fancy Stuff
 @import "lbd/social-buttons";
 @import "lbd/dropdown";
-
 @import "lbd/cards";
-
 @import "lbd/collapse";
 @import "lbd/carousel";
-
 @import "lbd/plugins/datetime-picker";
-
 // SCSS for Pages
 @import "lbd/pages.scss";
-
 // Responsive adjustments
 @import "lbd/responsive";
 @import "lbd/tabs-navs-pagination";

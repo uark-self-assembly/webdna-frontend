@@ -1,71 +1,75 @@
-<div class="card">
-    <div class="content content-full-width">
-        <accordion>
-            <accordion-group *ngFor="let row of projectRows" id="acc_{{row.project.id}}" (onOpen)="groupOpened(row)" (onClose)="groupClosed(row)"
-                [isOpened]="row.project.id === openedProjectId">
-                <accordion-heading style="cursor: pointer;">
-                    <h5 class="content background-hover">
-                        {{row.project.name}}
-                        <small class="ml-2">{{row.project.executionTime}}</small>
-                        <b class="caret"></b>
-                    </h5>
-                </accordion-heading>
-                <div class="table-responsive">
-                    <table class="table">
-                        <tr>
-                            <a *ngIf="row.project.hasOutput && !row.restarting" rel="tooltip" title="Restart" class="btn btn-primary btn-simple btn-s" (click)="restartClicked(row)">
-                                <i class="fa fa-undo"></i>
-                                Restart Simulation
-                            </a>
-                            <a *ngIf="row.project.hasOutput && row.restarting" rel="tooltip" title="Restart" class="btn btn-default btn-simple btn-s" (click)="restartClicked(row)">
-                                <i class="fa fa-undo"></i>
-                                Restarting...
-                            </a>
-                            <a *ngIf="!row.project.hasOutput && !row.starting" rel="tooltip" title="Start" class="btn btn-success btn-simple btn-s" (click)="startClicked(row)">
-                                <i class="fa fa-play"></i>
-                                Start Simulation
-                            </a>
-                            <a *ngIf="!row.project.hasOutput && row.starting" rel="tooltip" title="Start" class="btn btn-primary btn-simple btn-s" (click)="startClicked(row)">
-                                <i class="fa fa-play"></i>
-                                Starting...
-                            </a>
-                            <a rel="tooltip" title="View Output" class="btn {{!row.project.hasOutput ? 'btn-default btn-s disabled' : 'btn-primary'}} btn-simple btn-s"
-                                (click)="viewOutputClicked(row)">
-                                <i class="fa fa-terminal"></i>
-                                View Output
-                            </a>
-                            <a rel="tooltip" title="Edit" class="btn {{row.project.running ? 'btn-default btn-s disabled' : 'btn-primary'}} btn-simple btn-s"
-                                (click)="editClicked(row)">
-                                <i class="fa fa-edit"></i>
-                                Edit
-                            </a>
-                            <a *ngIf="row.project.running" rel="tooltip" title="Cancel" class="btn btn-default btn-simple btn-s" (click)="cancelClicked(row)">
-                                <i class="fa fa-remove"></i>
-                                Cancel
-                            </a>
-                            <a *ngIf="!row.project.running && !row.downloading" rel="tooltip" title="Download" class="btn btn-primary btn-simple btn-s" (click)="downloadClicked(row)">
-                                <i class="fa fa-download"></i>
-                                Download
-                            </a>
-                            <a *ngIf="!row.project.running && row.downloading" rel="tooltip" title="Download" class="btn btn-default btn-simple btn-s disabled">
-                                <i class="fa fa-download"></i>
-                                Downloading...
-                            </a>
-                            <a *ngIf="!row.project.running && !row.downloading" rel="tooltip" title="Duplicate" class="btn btn-primary btn-simple btn-s" (click)="duplicateClicked(row.project)">
-                                <i class="fa fa-clone"></i>
-                                Duplicate
-                            </a>
-                            <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-s" (click)="deleteClicked(row.project)">
-                                <i class="fa fa-trash"></i>
-                                Delete
-                            </a>
-                        </tr>
-                    </table>
-                </div>
-            </accordion-group>
-        </accordion>
-    </div>
-</div>
+<mat-accordion>
+    <mat-expansion-panel class="project-table-item" *ngFor="let row of projectRows" id="acc_{{row.project.id}}" (opened)="groupOpened(row)"
+        (closed)="groupClosed(row)" [expanded]="row.project.id === openedProjectId">
+        <mat-expansion-panel-header class="project-table-item right-aligned-header">
+            <mat-panel-title class="project-table-item">
+                {{row.project.name}}
+            </mat-panel-title>
+            <mat-panel-description>
+                {{row.project.executionTime}}
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+
+
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <a *ngIf="row.project.hasOutput && !row.restarting" rel="tooltip" title="Restart" class="btn btn-primary btn-simple btn-s"
+                        (click)="restartClicked(row)">
+                        <i class="fa fa-undo"></i>
+                        Restart Simulation
+                    </a>
+                    <a *ngIf="row.project.hasOutput && row.restarting" rel="tooltip" title="Restart" class="btn btn-default btn-simple btn-s"
+                        (click)="restartClicked(row)">
+                        <i class="fa fa-undo"></i>
+                        Restarting...onClose
+                    </a>
+                    <a *ngIf="!row.project.hasOutput && !row.starting" rel="tooltip" title="Start" class="btn btn-success btn-simple btn-s" (click)="startClicked(row)">
+                        <i class="fa fa-play"></i>
+                        Start Simulation
+                    </a>
+                    <a *ngIf="!row.project.hasOutput && row.starting" rel="tooltip" title="Start" class="btn btn-primary btn-simple btn-s" (click)="startClicked(row)">
+                        <i class="fa fa-play"></i>
+                        Starting...
+                    </a>
+                    <a rel="tooltip" title="View Output" class="btn {{!row.project.hasOutput ? 'btn-default btn-s disabled' : 'btn-primary'}} btn-simple btn-s"
+                        (click)="viewOutputClicked(row)">
+                        <i class="fa fa-terminal"></i>
+                        View Output
+                    </a>
+                    <a rel="tooltip" title="Edit" class="btn {{row.project.running ? 'btn-default btn-s disabled' : 'btn-primary'}} btn-simple btn-s"
+                        (click)="editClicked(row)">
+                        <i class="fa fa-edit"></i>
+                        Edit
+                    </a>
+                    <a *ngIf="row.project.running" rel="tooltip" title="Cancel" class="btn btn-default btn-simple btn-s" (click)="cancelClicked(row)">
+                        <i class="fa fa-remove"></i>
+                        Cancel
+                    </a>
+                    <a *ngIf="!row.project.running && !row.downloading" rel="tooltip" title="Download" class="btn btn-primary btn-simple btn-s"
+                        (click)="downloadClicked(row)">
+                        <i class="fa fa-download"></i>
+                        Download
+                    </a>
+                    <a *ngIf="!row.project.running && row.downloading" rel="tooltip" title="Download" class="btn btn-default btn-simple btn-s disabled">
+                        <i class="fa fa-download"></i>
+                        Downloading...
+                    </a>
+                    <a *ngIf="!row.project.running && !row.downloading" rel="tooltip" title="Duplicate" class="btn btn-primary btn-simple btn-s"
+                        (click)="duplicateClicked(row.project)">
+                        <i class="fa fa-clone"></i>
+                        Duplicate
+                    </a>
+                    <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-s" (click)="deleteClicked(row.project)">
+                        <i class="fa fa-trash"></i>
+                        Delete
+                    </a>
+                </tr>
+            </table>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>
+
 <modal #logmodal (onClose)="closeModal()" cancelButtonLabel="Close" modalClass="modal-lg">
     <modal-header>
         <h3 *ngIf="selectedRow">

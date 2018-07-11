@@ -1,13 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // this is needed!
-import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
-import { APP_BASE_HREF } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 import { AppComponent } from './app.component';
-import { AdminLayoutComponent } from './views/layouts/admin/admin-layout.component';
 
 import { DropdownModule } from 'ngx-dropdown';
 import { AccordionModule } from 'ngx-accordion';
@@ -29,7 +26,11 @@ import { AlertService } from './views/components/alert/alert.service';
 import { RequestService } from './services/request/request.service';
 import { StorageService } from './services/storage/storage.service';
 import { ScriptService } from './services/script/script.service';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { DashboardLayoutComponent } from './views/layout/dashboard-layout.component';
 
 
 @NgModule({
@@ -45,11 +46,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         DropdownModule,
         AccordionModule,
         AngularDateTimePickerModule,
-        MatTooltipModule
+        MatToolbarModule,
+        MatSidenavModule,
+        MatButtonModule,
+        MatIconModule
     ],
     declarations: [
         AppComponent,
-        AdminLayoutComponent,
+        DashboardLayoutComponent,
         AuthLayoutComponent,
         PageNotFoundComponent
     ],

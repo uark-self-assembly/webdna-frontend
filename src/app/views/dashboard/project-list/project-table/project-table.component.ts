@@ -42,7 +42,6 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
 
     @Input()
     set projects(newProjects) {
-        console.log('setter ' + newProjects);
         if (newProjects) {
             newProjects.forEach(project => {
                 project.created_on = new Date(project.created_on);

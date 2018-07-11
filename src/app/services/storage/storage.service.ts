@@ -6,8 +6,8 @@ import { AuthenticationResponse } from '../auth-guard/auth.response';
 @Injectable()
 export class StorageService {
 
-    private static TOKEN_KEY = 'lovelace_jwt_id';
-    private static USER_KEY = 'lovelace_user';
+    private static TOKEN_KEY = 'webdna_jwt_id';
+    private static USER_KEY = 'webdna_user';
 
     constructor() {}
 

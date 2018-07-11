@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AdminLayoutComponent } from './views/layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './views/layouts/auth/auth-layout.component';
 import { PageNotFoundComponent } from './views/page-not-found.component';
 import { AuthGuard } from './services/auth-guard/auth.guard';
+import { DashboardLayoutComponent } from './views/layout/dashboard-layout.component';
 
 export const AppRoutes: Routes = [
     { path: '', redirectTo: '/register', pathMatch: 'full' },
@@ -26,14 +26,10 @@ export const AppRoutes: Routes = [
     },
     {
         path: '',
-        component: AdminLayoutComponent,
+        component: DashboardLayoutComponent,
         children: [{
             path: '',
             loadChildren: './views/dashboard/dashboard.module#DashboardModule'
-        },
-        {
-            path: '',
-            loadChildren: './views/visualizer/visualizer.module#VisualizerModule'
         },
         { path: '**', component: PageNotFoundComponent }]
     }];

@@ -14,222 +14,219 @@
         <span class="glyphicon glyphicon-menu-right"></span>
     </button>
 </div>
+<button *ngIf="!loading" class="btn btn-fill btn-success pull-right" style="margin: 8px;" (click)="runSimulation()">Run Simulation
+    <span class="glyphicon glyphicon-menu-right"></span>
+</button>
 
-<div class="container-fluid">
-    <button *ngIf="!loading" class="btn btn-fill btn-success pull-right" style="margin: 8px;" (click)="runSimulation()">Run Simulation
-        <span class="glyphicon glyphicon-menu-right"></span>
-    </button>
+<button *ngIf="loading" class="btn btn-fill pull-right" style="margin: 8px;" (click)="runSimulation()">Setting up simulation (please wait)...
+</button>
 
-    <button *ngIf="loading" class="btn btn-fill pull-right" style="margin: 8px;" (click)="runSimulation()">Setting up simulation (please wait)...
-    </button>
+<div class="card" style="min-height: 54px;">
+    <div class="header">
+        <h4 class="title">Simulation Settings</h4>
+    </div>
 
-    <div class="card" style="min-height: 54px;">
-        <div class="header">
-            <h4 class="title">Simulation Settings</h4>
-        </div>
+    <div class="content content-full-width">
+        <div class="panel-group" id="accordion">
+            <!-- GENERATION OPTIONS -->
+            <div class="panel panel-default">
+                <div class="panel-heading" style="cursor: pointer;">
+                    <h4 class="panel-title">
+                        <a data-target="#collapseZeroHover" data-toggle="collapse-hover">
+                            Generation Options
+                            <b class="caret"></b>
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseZeroHover" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <form>
+                            <div class="form-group">
+                                <label>Sequence File</label>
+                                <br>
+                                <span class="btn btn-default">
+                                    <input type="file" (change)="fileChange($event)" placeholder="Upload Sequence File" accept=".txt,*" />
+                                </span>
+                            </div>
 
-        <div class="content content-full-width">
-            <div class="panel-group" id="accordion">
-                <!-- GENERATION OPTIONS -->
-                <div class="panel panel-default">
-                    <div class="panel-heading" style="cursor: pointer;">
-                        <h4 class="panel-title">
-                            <a data-target="#collapseZeroHover" data-toggle="collapse-hover">
-                                Generation Options
-                                <b class="caret"></b>
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseZeroHover" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <form>
-                                <div class="form-group">
-                                    <label>Sequence File</label>
-                                    <br>
-                                    <span class="btn btn-default">
-                                        <input type="file" (change)="fileChange($event)" placeholder="Upload Sequence File" accept=".txt,*" />
-                                    </span>
+                            <div class="form-group">
+                                <label>Box Size</label>
+                                <input type="number" [(ngModel)]="boxSize" placeholder="Box Size" name="option_boxsize" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Regenerate Initial Topology</label>
+                                <div class="bootstrap-switch-container">
+                                    <bSwitch [switch-on-color]="'primary'" [switch-on-text]="'YES'" [switch-off-text]="'NO'" [(ngModel)]="shouldRegenerate" name="option_shouldRegenerate"></bSwitch>
                                 </div>
-
-                                <div class="form-group">
-                                    <label>Box Size</label>
-                                    <input type="number" [(ngModel)]="boxSize" placeholder="Box Size" name="option_boxsize" class="form-control">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Regenerate Initial Topology</label>
-                                    <div class="bootstrap-switch-container">
-                                        <bSwitch [switch-on-color]="'primary'" [switch-on-text]="'YES'" [switch-off-text]="'NO'" [(ngModel)]="shouldRegenerate" name="option_shouldRegenerate"></bSwitch>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-
-                <!-- GENERIC OPTIONS -->
-                <div class="panel panel-default">
-                    <div class="panel-heading" style="cursor: pointer;">
-                        <h4 class="panel-title">
-                            <a data-target="#collapseOneHover" data-toggle="collapse-hover">
-                                Generic Options
-                                <b class="caret"></b>
-                            </a>
-                        </h4>
-
-                    </div>
-                    <div id="collapseOneHover" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <form>
-                                <div class="form-group" *ngFor="let option of genericOptions">
-                                    <label>{{option.displayText}}</label>
-                                    <div [ngSwitch]="option.optionType">
-                                        <!-- for string options -->
-                                        <input *ngSwitchCase="SimulationOptionType.STRING" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
-                                            class="form-control">
-
-                                        <!-- for multi choice options -->
-                                        <div *ngSwitchCase="SimulationOptionType.CHOICE" class="dropdown" dropdown>
-                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdown_{{option.propertyName}}" dropdown-open>
-                                                {{option.value[1]}}
-                                                <span class="caret"></span>
-                                            </button>
-
-                                            <ul class="dropdown-menu">
-                                                <li *ngFor="let choice of option.choices">
-                                                    <a (click)="choose(option, choice)" style="min-height: 36px;">{{choice[1]}}</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-
-                                        <!-- for on/off options (BOOLEAN) -->
-                                        <div *ngSwitchCase="SimulationOptionType.BOOLEAN" class="bootstrap-switch-container">
-                                            <bSwitch [switch-on-color]="'primary'" [(ngModel)]="option.value" (keyup)="option.validate(optionsMap)" name="option_{{option.propertyName}}"></bSwitch>
-                                        </div>
-
-                                        <input *ngSwitchCase="SimulationOptionType.INTEGER" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
-                                            placeholder="{{option.displayText}}" class="form-control">
-
-                                        <input *ngSwitchCase="SimulationOptionType.FLOAT" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
-                                            placeholder="{{option.displayText}}" class="form-control">
-
-                                        <!-- default option (same as string, for now) -->
-                                        <input *ngSwitchCase="SimulationOptionType.DEFAULT" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
-                                            class="form-control">
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading" style="cursor: pointer;">
-                        <h4 class="panel-title">
-                            <a data-target="#collapseTwoHover" data-toggle="collapse-hover">
-                                Simulation Options
-                                <b class="caret"></b>
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseTwoHover" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <form>
-                                <div class="form-group" *ngFor="let option of simulationOptions">
-                                    <label>{{option.displayText}}</label>
-                                    <div [ngSwitch]="option.optionType">
-                                        <!-- for string options -->
-                                        <input *ngSwitchCase="SimulationOptionType.STRING" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
-                                            class="form-control">
-
-                                        <!-- for multi choice options -->
-                                        <div *ngSwitchCase="SimulationOptionType.CHOICE" class="dropdown" dropdown>
-                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdown_{{option.propertyName}}" dropdown-open>
-                                                {{option.value[1]}}
-                                                <span class="caret"></span>
-                                            </button>
-
-                                            <ul class="dropdown-menu">
-                                                <li *ngFor="let choice of option.choices">
-                                                    <a (click)="choose(option, choice)" style="min-height: 36px;">{{choice[1]}}</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-
-                                        <!-- for on/off options (BOOLEAN) -->
-                                        <div *ngSwitchCase="SimulationOptionType.BOOLEAN" class="bootstrap-switch-container">
-                                            <bSwitch [switch-on-color]="'primary'" [(ngModel)]="option.value" (keyup)="option.validate(optionsMap)" name="option_{{option.propertyName}}"></bSwitch>
-                                        </div>
-
-                                        <input *ngSwitchCase="SimulationOptionType.INTEGER" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
-                                            placeholder="{{option.displayText}}" class="form-control">
-
-                                        <input *ngSwitchCase="SimulationOptionType.FLOAT" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
-                                            placeholder="{{option.displayText}}" class="form-control">
-
-                                        <!-- default option (same as string, for now) -->
-                                        <input *ngSwitchCase="SimulationOptionType.DEFAULT" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
-                                            class="form-control">
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading" style="cursor: pointer;">
-                        <h4 class="panel-title">
-                            <a data-target="#collapseThreeHover" data-toggle="collapse-hover">
-                                Molecular Dynamics Simulation Options
-                                <b class="caret"></b>
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseThreeHover" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <form>
-                                <div class="form-group" *ngFor="let option of mdSimulationOptions">
-                                    <label>{{option.displayText}}</label>
-                                    <div [ngSwitch]="option.optionType">
-                                        <!-- for string options -->
-                                        <input *ngSwitchCase="SimulationOptionType.STRING" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
-                                            class="form-control">
-
-                                        <!-- for multi choice options -->
-                                        <div *ngSwitchCase="SimulationOptionType.CHOICE" class="dropdown" dropdown>
-                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdown_{{option.propertyName}}" dropdown-open>
-                                                {{option.value[1]}}
-                                                <span class="caret"></span>
-                                            </button>
-
-                                            <ul class="dropdown-menu">
-                                                <li *ngFor="let choice of option.choices">
-                                                    <a (click)="choose(option, choice)" style="min-height: 36px;">{{choice[1]}}</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-
-                                        <!-- for on/off options (BOOLEAN) -->
-                                        <div *ngSwitchCase="SimulationOptionType.BOOLEAN" class="bootstrap-switch-container">
-                                            <bSwitch [switch-on-color]="'primary'" [(ngModel)]="option.value" (keyup)="option.validate(optionsMap)" name="option_{{option.propertyName}}"></bSwitch>
-                                        </div>
-
-                                        <input *ngSwitchCase="SimulationOptionType.INTEGER" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
-                                            placeholder="{{option.displayText}}" class="form-control">
-
-                                        <input *ngSwitchCase="SimulationOptionType.FLOAT" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
-                                            placeholder="{{option.displayText}}" class="form-control">
-
-                                        <!-- default option (same as string, for now) -->
-                                        <input *ngSwitchCase="SimulationOptionType.DEFAULT" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
-                                            class="form-control">
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
             </div>
+
+            <!-- GENERIC OPTIONS -->
+            <div class="panel panel-default">
+                <div class="panel-heading" style="cursor: pointer;">
+                    <h4 class="panel-title">
+                        <a data-target="#collapseOneHover" data-toggle="collapse-hover">
+                            Generic Options
+                            <b class="caret"></b>
+                        </a>
+                    </h4>
+
+                </div>
+                <div id="collapseOneHover" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <form>
+                            <div class="form-group" *ngFor="let option of genericOptions">
+                                <label>{{option.displayText}}</label>
+                                <div [ngSwitch]="option.optionType">
+                                    <!-- for string options -->
+                                    <input *ngSwitchCase="SimulationOptionType.STRING" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
+                                        class="form-control">
+
+                                    <!-- for multi choice options -->
+                                    <div *ngSwitchCase="SimulationOptionType.CHOICE" class="dropdown" dropdown>
+                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdown_{{option.propertyName}}" dropdown-open>
+                                            {{option.value[1]}}
+                                            <span class="caret"></span>
+                                        </button>
+
+                                        <ul class="dropdown-menu">
+                                            <li *ngFor="let choice of option.choices">
+                                                <a (click)="choose(option, choice)" style="min-height: 36px;">{{choice[1]}}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- for on/off options (BOOLEAN) -->
+                                    <div *ngSwitchCase="SimulationOptionType.BOOLEAN" class="bootstrap-switch-container">
+                                        <bSwitch [switch-on-color]="'primary'" [(ngModel)]="option.value" (keyup)="option.validate(optionsMap)" name="option_{{option.propertyName}}"></bSwitch>
+                                    </div>
+
+                                    <input *ngSwitchCase="SimulationOptionType.INTEGER" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
+                                        placeholder="{{option.displayText}}" class="form-control">
+
+                                    <input *ngSwitchCase="SimulationOptionType.FLOAT" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
+                                        placeholder="{{option.displayText}}" class="form-control">
+
+                                    <!-- default option (same as string, for now) -->
+                                    <input *ngSwitchCase="SimulationOptionType.DEFAULT" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
+                                        class="form-control">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" style="cursor: pointer;">
+                    <h4 class="panel-title">
+                        <a data-target="#collapseTwoHover" data-toggle="collapse-hover">
+                            Simulation Options
+                            <b class="caret"></b>
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseTwoHover" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <form>
+                            <div class="form-group" *ngFor="let option of simulationOptions">
+                                <label>{{option.displayText}}</label>
+                                <div [ngSwitch]="option.optionType">
+                                    <!-- for string options -->
+                                    <input *ngSwitchCase="SimulationOptionType.STRING" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
+                                        class="form-control">
+
+                                    <!-- for multi choice options -->
+                                    <div *ngSwitchCase="SimulationOptionType.CHOICE" class="dropdown" dropdown>
+                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdown_{{option.propertyName}}" dropdown-open>
+                                            {{option.value[1]}}
+                                            <span class="caret"></span>
+                                        </button>
+
+                                        <ul class="dropdown-menu">
+                                            <li *ngFor="let choice of option.choices">
+                                                <a (click)="choose(option, choice)" style="min-height: 36px;">{{choice[1]}}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- for on/off options (BOOLEAN) -->
+                                    <div *ngSwitchCase="SimulationOptionType.BOOLEAN" class="bootstrap-switch-container">
+                                        <bSwitch [switch-on-color]="'primary'" [(ngModel)]="option.value" (keyup)="option.validate(optionsMap)" name="option_{{option.propertyName}}"></bSwitch>
+                                    </div>
+
+                                    <input *ngSwitchCase="SimulationOptionType.INTEGER" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
+                                        placeholder="{{option.displayText}}" class="form-control">
+
+                                    <input *ngSwitchCase="SimulationOptionType.FLOAT" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
+                                        placeholder="{{option.displayText}}" class="form-control">
+
+                                    <!-- default option (same as string, for now) -->
+                                    <input *ngSwitchCase="SimulationOptionType.DEFAULT" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
+                                        class="form-control">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" style="cursor: pointer;">
+                    <h4 class="panel-title">
+                        <a data-target="#collapseThreeHover" data-toggle="collapse-hover">
+                            Molecular Dynamics Simulation Options
+                            <b class="caret"></b>
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseThreeHover" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <form>
+                            <div class="form-group" *ngFor="let option of mdSimulationOptions">
+                                <label>{{option.displayText}}</label>
+                                <div [ngSwitch]="option.optionType">
+                                    <!-- for string options -->
+                                    <input *ngSwitchCase="SimulationOptionType.STRING" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
+                                        class="form-control">
+
+                                    <!-- for multi choice options -->
+                                    <div *ngSwitchCase="SimulationOptionType.CHOICE" class="dropdown" dropdown>
+                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdown_{{option.propertyName}}" dropdown-open>
+                                            {{option.value[1]}}
+                                            <span class="caret"></span>
+                                        </button>
+
+                                        <ul class="dropdown-menu">
+                                            <li *ngFor="let choice of option.choices">
+                                                <a (click)="choose(option, choice)" style="min-height: 36px;">{{choice[1]}}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- for on/off options (BOOLEAN) -->
+                                    <div *ngSwitchCase="SimulationOptionType.BOOLEAN" class="bootstrap-switch-container">
+                                        <bSwitch [switch-on-color]="'primary'" [(ngModel)]="option.value" (keyup)="option.validate(optionsMap)" name="option_{{option.propertyName}}"></bSwitch>
+                                    </div>
+
+                                    <input *ngSwitchCase="SimulationOptionType.INTEGER" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
+                                        placeholder="{{option.displayText}}" class="form-control">
+
+                                    <input *ngSwitchCase="SimulationOptionType.FLOAT" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
+                                        placeholder="{{option.displayText}}" class="form-control">
+
+                                    <!-- default option (same as string, for now) -->
+                                    <input *ngSwitchCase="SimulationOptionType.DEFAULT" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
+                                        class="form-control">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

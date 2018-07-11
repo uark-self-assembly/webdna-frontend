@@ -1,9 +1,11 @@
-h5.background-hover:hover {
+mat-expansion-panel.project-table-item {
+    background: #fff;
+}
+
+mat-expansion-panel-header.project-table-item:hover {
     background: #eee;
-    margin-top: 0px;
-    padding-top: 25px;
-    margin-bottom: 0px;
-    padding-bottom: 30px;
-    border-top-width: 1px;
-    border-top-color: #dddddd;
+}
+
+mat-expansion-panel-title.project-table-item {
+    width: 150px;
 }

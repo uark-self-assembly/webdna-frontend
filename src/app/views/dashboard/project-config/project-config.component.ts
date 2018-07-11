@@ -335,9 +335,8 @@ export class ProjectConfigComponent implements OnInit {
             this.loading = false;
             if (response === 'success') {
                 this.execute();
-                console.log('settings added');
             } else {
-                console.log('error');
+                // TODO (jace) show useful error message
             }
         }, _ => { /* error */
             this.loading = false;

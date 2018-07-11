@@ -1,0 +1,24 @@
+<mat-toolbar color="primary" class="content-header">
+    <button mat-icon-button (click)="sideNavOpened=!sideNavOpened;">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <h1>
+        WebDNA
+    </h1>
+    <span class="toolbar-fill-remaining-space"></span>
+    <span>
+        <button mat-button (click)="onLogoutClicked()">
+            <i class="fa fa-lock"></i>
+            Logout
+        </button>
+    </span>
+</mat-toolbar>
+
+<mat-sidenav-container class="content-container">
+    <mat-sidenav #sidenav mode="side" [(opened)]="sideNavOpened" class="content-sidenav">
+        Something
+    </mat-sidenav>
+    <mat-sidenav-content class="sidenav-content-container">
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
