@@ -2,7 +2,7 @@
     <button mat-icon-button (click)="sideNavOpened=!sideNavOpened;">
         <mat-icon>menu</mat-icon>
     </button>
-    <h1>
+    <h1 *ngIf="!sideNavOpened">
         WebDNA
     </h1>
     <span class="toolbar-fill-remaining-space"></span>

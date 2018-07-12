@@ -21,6 +21,7 @@
             ],
             "styles": [
               "src/styles.scss",
+              "src/webdna-app-theme.scss",
               "src/assets/sass/light-bootstrap-dashboard.scss"
             ],
             "scripts": []

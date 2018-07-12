@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, OnDestroy } from '@angular/core';
-import { Project } from 'app/services/project/project';
-import { Script } from 'app/services/script/script';
-import { ScriptService } from 'app/services/script/script.service';
+import { Project } from '../../../services/project/project';
+import { Script } from '../../../services/script/script';
+import { ScriptService } from '../../../services/script/script.service';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';

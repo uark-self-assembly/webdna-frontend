@@ -41,7 +41,7 @@ export class Project {
 
             return 'Running: ' + Math.floor((currentTime - startTime) / 60000) + ' min'
         } else {
-            return 'Never run.';
+            return 'Never run';
         }
     }
 

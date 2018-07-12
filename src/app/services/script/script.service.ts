@@ -1,4 +1,4 @@
-import { RequestService } from 'app/services/request/request.service';
+import { RequestService } from '../request/request.service';
 import { Script, ScriptChain } from './script';
 import { Response } from '@angular/http';
 import { Injectable } from '@angular/core';

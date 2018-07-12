@@ -1,12 +1,12 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { Project } from 'app/services/project/project';
-import { ProjectService } from 'app/services/project/project.service';
+import { Project } from '../../../services/project/project';
+import { ProjectService } from '../../../services/project/project.service';
 import { Observable } from 'rxjs/Observable';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
 import { Subscription } from 'rxjs/Subscription';
-import { ProjectPage } from 'app/views/dashboard/dashboard.component';
-import { StorageService } from 'app/services/storage/storage.service';
-import { User } from 'app/services/user/user';
+import { ProjectPage } from '../dashboard.component';
+import { StorageService } from '../../../services/storage/storage.service';
+import { User } from '../../../services/user/user';
 
 declare var $: any;
 

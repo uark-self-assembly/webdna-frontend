@@ -1,3 +1,6 @@
+@import '~@angular/material/theming';
+@import 'src/webdna-app-theme.scss';
+
 .content-header {
     position: fixed;
     top: 0;
@@ -15,6 +18,7 @@
 
 .content-sidenav {
     width: 200px;
+    background: mat-color($accent-color);
 }
 
 .toolbar-fill-remaining-space {

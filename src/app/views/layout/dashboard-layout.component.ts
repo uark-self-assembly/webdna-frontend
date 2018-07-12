@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-dashboard-layout',
     templateUrl: './dashboard-layout.component.html',
-    styleUrls: ['./dashboard-layout.component.css']
+    styleUrls: ['./dashboard-layout.component.scss']
 })
 export class DashboardLayoutComponent {
     private sideNavOpened = false;

@@ -2,10 +2,18 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Project, ProjectFileType } from '../../../services/project/project';
 import { ProjectService } from '../../../services/project/project.service';
 
-declare var $: any;
+class OptionCollection {
+    name: string;
+    options: SimulationOption[];
+
+    constructor(name: string, options: SimulationOption[]) {
+        this.name = name;
+        this.options = options;
+    }
+}
 
 enum SimulationOptionType {
-    FLOAT, BOOLEAN, INTEGER, STRING, CHOICE
+    FLOAT, BOOLEAN, INTEGER, STRING, CHOICE, FILE
 }
 
 class SimulationOption {
@@ -53,7 +61,8 @@ class SimulationOption {
 
 @Component({
     selector: 'project-config',
-    templateUrl: './project-config.component.html'
+    templateUrl: './project-config.component.html',
+    styleUrls: ['./project-config.component.scss']
 })
 
 export class ProjectConfigComponent implements OnInit {
@@ -70,23 +79,11 @@ export class ProjectConfigComponent implements OnInit {
 
     private loading = false;
 
-    private sequenceFile: File;
-
-    private get boxSize() {
-        if (this.result && this.result['box_size'] !== undefined) {
-            return this.result['box_size'];
-        } else {
-            this.result['box_size'] = 20;
-            return 20;
-        }
-    }
-    private set boxSize(size) {
-        this.result['box_size'] = size;
-    }
-
-    private shouldRegenerate: boolean;
-
-    private initializing = true;
+    private generationOptions = [
+        new SimulationOption('sequence_file', 'Sequence File', SimulationOptionType.FILE),
+        new SimulationOption('box_size', 'Box Size', SimulationOptionType.INTEGER, null, 20),
+        new SimulationOption('should_regenerate', 'Regenerate Initial Topology', SimulationOptionType.BOOLEAN),
+    ]
 
     private genericOptions = [
         new SimulationOption(
@@ -120,7 +117,7 @@ export class ProjectConfigComponent implements OnInit {
     ]
 
     private simulationOptions = [
-        new SimulationOption('steps', 'Simulation Steps', SimulationOptionType.INTEGER, null, 1e6),
+        new SimulationOption('steps', 'Simulation Steps', SimulationOptionType.INTEGER, null, 1_000_000),
         new SimulationOption('seed', 'Simulation Seed', SimulationOptionType.INTEGER, null, 42),
         new SimulationOption('T', 'Temperature (K)', SimulationOptionType.FLOAT, null, 243),
         new SimulationOption('verlet_skin', 'Verlet Skin', SimulationOptionType.FLOAT, null, 0.05),
@@ -139,82 +136,33 @@ export class ProjectConfigComponent implements OnInit {
 
     private optionsMap: Map<string, SimulationOption> = new Map<string, SimulationOption>();
 
+    private optionCollections: OptionCollection[] = [];
+
     private result = {};
 
     constructor(private projectService: ProjectService) {
+        this.optionCollections = [
+            new OptionCollection('Generation Options', this.generationOptions),
+            new OptionCollection('Generic Options', this.genericOptions),
+            new OptionCollection('Simulation Options', this.simulationOptions),
+            new OptionCollection('Molecular Dynamics Simulation Options', this.mdSimulationOptions)
+        ];
+
+        this.buildOptionsMap();
     }
 
     ngOnInit() {
-        $('[data-toggle="collapse-hover"]').each(function () {
-            const thisdiv = $(this).attr('data-target');
-            $(thisdiv).addClass('collapse-hover');
-        });
-
-        $('[data-toggle="collapse-hover"]').hover(function () {
-            const thisdiv = $(this).attr('data-target');
-            if (!$(this).hasClass('state-open')) {
-                $(this).addClass('state-hover');
-                $(thisdiv).css({
-                    'height': '30px'
-                });
-            }
-
-        },
-            function () {
-                const thisdiv = $(this).attr('data-target');
-                $(this).removeClass('state-hover');
-
-                if (!$(this).hasClass('state-open')) {
-                    $(thisdiv).css({
-                        'height': '0px'
-                    });
-                }
-            }).click(function (event) {
-                event.preventDefault();
-
-                const thisdiv = $(this).attr('data-target');
-                const height = $(thisdiv).children('.panel-body').height();
-
-                if ($(this).hasClass('state-open')) {
-                    $(thisdiv).css({
-                        'height': '0px',
-                    });
-                    $(this).removeClass('state-open');
-                } else {
-                    $(thisdiv).css({
-                        'height': height + 30,
-                    });
-                    $(this).addClass('state-open');
-                }
-            });
-
-        if ($('.dropdown').hasClass('show-dropdown')) {
-            $('.dropdown').addClass('open');
-        }
-
-        this.buildOptionsMap();
         this.projectService.getSettings(this.project.id).then(response => {
-            if (typeof response === 'string') {
-            } else {
-                this.initializeOptions(response);
-
-                this.initializing = false
-            }
+            this.initializeOptions(response);
         }, error => {
         });
     }
 
     buildOptionsMap() {
-        for (const option of this.genericOptions) {
-            this.optionsMap[option.propertyName] = option;
-        }
-
-        for (const option of this.simulationOptions) {
-            this.optionsMap[option.propertyName] = option;
-        }
-
-        for (const option of this.mdSimulationOptions) {
-            this.optionsMap[option.propertyName] = option;
+        for (const optionCollection of this.optionCollections) {
+            optionCollection.options.forEach(option => {
+                this.optionsMap[option.propertyName] = option;
+            });
         }
     }
 
@@ -222,10 +170,6 @@ export class ProjectConfigComponent implements OnInit {
         console.log(response);
 
         Object.keys(response).forEach(key => {
-            if (key === 'box_size') {
-                this.boxSize = response[key];
-            }
-
             if (this.optionsMap[key]) {
                 const responseValue = response[key];
                 const option: SimulationOption = this.optionsMap[key];
@@ -249,52 +193,32 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     buildResults() {
+        const ignoreKeys = ['sequence_file', 'should_regenerate']
+
         this.result['refresh_vel'] = 1;
-        this.result['box_size'] = this.boxSize;
         this.result['generation_method'] = 'generate-sa';
-        for (const option of this.genericOptions) {
-            if (option.optionType === SimulationOptionType.CHOICE) {
-                this.result[option.propertyName] = option.value[0];
-            } else if (option.optionType === SimulationOptionType.BOOLEAN) {
-                this.result[option.propertyName] = option.value ? 1 : 0;
-            } else {
-                this.result[option.propertyName] = option.value;
-            }
-        }
 
-        for (const option of this.simulationOptions) {
-            if (option.optionType === SimulationOptionType.CHOICE) {
-                this.result[option.propertyName] = option.value[0];
-            } else if (option.optionType === SimulationOptionType.BOOLEAN) {
-                this.result[option.propertyName] = option.value ? 1 : 0;
-            } else {
-                this.result[option.propertyName] = option.value;
-            }
-        }
+        for (const optionCollection of this.optionCollections) {
+            for (const option of optionCollection.options) {
+                if (ignoreKeys.indexOf(option.propertyName) > -1) {
+                    continue;
+                }
 
-        for (const option of this.mdSimulationOptions) {
-            if (option.optionType === SimulationOptionType.CHOICE) {
-                this.result[option.propertyName] = option.value[0];
-            } else if (option.optionType === SimulationOptionType.BOOLEAN) {
-                this.result[option.propertyName] = option.value ? 1 : 0;
-            } else {
-                this.result[option.propertyName] = option.value;
+                if (option.optionType === SimulationOptionType.CHOICE) {
+                    this.result[option.propertyName] = option.value[0];
+                } else if (option.optionType === SimulationOptionType.BOOLEAN) {
+                    this.result[option.propertyName] = option.value ? 1 : 0;
+                } else {
+                    this.result[option.propertyName] = option.value;
+                }
             }
         }
     }
 
     backClicked() {
-        if (this.loading) {
-            return;
+        if (!this.loading) {
+            this.didClickBack();
         }
-        this.didClickBack();
-    }
-
-    check() {
-        this.buildResults();
-
-        console.log(this.result);
-        console.log(this.sequenceFile);
     }
 
     choose(option: SimulationOption, choice) {
@@ -302,12 +226,38 @@ export class ProjectConfigComponent implements OnInit {
         option.validate(this.optionsMap);
     }
 
-    fileChange(event) {
+    fileChange(event, option: SimulationOption) {
         const fileList: FileList = event.target.files;
         if (fileList.length > 0) {
-            this.sequenceFile = fileList[0];
+            option.value = fileList[0];
         }
-        this.shouldRegenerate = true;
+        this.optionsMap['should_regenerate'].value = true;
+    }
+
+    onSaveClicked() {
+        if (this.loading) {
+            return;
+        }
+
+        this.loading = true;
+        this.buildResults();
+
+        const sequenceFile = this.optionsMap['sequence_file'].value;
+
+        if (sequenceFile) {
+            this.projectService.uploadFile(this.project.id, sequenceFile, ProjectFileType.SEQUENCE).then(_ => {
+                this.applySettings();
+            }, _ => {
+                this.loading = false;
+                console.log('Couldn\'t upload file');
+            });
+        } else {
+            this.applySettings();
+        }
+    }
+
+    onSaveAndRunClicked() {
+
     }
 
     runSimulation() {
@@ -318,8 +268,10 @@ export class ProjectConfigComponent implements OnInit {
         this.loading = true;
         this.buildResults();
 
-        if (this.sequenceFile) {
-            this.projectService.uploadFile(this.project.id, this.sequenceFile, ProjectFileType.SEQUENCE).then(_ => {
+        const sequenceFile = this.optionsMap['sequence_file'].value;
+
+        if (sequenceFile) {
+            this.projectService.uploadFile(this.project.id, sequenceFile, ProjectFileType.SEQUENCE).then(_ => {
                 this.applySettings();
             }, _ => {
                 this.loading = false;
@@ -344,7 +296,8 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     execute() {
-        this.projectService.execute(this.project.id, this.shouldRegenerate).then(response => {
+        const shouldRegenerate = this.optionsMap['should_regenerate'].value;
+        this.projectService.execute(this.project.id, shouldRegenerate).then(response => {
             console.log(response);
             this.backClicked();
         });
