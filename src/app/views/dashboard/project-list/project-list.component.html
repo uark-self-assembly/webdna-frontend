@@ -5,14 +5,8 @@
     </span>
 
 
-    <button mat-raised-button color="primary" *ngIf="!addingProject" type="button" class="pull-right"
-        (click)="addProjectClicked()">
-        <i class="fa fa-plus"></i> New</button>
+    <button mat-raised-button color="primary" type="button" class="pull-right" (click)="addProjectClicked()">
+        <mat-icon>add</mat-icon>New</button>
 </div>
-<project-table *ngIf="!addingProject" [projects]="projects" [projectClicked]="projectClicked" [runClicked]="runClicked" [deleteClicked]="deleteClicked"
+<project-table [projects]="projects" [projectClicked]="projectClicked" [runClicked]="runClicked" [deleteClicked]="deleteClicked"
     [duplicateClicked]="duplicateClicked"></project-table>
-
-<button mat-button *ngIf="addingProject" type="button" style="margin-bottom: 20px;" (click)="cancelAddProjectClicked()">Cancel</button>
-<div *ngIf="addingProject">
-    <project-add [addProjectConfirmed]="addProjectConfirmed"></project-add>
-</div>

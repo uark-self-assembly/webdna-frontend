@@ -32,6 +32,10 @@
                         <i class="fa fa-play"></i>
                         Starting...
                     </a>
+                    <a *ngIf="row.project.running" rel="tooltip" title="Cancel" class="btn btn-danger btn-simple btn-s" (click)="cancelClicked(row)">
+                        <i class="fa fa-stop"></i>
+                        Stop Simulation
+                    </a>
                     <a rel="tooltip" title="View Output" class="btn {{!row.project.hasOutput ? 'btn-default btn-s disabled' : 'btn-primary'}} btn-simple btn-s"
                         (click)="viewOutputClicked(row)">
                         <i class="fa fa-terminal"></i>
@@ -41,10 +45,6 @@
                         (click)="editClicked(row)">
                         <i class="fa fa-edit"></i>
                         Edit
-                    </a>
-                    <a *ngIf="row.project.running" rel="tooltip" title="Cancel" class="btn btn-default btn-simple btn-s" (click)="cancelClicked(row)">
-                        <i class="fa fa-remove"></i>
-                        Cancel
                     </a>
                     <a *ngIf="!row.project.running && !row.downloading" rel="tooltip" title="Download" class="btn btn-primary btn-simple btn-s"
                         (click)="downloadClicked(row)">
@@ -70,7 +70,7 @@
     </mat-expansion-panel>
 </mat-accordion>
 
-<modal #logmodal (onClose)="closeModal()" cancelButtonLabel="Close" modalClass="modal-lg">
+<!-- <modal #logmodal (onClose)="closeModal()" cancelButtonLabel="Close" modalClass="modal-lg">
     <modal-header>
         <h3 *ngIf="selectedRow">
             <strong>{{selectedRow.project.name}}</strong> (console output)</h3>
@@ -89,4 +89,4 @@
             </div>
         </div>
     </modal-content>
-</modal>
+</modal> -->

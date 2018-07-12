@@ -17,11 +17,11 @@
 
 <div class="content content-full-width">
     <div class="row button-row">
-        <button mat-button color="primary" disabled="loading" (click)="onSaveClicked()">
+        <button mat-button color="primary" [disabled]="loading" (click)="save()">
             <mat-icon>save</mat-icon>
             Save
         </button>
-        <button mat-raised-button color="primary" class="pull-right" disabled="loading" (click)="onSaveAndRunClicked()">
+        <button mat-raised-button color="primary" class="pull-right" [disabled]="loading" (click)="save(true)">
             <mat-icon>play_arrow</mat-icon>
             Save and Run
         </button>

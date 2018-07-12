@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'ngx-dropdown';
 import { AccordionModule } from 'ngx-accordion';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectTableComponent } from './project-list/project-table/project-table.component';
-import { ProjectAddComponent } from './project-list/project-add/project-add.component';
 
 import { DashboardComponent } from './dashboard.component';
 import { VisualizerComponent } from '../visualizer/visualizer.component';
@@ -19,7 +17,8 @@ import { SharedModule } from '../shared/shared.module';
 import { ProjectAnalysisComponent } from './project-analysis/project-analysis.component';
 import { HtmolComponent } from '../visualizer/htmol/htmol.component';
 import { AppMaterialModule } from '../../material/app-material.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LogOutputDialogComponent } from './log-output/dialog/log-output-dialog.component';
+import { ProjectAddDialogComponent } from './project-list/project-add-dialog/project-add-dialog.component';
 
 @NgModule({
     imports: [
@@ -37,11 +36,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         DashboardComponent,
         VisualizerComponent,
         HtmolComponent,
+        LogOutputDialogComponent,
+        ProjectAddDialogComponent,
         ProjectListComponent,
         ProjectTableComponent,
-        ProjectAddComponent,
         ProjectConfigComponent,
         ProjectAnalysisComponent
+    ], entryComponents: [
+        LogOutputDialogComponent,
+        ProjectAddDialogComponent
     ]
 })
 

@@ -1,17 +1,10 @@
-import { Component, Input } from '@angular/core';
-
-declare var $: any;
-
-declare interface TableData {
-    headerRow: string[];
-    dataRows: string[][];
-}
+import { Component, Input, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 
 @Component({
     selector: 'log-output',
     templateUrl: './log-output.component.html'
 })
-export class LogOutputComponent {
+export class LogOutputComponent implements AfterViewChecked {
     @Input()
     private logText: string;
 
@@ -20,5 +13,11 @@ export class LogOutputComponent {
 
     get lines(): string[] {
         return this.logText.split('\n');
+    }
+
+    constructor(private changeDetectorRef: ChangeDetectorRef) { }
+
+    ngAfterViewChecked() {
+        this.changeDetectorRef.detectChanges();
     }
 }

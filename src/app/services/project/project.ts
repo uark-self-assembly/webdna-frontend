@@ -1,3 +1,29 @@
+function formatMillis(millis: number): string {
+    let result = '';
+
+    const dayInMillis = 24 * 60 * 60 * 1000;
+    const hourInMillis = 60 * 60 * 1000;
+    const minuteInMillis = 60 * 1000;
+    const secondInMillis = 1000;
+
+    if (millis > dayInMillis) {
+        result += Math.floor(millis / dayInMillis) + 'd ';
+        millis = millis % dayInMillis;
+    }
+
+    if (millis > hourInMillis) {
+        result += Math.floor(millis / hourInMillis) + 'h ';
+        millis = millis % hourInMillis;
+    }
+
+    result += Math.floor(millis / minuteInMillis) + 'm ';
+    millis = millis % minuteInMillis;
+
+    result += Math.floor(millis / secondInMillis) + 's';
+
+    return result;
+}
+
 export class Job {
     id?: string;
     project: string;
@@ -14,32 +40,33 @@ export class Project {
     created_on: Date;
     job: Job;
 
-    get running() {
+    get running(): boolean {
         return this.job && !this.job.finish_time;
     }
 
-    get hasOutput() {
-        return this.job;
+    get hasOutput(): boolean {
+        return !!this.job;
     }
 
-    get executionTime() {
+    get executionTime(): string {
         if (this.hasOutput) {
+            let prefix = 'Running: ';
+            const startTime: number = new Date(this.job.start_time).getTime();
+            let currentTime: number = new Date().getTime();
+
             if (!this.running) {
-                const finishTime = new Date(this.job.finish_time).getTime();
-                const startTime = new Date(this.job.start_time).getTime();
-                const minutes = Math.floor((finishTime - startTime) / 60000);
+                currentTime = new Date(this.job.finish_time).getTime();
 
                 if (this.job.terminated) {
-                    return 'Terminated: ' + minutes + ' min';
+                    prefix = 'Finished (stopped): ';
                 } else {
-                    return 'Finished: ' + minutes + ' min';
+                    prefix = 'Finished (success): ';
                 }
             }
 
-            const currentTime = new Date().getTime();
-            const startTime = new Date(this.job.start_time).getTime();
+            const millis = currentTime - startTime;
 
-            return 'Running: ' + Math.floor((currentTime - startTime) / 60000) + ' min'
+            return prefix + formatMillis(millis);
         } else {
             return 'Never run';
         }

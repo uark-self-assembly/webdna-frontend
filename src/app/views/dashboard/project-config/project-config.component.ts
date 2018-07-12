@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Project, ProjectFileType } from '../../../services/project/project';
 import { ProjectService } from '../../../services/project/project.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 class OptionCollection {
     name: string;
@@ -140,7 +141,7 @@ export class ProjectConfigComponent implements OnInit {
 
     private result = {};
 
-    constructor(private projectService: ProjectService) {
+    constructor(private projectService: ProjectService, private snackBar: MatSnackBar) {
         this.optionCollections = [
             new OptionCollection('Generation Options', this.generationOptions),
             new OptionCollection('Generic Options', this.genericOptions),
@@ -152,8 +153,10 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.loading = true;
         this.projectService.getSettings(this.project.id).then(response => {
             this.initializeOptions(response);
+            this.loading = false;
         }, error => {
         });
     }
@@ -234,7 +237,13 @@ export class ProjectConfigComponent implements OnInit {
         this.optionsMap['should_regenerate'].value = true;
     }
 
-    onSaveClicked() {
+    showSnackBar(message: string) {
+        this.snackBar.open(message, null, {
+            duration: 2000
+        });
+    }
+
+    save(execute: boolean = false) {
         if (this.loading) {
             return;
         }
@@ -246,49 +255,23 @@ export class ProjectConfigComponent implements OnInit {
 
         if (sequenceFile) {
             this.projectService.uploadFile(this.project.id, sequenceFile, ProjectFileType.SEQUENCE).then(_ => {
-                this.applySettings();
+                this.applySettings(execute);
             }, _ => {
                 this.loading = false;
                 console.log('Couldn\'t upload file');
             });
         } else {
-            this.applySettings();
+            this.applySettings(execute);
         }
     }
 
-    onSaveAndRunClicked() {
-
-    }
-
-    runSimulation() {
-        if (this.loading) {
-            return;
-        }
-
-        this.loading = true;
-        this.buildResults();
-
-        const sequenceFile = this.optionsMap['sequence_file'].value;
-
-        if (sequenceFile) {
-            this.projectService.uploadFile(this.project.id, sequenceFile, ProjectFileType.SEQUENCE).then(_ => {
-                this.applySettings();
-            }, _ => {
-                this.loading = false;
-                console.log('Couldn\'t upload file');
-            });
-        } else {
-            this.applySettings();
-        }
-    }
-
-    applySettings() {
+    applySettings(execute: boolean = false) {
         this.projectService.putSettings(this.project.id, this.result).then(response => {
             this.loading = false;
-            if (response === 'success') {
+            if (execute) {
                 this.execute();
             } else {
-                // TODO (jace) show useful error message
+                this.showSnackBar('Project settings saved successfully');
             }
         }, _ => { /* error */
             this.loading = false;

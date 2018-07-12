@@ -1,9 +1,12 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { Project, LogResponse } from '../../../../services/project/project';
 import { Observable } from 'rxjs/Observable';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
 import { Subscription } from 'rxjs/Subscription';
 import { ProjectService } from '../../../../services/project/project.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { LogOutputDialogComponent, LogOutputData } from '../../log-output/dialog/log-output-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 declare var $: any;
 
@@ -23,7 +26,7 @@ export class ProjectRow {
     templateUrl: './project-table.component.html',
     styleUrls: ['./project-table.component.css']
 })
-export class ProjectTableComponent implements OnInit, OnDestroy {
+export class ProjectTableComponent implements OnInit, OnDestroy, AfterViewChecked {
     _projects: Project[];
 
     @ViewChild('logmodal') logModal;
@@ -64,15 +67,18 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
 
     private openedProjectId: string;
     private selectedRow: ProjectRow = null;
-    private oxDNALogText = '';
-    private programLogText = '';
 
+    private logData: LogOutputData = { project: null, logHeight: 500, oxDNALog: '', programLog: '' };
     private projectRows: ProjectRow[] = [];
 
     private logTimer: Observable<number>;
     private logSubscription: Subscription;
 
-    constructor(private projectService: ProjectService) { }
+    constructor(
+        private projectService: ProjectService,
+        public dialog: MatDialog,
+        public snackBar: MatSnackBar,
+        private changeDetectorRef: ChangeDetectorRef) { }
 
     ngOnInit() {
         this.logTimer = TimerObservable.create(0, 600);
@@ -85,6 +91,16 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.logSubscription.unsubscribe();
+    }
+
+    ngAfterViewChecked() {
+        this.changeDetectorRef.detectChanges();
+    }
+
+    showSnackBar(message: string, duration: number = 2000) {
+        this.snackBar.open(message, null, {
+            duration: duration
+        });
     }
 
     refreshSelectedProject() {
@@ -116,25 +132,18 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
     updateLogText() {
         this.projectService.getCurrentOutput(this.selectedRow.project.id).then(response => {
             if (typeof response === 'string') {
-                this.oxDNALogText = 'No logs found for this project.';
+                this.logData.oxDNALog = 'No logs found for this project.';
             } else {
                 const logResponse = response as LogResponse;
 
-                this.oxDNALogText = logResponse.stdout;
-                this.programLogText = logResponse.log;
+                this.logData.oxDNALog = logResponse.stdout;
+                this.logData.programLog = logResponse.log;
 
                 if (this.selectedRow.project.running !== logResponse.running) {
                     this.refreshSelectedProject();
                 }
             }
         });
-    }
-
-    closeModal() {
-        this.logModal.close();
-        this.logOpen = false;
-        this.oxDNALogText = '';
-        this.programLogText = '';
     }
 
     startSimulation(row: ProjectRow) {
@@ -146,6 +155,11 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
                 row.starting = false;
                 row.restarting = false;
             });
+        }, _ => {
+            // TODO (jace) display useful error message
+            this.showSnackBar('You must configure this project before executing it');
+            row.starting = false;
+            row.restarting = false;
         });
     }
 
@@ -169,13 +183,25 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
 
     viewOutputClicked(row: ProjectRow) {
         this.logOpen = true;
-        this.logModal.open();
+        this.logData.project = row.project;
+        const dialogRef = this.dialog.open(LogOutputDialogComponent, {
+            data: this.logData
+        });
+
+        dialogRef.afterClosed().subscribe(_ => {
+            this.logOpen = false;
+            this.logData.project = null;
+            this.logData.oxDNALog = '';
+            this.logData.programLog = '';
+        });
+
         this.selectedRow = row;
         this.updateLogText();
     }
 
     cancelClicked(row: ProjectRow) {
         this.projectService.terminate(row.project.id).then(_ => {
+            this.showSnackBar('Project "' + row.project.name + '" was stopped');
             this.projectService.getProjectById(row.project.id).then(response => {
                 if (typeof response !== 'string') {
                     row.project = response;
@@ -186,6 +212,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy {
 
     downloadClicked(row: ProjectRow) {
         row.downloading = true;
+        this.showSnackBar('Processing download...', 1000);
         this.projectService.downloadZipFile(row.project).then(value => {
             const url = window.URL.createObjectURL(value.data);
             const a = document.createElement('a');
