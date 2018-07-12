@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Project } from '../../services/project/project';
 import { ProjectService } from '../../services/project/project.service';
 
-declare var $: any;
-
 @Component({
   selector: 'visualizer-cmp',
   templateUrl: './visualizer.component.html'

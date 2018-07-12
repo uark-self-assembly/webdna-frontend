@@ -11,8 +11,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProjectAddDialogComponent } from './project-add-dialog/project-add-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-declare var $: any;
-
 @Component({
     selector: 'project-list',
     templateUrl: './project-list.component.html',
@@ -56,9 +54,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
         private dialog: MatDialog,
         private snackBar: MatSnackBar,
         private storageService: StorageService,
-        private projectService: ProjectService) {
-
-    }
+        private projectService: ProjectService) { }
 
     ngOnInit() {
         this.projectsTimer = TimerObservable.create(0, 5000);

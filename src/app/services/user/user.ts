@@ -5,5 +5,5 @@ export class User {
   username: string;
   password: string;
   email: string;
-  created_on: Date;
+  date_joined: Date;
 }

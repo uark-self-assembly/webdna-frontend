@@ -4,11 +4,9 @@ import { Observable } from 'rxjs/Observable';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
 import { Subscription } from 'rxjs/Subscription';
 import { ProjectService } from '../../../../services/project/project.service';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { LogOutputDialogComponent, LogOutputData } from '../../log-output/dialog/log-output-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-declare var $: any;
 
 export class ProjectRow {
     project: Project;
@@ -62,7 +60,6 @@ export class ProjectTableComponent implements OnInit, OnDestroy, AfterViewChecke
         return this._projects;
     }
 
-    private logHeight = 500;
     private logOpen = false;
 
     private openedProjectId: string;
@@ -168,7 +165,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy, AfterViewChecke
         if (row.project.running) {
             this.projectService.terminate(row.project.id).then(_ => {
                 this.startSimulation(row);
-            }, error => {
+            }, _ => {
                 this.startSimulation(row);
             });
         } else {
@@ -222,7 +219,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy, AfterViewChecke
             a.download = value.fileName;
             a.click();
             window.URL.revokeObjectURL(url);
-            a.remove(); // remove the element
+            a.remove();
             row.downloading = false;
         });
     }

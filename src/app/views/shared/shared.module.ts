@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { LogOutputComponent } from '../dashboard/log-output/log-output.component';
-import { AppModule } from '../../app.module';
 import { CommonModule } from '@angular/common';
 
 const SHARED_COMPONENTS = [LogOutputComponent];

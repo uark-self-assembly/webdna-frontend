@@ -157,7 +157,8 @@ export class ProjectConfigComponent implements OnInit {
         this.projectService.getSettings(this.project.id).then(response => {
             this.initializeOptions(response);
             this.loading = false;
-        }, error => {
+        }, _ => {
+            this.loading = false;
         });
     }
 
@@ -170,8 +171,6 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     initializeOptions(response) {
-        console.log(response);
-
         Object.keys(response).forEach(key => {
             if (this.optionsMap[key]) {
                 const responseValue = response[key];
@@ -281,7 +280,6 @@ export class ProjectConfigComponent implements OnInit {
     execute() {
         const shouldRegenerate = this.optionsMap['should_regenerate'].value;
         this.projectService.execute(this.project.id, shouldRegenerate).then(response => {
-            console.log(response);
             this.backClicked();
         });
     }

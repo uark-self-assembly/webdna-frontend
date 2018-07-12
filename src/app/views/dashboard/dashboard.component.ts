@@ -1,8 +1,6 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { Project } from '../../services/project/project';
 import { StorageService } from '../../services/storage/storage.service';
-
-declare var $: any;
 
 export enum ProjectPage {
   TABLE, SETTINGS, ANALYSIS
@@ -11,8 +9,7 @@ export enum ProjectPage {
 @Component({
   selector: 'app-dashboard',
   encapsulation: ViewEncapsulation.None,
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
   private ProjectPage = ProjectPage;
@@ -38,7 +35,5 @@ export class DashboardComponent {
     this.currentPage = ProjectPage.SETTINGS;
   }).bind(this);
 
-  constructor(private storageService: StorageService) {
-
-  }
+  constructor() { }
 }

@@ -2,9 +2,6 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input } from '
 import { Http } from '@angular/http';
 import { RequestService } from '../../../services/request/request.service';
 
-declare var $: any;
-declare var window: any;
-
 @Component({
   selector: 'htmol-cmp',
   templateUrl: './htmol.component.html'

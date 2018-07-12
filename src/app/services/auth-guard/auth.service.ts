@@ -6,13 +6,9 @@ user logged in while they still have their JWT
 *************************************************/
 
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
 import { AuthenticationResponse } from './auth.response';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
-import { tokenNotExpired } from 'angular2-jwt';
-import { User } from '../user/user';
 import { RequestService } from '../request/request.service';
 import { StorageService } from '../storage/storage.service';
 
@@ -39,10 +35,7 @@ export class AuthenticationService {
       .then((response: AuthenticationResponse) => {
         if (typeof response !== 'string') {
           const authentication = response as AuthenticationResponse;
-          console.log(authentication);
           this.storageService.setAuthentication(authentication);
-          console.log(this.storageService.token);
-          console.log(this.storageService.user);
         }
 
         return response;

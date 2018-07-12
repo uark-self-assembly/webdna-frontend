@@ -1,5 +1,5 @@
 import { RequestService } from '../request/request.service';
-import { Script, ScriptChain } from './script';
+import { Script } from './script';
 import { Response } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { StorageService } from '../storage/storage.service';
