@@ -20,6 +20,7 @@ import { AppMaterialModule } from '../../material/app-material.module';
 import { LogOutputDialogComponent } from './log-output/dialog/log-output-dialog.component';
 import { ProjectAddDialogComponent } from './project-list/project-add-dialog/project-add-dialog.component';
 import { SimulationFileUploadComponent } from './project-config/simulation-file-upload/simulation-file-upload.component';
+import { FileDialogComponent } from './file-dialog/file-dialog.component';
 
 @NgModule({
     imports: [
@@ -40,13 +41,15 @@ import { SimulationFileUploadComponent } from './project-config/simulation-file-
         LogOutputDialogComponent,
         SimulationFileUploadComponent,
         ProjectAddDialogComponent,
+        FileDialogComponent,
         ProjectListComponent,
         ProjectTableComponent,
         ProjectConfigComponent,
         ProjectAnalysisComponent
     ], entryComponents: [
         LogOutputDialogComponent,
-        ProjectAddDialogComponent
+        ProjectAddDialogComponent,
+        FileDialogComponent,
     ]
 })
 

@@ -17,6 +17,10 @@ export class DashboardComponent {
   private currentPage: ProjectPage = ProjectPage.TABLE;
   private editingProject: Project = null;
 
+  get pageTitle(): string {
+    return 'Projects';
+  }
+
   projectClicked = ((project: Project) => {
     this.editingProject = project;
     this.currentPage = ProjectPage.SETTINGS;

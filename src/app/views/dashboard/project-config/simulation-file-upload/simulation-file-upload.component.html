@@ -3,7 +3,10 @@
         <button mat-raised-button color="primary" (click)="fileButtonClicked()">
             {{option.value ? option.displayText + ': ' + option.value.name : 'Upload ' + option.displayText}}
         </button>
-        <button *ngIf="existingFile" mat-button color="accent" (click)="viewExistingClicked()"></button>
+        <button *ngIf="existingFile" mat-button style="margin-left: 15px;" color="accent" (click)="viewExistingClicked()">
+            <mat-icon>open_in_new</mat-icon>
+            Open Current File
+        </button>
     </div>
     <input id="{{option.propertyName}}" type="file" style="display: none;" (change)="fileChange($event)">
 </div>

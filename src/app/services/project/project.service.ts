@@ -85,6 +85,16 @@ export class ProjectService {
     return this.requestService.putFile(this.filesUrl(projectId).concat('upload'), formData, true);
   }
 
+  downloadFile(projectId: string, projectFileType: string): Promise<Response> {
+    return this.requestService.getResponse(this.filesUrl(projectId).concat(projectFileType, 'download'), true);
+  }
+
+  checkFileExists(projectId: string, projectFileType: string): Promise<boolean> {
+    return this.requestService.get(this.filesUrl(projectId).concat(projectFileType, 'check'), true).then(response => {
+      return !!response;
+    });
+  }
+
   downloadZipFile(project: Project): Promise<FileResponse> {
     return this.requestService.getFile(this.filesUrl(project.id).concat('zip'), project.name + '.zip', true);
   }

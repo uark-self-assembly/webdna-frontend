@@ -1,5 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SimulationOption } from '../project-config.component';
+import { ProjectService } from '../../../../services/project/project.service';
+import { Project } from '../../../../services/project/project';
+import { MatDialog } from '@angular/material/dialog';
+import { FileDialogComponent, FileDialogData } from '../../file-dialog/file-dialog.component';
 
 @Component({
     selector: 'simulation-file-upload',
@@ -9,12 +13,29 @@ export class SimulationFileUploadComponent implements OnInit {
     @Input()
     option: SimulationOption;
 
+    @Input()
+    project: Project;
+
     private existingFile = false;
 
-    constructor() { }
+    get fileDialogData(): FileDialogData {
+        return {
+            project: this.project,
+            projectFileType: this.option.propertyName
+        }
+    }
+
+    constructor(
+        private projectService: ProjectService,
+        public dialog: MatDialog) { }
 
     ngOnInit() {
-        // TODO (jace) check if file already exists
+        this.projectService.checkFileExists(this.project.id, this.option.propertyName).then(response => {
+            console.log(this.option.propertyName + ' ' + response);
+            this.existingFile = response;
+        }, _ => {
+            this.existingFile = false;
+        });
     }
 
     fileChange(event) {
@@ -29,6 +50,9 @@ export class SimulationFileUploadComponent implements OnInit {
     }
 
     viewExistingClicked() {
-        // TODO (jace) display current file
+        console.log('Requested to view existing file');
+        this.dialog.open(FileDialogComponent, {
+            data: this.fileDialogData
+        });
     }
 }

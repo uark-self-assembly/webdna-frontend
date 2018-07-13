@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>
+    {{data.project.name}}: {{data.projectFileType}}
+    <span class="pull-right">
+        <button mat-icon-button tabindex="-1" (click)="onCloseClicked()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </span>
+</h2>
+<mat-dialog-content>
+    <div style="overflow: scroll; overflow-y: scroll; overflow-x: scroll;" [style.height.px]="600" [style.width.px]="800">
+        <span style="color: black; font-family: 'Courier New';" *ngFor="let line of fileLines">{{line}}
+            <br>
+        </span>
+    </div>
+</mat-dialog-content>

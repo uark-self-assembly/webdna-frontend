@@ -65,10 +65,12 @@ export class RequestService {
     }
   }
 
+  getResponse(urlPieces: string[], authenticated: boolean = false): Promise<Response> {
+    return this.http.get(this.buildUrl(urlPieces), this.buildOptions(authenticated)).toPromise();
+  }
+
   get<T>(urlPieces: string[], authenticated: boolean = false): Promise<T> {
-    return this.http.get(this.buildUrl(urlPieces), this.buildOptions(authenticated))
-      .toPromise()
-      .then(this.doPromiseResult);
+    return this.getResponse(urlPieces, authenticated).then(this.doPromiseResult);
   }
 
   post<T>(urlPieces: string[], body?: any, authenticated: boolean = false): Promise<T> {
