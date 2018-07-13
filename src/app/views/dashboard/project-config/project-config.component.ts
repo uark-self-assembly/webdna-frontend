@@ -2,10 +2,12 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Project, ProjectFileType } from '../../../services/project/project';
 import { ProjectService } from '../../../services/project/project.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 
 class OptionCollection {
     name: string;
     options: SimulationOption[];
+    something: MatSlideToggle
 
     constructor(name: string, options: SimulationOption[]) {
         this.name = name;
@@ -14,7 +16,7 @@ class OptionCollection {
 }
 
 enum SimulationOptionType {
-    FLOAT, BOOLEAN, INTEGER, STRING, CHOICE, FILE
+    BOOLEAN, INTEGER, FLOAT, STRING, CHOICE, FILE
 }
 
 class SimulationOption {
@@ -22,7 +24,18 @@ class SimulationOption {
     displayText: string;
     optionType: SimulationOptionType;
     choices?: string[][];
-    value: any;
+    private _value: any;
+    get value() {
+        return this._value;
+    }
+    set value(newValue) {
+        this._value = newValue;
+        if (this.validate && this.optionsMap) {
+            this.validate(this.optionsMap);
+        }
+    }
+
+    optionsMap: Map<String, SimulationOption>;
     validate = (_) => { };
 
     constructor(
@@ -43,7 +56,7 @@ class SimulationOption {
         }
 
         if (optionType === SimulationOptionType.CHOICE) {
-            this.value = choices[0];
+            this.value = choices[0][0];
         }
 
         if (!value && optionType === SimulationOptionType.BOOLEAN) {
@@ -56,7 +69,7 @@ class SimulationOption {
             return;
         }
 
-        this.value = this.choices[index];
+        this.value = this.choices[index][0];
     }
 }
 
@@ -102,16 +115,14 @@ export class ProjectConfigComponent implements OnInit {
         new SimulationOption(
             'backend_precision', 'Floating Point Precision', SimulationOptionType.CHOICE,
             [['float', 'float (low)'], ['double', 'double (high)'], ['mixed', 'mixed (CUDA only)']], 1, (options) => {
-                if (options['backend_precision'].value[0] === 'mixed') {
+                if (options['backend_precision'].value === 'mixed') {
                     options['backend'].choose(2);
-                    options['backend'].validate(options);
                 }
             }),
         new SimulationOption('backend', 'Backend Type', SimulationOptionType.CHOICE,
             [['CPU', 'CPU'], ['CUDA', 'CUDA (MD only)']], null, (options) => {
-                if (options['backend'].value[0] === 'CUDA') {
+                if (options['backend'].value === 'CUDA') {
                     options['sim_type'].choose(0);
-                    options['sim_type'].validate(options);
                 }
             }),
         new SimulationOption('debug', 'Debug', SimulationOptionType.BOOLEAN),
@@ -166,6 +177,7 @@ export class ProjectConfigComponent implements OnInit {
         for (const optionCollection of this.optionCollections) {
             optionCollection.options.forEach(option => {
                 this.optionsMap[option.propertyName] = option;
+                option.optionsMap = this.optionsMap;
             });
         }
     }
@@ -179,7 +191,7 @@ export class ProjectConfigComponent implements OnInit {
                 if (option.optionType === SimulationOptionType.CHOICE) {
                     for (const choice of option.choices) {
                         if (choice[0] === response[key]) {
-                            option.value = choice;
+                            option.value = choice[0];
                         }
                     }
                 } else if (option.optionType === SimulationOptionType.FLOAT) {
@@ -221,11 +233,6 @@ export class ProjectConfigComponent implements OnInit {
         if (!this.loading) {
             this.didClickBack();
         }
-    }
-
-    choose(option: SimulationOption, choice) {
-        option.value = choice;
-        option.validate(this.optionsMap);
     }
 
     fileChange(event, option: SimulationOption) {

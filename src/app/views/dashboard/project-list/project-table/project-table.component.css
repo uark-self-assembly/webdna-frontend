@@ -5,3 +5,7 @@ mat-expansion-panel.project-table-item {
 mat-expansion-panel-title.project-table-item {
     width: 150px;
 }
+
+table.action-items {
+    margin: 0px;
+}

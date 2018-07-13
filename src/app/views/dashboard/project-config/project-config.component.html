@@ -1,88 +1,75 @@
-<div class="row config-row">
-    <button type="button" class="btn btn-primary" style="border: 0px solid transparent; font-size: 18px; vertical-align: middle;"
-        (click)="backClicked()">
-        <span class="glyphicon glyphicon-menu-left"></span> Back
-    </button>
-
-    <span class="text-muted config-text-title">
-        <strong>{{project.name}}</strong>
-    </span>
-
-    <button type="button" class="btn btn-primary pull-right" style="border: 0px solid transparent; font-size: 18px; vertical-align: middle;"
-        (click)="analysisClicked()">
-        Configure Analysis
-        <span class="glyphicon glyphicon-menu-right"></span>
-    </button>
-</div>
-
-<div class="content content-full-width">
-    <div class="row button-row">
-        <button mat-button color="primary" [disabled]="loading" (click)="save()">
-            <mat-icon>save</mat-icon>
-            Save
+<div class="project-config-page">
+    <div class="row config-row">
+        <button type="button" class="btn btn-primary" style="border: 0px solid transparent; font-size: 18px; vertical-align: middle;"
+            (click)="backClicked()">
+            <span class="glyphicon glyphicon-menu-left"></span> Back
         </button>
-        <button mat-raised-button color="primary" class="pull-right" [disabled]="loading" (click)="save(true)">
-            <mat-icon>play_arrow</mat-icon>
-            Save and Run
+
+        <span class="text-muted config-text-title">
+            <strong>{{project.name}}</strong>
+        </span>
+
+        <button type="button" class="btn btn-primary pull-right" style="border: 0px solid transparent; font-size: 18px; vertical-align: middle;"
+            (click)="analysisClicked()">
+            Configure Analysis
+            <span class="glyphicon glyphicon-menu-right"></span>
         </button>
     </div>
 
-    <mat-accordion multi="true">
-        <mat-expansion-panel *ngFor="let optionCollection of optionCollections">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    {{optionCollection.name}}
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+    <div class="content content-full-width">
+        <div class="row button-row">
+            <button mat-button color="primary" [disabled]="loading" (click)="save()">
+                <mat-icon>save</mat-icon>
+                Save
+            </button>
+            <button mat-raised-button color="primary" class="pull-right" [disabled]="loading" (click)="save(true)">
+                <mat-icon>play_arrow</mat-icon>
+                Save and Run
+            </button>
+        </div>
 
-            <form>
+        <mat-accordion multi="true">
+            <mat-expansion-panel *ngFor="let optionCollection of optionCollections">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{optionCollection.name}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
 
-                <div class="form-group" *ngFor="let option of optionCollection.options">
-                    <label>{{option.displayText}}</label>
-                    <div [ngSwitch]="option.optionType">
-                        <!-- for file options -->
-                        <div *ngSwitchCase="SimulationOptionType.FILE">
-                            <br>
-                            <span class="btn btn-default">
-                                <input type="file" (change)="fileChange($event, option)" placeholder="Upload Sequence File" accept=".txt,*" />
-                            </span>
+                <div class="form-container">
+                    <div *ngFor="let option of optionCollection.options">
+                        <div [ngSwitch]="option.optionType">
+                            <div *ngSwitchCase="SimulationOptionType.BOOLEAN">
+                                <mat-slide-toggle [(ngModel)]="option.value">{{option.displayText}}</mat-slide-toggle>
+                            </div>
+
+                            <mat-form-field *ngSwitchCase="SimulationOptionType.INTEGER">
+                                <input matInput type="number" placeholder="{{option.displayText}}" [(ngModel)]="option.value">
+                            </mat-form-field>
+
+                            <mat-form-field *ngSwitchCase="SimulationOptionType.FLOAT">
+                                <input matInput type="number" placeholder="{{option.displayText}}" [(ngModel)]="option.value">
+                            </mat-form-field>
+
+                            <mat-form-field *ngSwitchCase="SimulationOptionType.STRING">
+                                <input matInput type="text" placeholder="{{option.displayText}}" [(ngModel)]="option.value">
+                            </mat-form-field>
+
+                            <mat-form-field *ngSwitchCase="SimulationOptionType.CHOICE">
+                                <mat-select placeholder="{{option.displayText}}" [(value)]="option.value">
+                                    <mat-option *ngFor="let choice of option.choices" value="{{choice[0]}}">
+                                        {{choice[1]}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field *ngSwitchCase="SimulationOptionType.FILE">
+                                <input matInput placeholder="{{option.displayText}}">
+                            </mat-form-field>
                         </div>
-
-                        <!-- for string options -->
-                        <input *ngSwitchCase="SimulationOptionType.STRING" matInput [(ngModel)]="option.value" name="option_{{option.propertyName}}"
-                            placeholder="{{option.displayText}}" class="form-control">
-
-                        <!-- for multi choice options -->
-                        <div *ngSwitchCase="SimulationOptionType.CHOICE" class="dropdown" dropdown>
-                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdown_{{option.propertyName}}" dropdown-open>
-                                {{option.value[1]}}
-                                <span class="caret"></span>
-                            </button>
-
-                            <ul class="dropdown-menu">
-                                <li *ngFor="let choice of option.choices">
-                                    <a (click)="choose(option, choice)" style="min-height: 36px;">{{choice[1]}}</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- for on/off options (BOOLEAN) -->
-                        <div *ngSwitchCase="SimulationOptionType.BOOLEAN" class="bootstrap-switch-container">
-                            <bSwitch [switch-on-color]="'primary'" [(ngModel)]="option.value" (keyup)="option.validate(optionsMap)" name="option_{{option.propertyName}}"></bSwitch>
-                        </div>
-
-                        <input *ngSwitchCase="SimulationOptionType.INTEGER" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
-                            placeholder="{{option.displayText}}" class="form-control">
-
-                        <input *ngSwitchCase="SimulationOptionType.FLOAT" type="number" [(ngModel)]="option.value" name="option_{{option.propertyName}}"
-                            placeholder="{{option.displayText}}" class="form-control">
-
-                        <!-- default option (same as string, for now) -->
-                        <input *ngSwitchCase="SimulationOptionType.DEFAULT" [(ngModel)]="option.value" name="option_{{option.propertyName}}" placeholder="{{option.displayText}}"
-                            class="form-control">
                     </div>
                 </div>
-            </form>
-        </mat-expansion-panel>
-    </mat-accordion>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
 </div>

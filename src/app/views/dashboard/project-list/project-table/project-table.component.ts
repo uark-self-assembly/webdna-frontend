@@ -196,7 +196,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy, AfterViewChecke
         this.updateLogText();
     }
 
-    cancelClicked(row: ProjectRow) {
+    stopClicked(row: ProjectRow) {
         this.projectService.terminate(row.project.id).then(_ => {
             this.showSnackBar('Project "' + row.project.name + '" was stopped');
             this.projectService.getProjectById(row.project.id).then(response => {

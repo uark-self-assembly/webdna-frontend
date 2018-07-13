@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   imports: [
@@ -22,14 +23,15 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatToolbarModule,
     MatCardModule,
     MatButtonModule,
-    MatInputModule,
     MatFormFieldModule,
+    MatInputModule,
     MatExpansionModule,
     MatTooltipModule,
     MatIconModule,
     MatSlideToggleModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatSelectModule
   ]
 })
 export class AppMaterialModule { }

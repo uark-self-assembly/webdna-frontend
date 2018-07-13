@@ -1,12 +1,14 @@
-<div class="row project-list-header">
-    <span class="text-muted project-list-header-title">
-        <strong *ngIf="user && user.first_name">{{user.first_name}}'s Projects</strong>
-        <strong *ngIf="!user || !user.first_name">Projects</strong>
-    </span>
+ <div class="project-list-page">
+    <div class="row project-list-header">
+        <span class="text-muted project-list-header-title">
+            <strong *ngIf="user && user.first_name">{{user.first_name}}'s Projects</strong>
+            <strong *ngIf="!user || !user.first_name">Projects</strong>
+        </span>
 
 
-    <button mat-raised-button color="primary" type="button" class="pull-right" (click)="addProjectClicked()">
-        <mat-icon>add</mat-icon>New</button>
+        <button mat-raised-button color="primary" type="button" class="pull-right" (click)="addProjectClicked()">
+            <mat-icon>add</mat-icon>New</button>
+    </div>
+    <project-table [projects]="projects" [projectClicked]="projectClicked" [runClicked]="runClicked" [deleteClicked]="deleteClicked"
+        [duplicateClicked]="duplicateClicked"></project-table>
 </div>
-<project-table [projects]="projects" [projectClicked]="projectClicked" [runClicked]="runClicked" [deleteClicked]="deleteClicked"
-    [duplicateClicked]="duplicateClicked"></project-table>

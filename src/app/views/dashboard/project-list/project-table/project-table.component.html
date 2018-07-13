@@ -12,58 +12,47 @@
 
 
         <div class="table-responsive">
-            <table class="table">
+            <table class="table action-items">
                 <tr>
-                    <a *ngIf="row.project.hasOutput && !row.restarting" rel="tooltip" title="Restart" class="btn btn-primary btn-simple btn-s"
-                        (click)="restartClicked(row)">
-                        <i class="fa fa-undo"></i>
-                        Restart Simulation
-                    </a>
-                    <a *ngIf="row.project.hasOutput && row.restarting" rel="tooltip" title="Restart" class="btn btn-default btn-simple btn-s"
-                        (click)="restartClicked(row)">
-                        <i class="fa fa-undo"></i>
-                        Restarting...onClose
-                    </a>
-                    <a *ngIf="!row.project.hasOutput && !row.starting" rel="tooltip" title="Start" class="btn btn-success btn-simple btn-s" (click)="startClicked(row)">
-                        <i class="fa fa-play"></i>
-                        Start Simulation
-                    </a>
-                    <a *ngIf="!row.project.hasOutput && row.starting" rel="tooltip" title="Start" class="btn btn-primary btn-simple btn-s" (click)="startClicked(row)">
-                        <i class="fa fa-play"></i>
-                        Starting...
-                    </a>
-                    <a *ngIf="row.project.running" rel="tooltip" title="Cancel" class="btn btn-danger btn-simple btn-s" (click)="cancelClicked(row)">
-                        <i class="fa fa-stop"></i>
-                        Stop Simulation
-                    </a>
-                    <a rel="tooltip" title="View Output" class="btn {{!row.project.hasOutput ? 'btn-default btn-s disabled' : 'btn-primary'}} btn-simple btn-s"
-                        (click)="viewOutputClicked(row)">
-                        <i class="fa fa-terminal"></i>
-                        View Output
-                    </a>
-                    <a rel="tooltip" title="Edit" class="btn {{row.project.running ? 'btn-default btn-s disabled' : 'btn-primary'}} btn-simple btn-s"
-                        (click)="editClicked(row)">
-                        <i class="fa fa-edit"></i>
+                    <button *ngIf="row.project.hasOutput" mat-button color="primary" (click)="restartClicked(row)">
+                        <mat-icon>replay</mat-icon>
+                        Restart
+                    </button>
+
+                    <button *ngIf="!row.project.hasOutput" mat-button color="accent" (click)="startClicked(row)">
+                        <mat-icon>play_arrow</mat-icon>
+                        Start
+                    </button>
+
+                    <button *ngIf="row.project.running" mat-button color="warn" (click)="stopClicked(row)">
+                        <mat-icon>stop</mat-icon>
+                        Stop
+                    </button>
+
+                    <button mat-button disabled="{{!row.project.hasOutput}}" color="primary" (click)="viewOutputClicked(row)">
+                        <mat-icon>vertical_split</mat-icon>
+                        Output
+                    </button>
+
+                    <button mat-button disabled="{{row.project.running}}" color="primary" (click)="editClicked(row)">
+                        <mat-icon>edit</mat-icon>
                         Edit
-                    </a>
-                    <a *ngIf="!row.project.running && !row.downloading" rel="tooltip" title="Download" class="btn btn-primary btn-simple btn-s"
-                        (click)="downloadClicked(row)">
-                        <i class="fa fa-download"></i>
-                        Download
-                    </a>
-                    <a *ngIf="!row.project.running && row.downloading" rel="tooltip" title="Download" class="btn btn-default btn-simple btn-s disabled">
-                        <i class="fa fa-download"></i>
-                        Downloading...
-                    </a>
-                    <a *ngIf="!row.project.running && !row.downloading" rel="tooltip" title="Duplicate" class="btn btn-primary btn-simple btn-s"
-                        (click)="duplicateClicked(row.project)">
-                        <i class="fa fa-clone"></i>
+                    </button>
+
+                    <button *ngIf="!row.project.running" mat-button disabled="{{row.downloading}}" color="primary" (click)="downloadClicked(row)">
+                        <mat-icon>get_app</mat-icon>
+                        {{row.downloading ? 'Downloading...' : 'Download'}}
+                    </button>
+
+                    <button *ngIf="!row.project.running && !row.downloading" mat-button color="primary" (click)="duplicateClicked(row.project)">
+                        <mat-icon>file_copy</mat-icon>
                         Duplicate
-                    </a>
-                    <a rel="tooltip" title="Delete" class="btn btn-danger btn-simple btn-s" (click)="deleteClicked(row.project)">
-                        <i class="fa fa-trash"></i>
+                    </button>
+
+                    <button *ngIf="!row.project.running" mat-button color="warn" (click)="deleteClicked(row.project)">
+                        <mat-icon>delete</mat-icon>
                         Delete
-                    </a>
+                    </button>
                 </tr>
             </table>
         </div>

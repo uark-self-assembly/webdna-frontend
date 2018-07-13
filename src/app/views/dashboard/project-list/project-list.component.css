@@ -1,3 +1,9 @@
+.project-list-page {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+}
+
 .project-list-header {
     padding-left: 16px;
     padding-right: 16px;
