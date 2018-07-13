@@ -77,7 +77,7 @@ export class ProjectService {
     return this.requestService.get(this.simulationUrl(projectId).concat('terminate'), true);
   }
 
-  uploadFile(projectId: string, file: File, projectFileType: ProjectFileType): Promise<Response> {
+  uploadFile(projectId: string, file: File, projectFileType: string): Promise<Response> {
     const formData = new FormData();
     formData.append('file', file, file.name);
     formData.append('type', projectFileType.toString());

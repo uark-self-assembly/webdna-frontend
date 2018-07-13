@@ -19,6 +19,7 @@ import { HtmolComponent } from '../visualizer/htmol/htmol.component';
 import { AppMaterialModule } from '../../material/app-material.module';
 import { LogOutputDialogComponent } from './log-output/dialog/log-output-dialog.component';
 import { ProjectAddDialogComponent } from './project-list/project-add-dialog/project-add-dialog.component';
+import { SimulationFileUploadComponent } from './project-config/simulation-file-upload/simulation-file-upload.component';
 
 @NgModule({
     imports: [
@@ -37,6 +38,7 @@ import { ProjectAddDialogComponent } from './project-list/project-add-dialog/pro
         VisualizerComponent,
         HtmolComponent,
         LogOutputDialogComponent,
+        SimulationFileUploadComponent,
         ProjectAddDialogComponent,
         ProjectListComponent,
         ProjectTableComponent,

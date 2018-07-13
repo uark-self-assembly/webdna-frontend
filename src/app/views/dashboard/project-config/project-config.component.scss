@@ -24,10 +24,18 @@
     flex-direction: column;
 }
 
-.form-container * {
+.form-file-button {
+    width: 100px;
+}
+
+.full-width {
     width: 100%;
 }
 
-.form-file-button {
-    width: 100px;
+.full-width * {
+    width: 100%;
+}
+
+.half-width {
+    width: 50%;
 }

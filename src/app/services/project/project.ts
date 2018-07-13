@@ -84,7 +84,9 @@ export class Project {
 }
 
 export enum ProjectFileType {
-    SEQUENCE = 'SEQUENCE', TRAJECTORY_DAT = 'TRAJECTORY_DAT'
+    SEQUENCE = 'SEQUENCE',
+    TRAJECTORY_DAT = 'TRAJECTORY_DAT',
+    EXTERNAL_FORCES = 'EXTERNAL_FORCES'
 }
 
 export class LogResponse {

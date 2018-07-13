@@ -4,6 +4,7 @@ import { ProjectService } from '../../../services/project/project.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { DOCUMENT } from '@angular/platform-browser';
+import { Response } from '@angular/http';
 
 class OptionCollection {
     name: string;
@@ -16,11 +17,11 @@ class OptionCollection {
     }
 }
 
-enum SimulationOptionType {
+export enum SimulationOptionType {
     BOOLEAN, INTEGER, FLOAT, STRING, CHOICE, FILE
 }
 
-class SimulationOption {
+export class SimulationOption {
     propertyName: string;
     displayText: string;
     optionType: SimulationOptionType;
@@ -79,7 +80,6 @@ class SimulationOption {
     templateUrl: './project-config.component.html',
     styleUrls: ['./project-config.component.scss']
 })
-
 export class ProjectConfigComponent implements OnInit {
     SimulationOptionType = SimulationOptionType
 
@@ -95,8 +95,8 @@ export class ProjectConfigComponent implements OnInit {
     private loading = false;
 
     private generationOptions = [
-        new SimulationOption('sequence_file', 'Sequence File', SimulationOptionType.FILE, null, null, (options) => {
-            if (options['sequence_file'].value) {
+        new SimulationOption(ProjectFileType.SEQUENCE, 'Sequence File', SimulationOptionType.FILE, null, null, (options) => {
+            if (options[ProjectFileType.SEQUENCE].value) {
                 options['should_regenerate'].value = true;
             }
         }),
@@ -138,8 +138,8 @@ export class ProjectConfigComponent implements OnInit {
         new SimulationOption('seed', 'Simulation Seed', SimulationOptionType.INTEGER, null, 42),
         new SimulationOption('T', 'Temperature (K)', SimulationOptionType.FLOAT, null, 243),
         new SimulationOption('verlet_skin', 'Verlet Skin', SimulationOptionType.FLOAT, null, 0.05),
-        new SimulationOption('external_forces_file', 'External Forces File', SimulationOptionType.FILE, null, null, (options) => {
-            if (options['external_forces_file'].value) {
+        new SimulationOption(ProjectFileType.EXTERNAL_FORCES, 'External Forces File', SimulationOptionType.FILE, null, null, (options) => {
+            if (options[ProjectFileType.EXTERNAL_FORCES].value) {
                 options['external_forces'].value = true;
             }
         }),
@@ -156,6 +156,7 @@ export class ProjectConfigComponent implements OnInit {
     ]
 
     private optionsMap: Map<string, SimulationOption> = new Map<string, SimulationOption>();
+    private fileOptions: SimulationOption[] = [];
 
     private optionCollections: OptionCollection[] = [];
 
@@ -170,6 +171,7 @@ export class ProjectConfigComponent implements OnInit {
         ];
 
         this.buildOptionsMap();
+        this.collectFileOptions();
     }
 
     ngOnInit() {
@@ -188,6 +190,16 @@ export class ProjectConfigComponent implements OnInit {
                 this.optionsMap[option.propertyName] = option;
                 option.optionsMap = this.optionsMap;
             });
+        }
+    }
+
+    collectFileOptions() {
+        for (const optionCollection of this.optionCollections) {
+            for (const option of optionCollection.options) {
+                if (option.optionType === SimulationOptionType.FILE) {
+                    this.fileOptions.push(option);
+                }
+            }
         }
     }
 
@@ -242,21 +254,15 @@ export class ProjectConfigComponent implements OnInit {
         }
     }
 
-    fileChange(event, option: SimulationOption) {
-        const fileList: FileList = event.target.files;
-        if (fileList.length > 0) {
-            option.value = fileList[0];
-        }
-    }
-
-    fileButtonClicked(option: SimulationOption) {
-        document.getElementById(option.propertyName).click();
-    }
-
-    showSnackBar(message: string) {
+    showSnackBar(message: string, duration: number = 2000) {
         this.snackBar.open(message, null, {
-            duration: 2000
+            duration: duration,
         });
+    }
+
+    isNumberKey(event) {
+        const charCode = event.which ? event.which : event.keyCode;
+        return !(charCode > 31 && (charCode < 48 || charCode > 57));
     }
 
     save(execute: boolean = false) {
@@ -267,17 +273,19 @@ export class ProjectConfigComponent implements OnInit {
         this.loading = true;
         this.buildResults();
 
-        const sequenceFile = this.optionsMap['sequence_file'].value;
-
-        if (sequenceFile) {
-            this.projectService.uploadFile(this.project.id, sequenceFile, ProjectFileType.SEQUENCE).then(_ => {
-                this.applySettings(execute);
-            }, _ => {
-                this.loading = false;
-                console.log('Couldn\'t upload file');
-            });
-        } else {
+        this.saveFiles().then(_ => {
             this.applySettings(execute);
+        }, _ => {
+            this.loading = false;
+            this.showSnackBar('An error occurred when uploading these files');
+        });
+    }
+
+    async saveFiles(): Promise<void> {
+        for (const fileOption of this.fileOptions) {
+            if (fileOption.value) {
+                await this.projectService.uploadFile(this.project.id, fileOption.value, fileOption.propertyName);
+            }
         }
     }
 
@@ -289,7 +297,17 @@ export class ProjectConfigComponent implements OnInit {
             } else {
                 this.showSnackBar('Project settings saved successfully');
             }
-        }, _ => { /* error */
+        }, (response: Response) => { /* error */
+            try {
+                const body = response.json();
+                if (body && body.response && body.response.non_field_errors) {
+                    const error = body.response.non_field_errors[0];
+                    this.showSnackBar(error, 4000);
+                }
+            } catch {
+                this.showSnackBar('An unkown error occurred when trying to save your settings.');
+            }
+
             this.loading = false;
         });
     }
@@ -298,6 +316,16 @@ export class ProjectConfigComponent implements OnInit {
         const shouldRegenerate = this.optionsMap['should_regenerate'].value;
         this.projectService.execute(this.project.id, shouldRegenerate).then(response => {
             this.backClicked();
+        }, response => {
+            try {
+                const body = response.json();
+                console.log(body);
+                if (body && body.message) {
+                    this.showSnackBar(body.message);
+                }
+            } catch {
+                this.showSnackBar('This project cannot be executed');
+            }
         });
     }
 
