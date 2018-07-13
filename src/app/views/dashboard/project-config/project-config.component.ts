@@ -1,8 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
 import { Project, ProjectFileType } from '../../../services/project/project';
 import { ProjectService } from '../../../services/project/project.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { DOCUMENT } from '@angular/platform-browser';
 
 class OptionCollection {
     name: string;
@@ -94,7 +95,11 @@ export class ProjectConfigComponent implements OnInit {
     private loading = false;
 
     private generationOptions = [
-        new SimulationOption('sequence_file', 'Sequence File', SimulationOptionType.FILE),
+        new SimulationOption('sequence_file', 'Sequence File', SimulationOptionType.FILE, null, null, (options) => {
+            if (options['sequence_file'].value) {
+                options['should_regenerate'].value = true;
+            }
+        }),
         new SimulationOption('box_size', 'Box Size', SimulationOptionType.INTEGER, null, 20),
         new SimulationOption('should_regenerate', 'Regenerate Initial Topology', SimulationOptionType.BOOLEAN),
     ]
@@ -133,8 +138,12 @@ export class ProjectConfigComponent implements OnInit {
         new SimulationOption('seed', 'Simulation Seed', SimulationOptionType.INTEGER, null, 42),
         new SimulationOption('T', 'Temperature (K)', SimulationOptionType.FLOAT, null, 243),
         new SimulationOption('verlet_skin', 'Verlet Skin', SimulationOptionType.FLOAT, null, 0.05),
+        new SimulationOption('external_forces_file', 'External Forces File', SimulationOptionType.FILE, null, null, (options) => {
+            if (options['external_forces_file'].value) {
+                options['external_forces'].value = true;
+            }
+        }),
         new SimulationOption('external_forces', 'Use External Forces', SimulationOptionType.BOOLEAN),
-        new SimulationOption('external_forces_file', 'External Forces File Name', SimulationOptionType.STRING),
     ]
 
     private mdSimulationOptions = [
@@ -152,7 +161,7 @@ export class ProjectConfigComponent implements OnInit {
 
     private result = {};
 
-    constructor(private projectService: ProjectService, private snackBar: MatSnackBar) {
+    constructor(@Inject(DOCUMENT) document, private projectService: ProjectService, private snackBar: MatSnackBar) {
         this.optionCollections = [
             new OptionCollection('Generation Options', this.generationOptions),
             new OptionCollection('Generic Options', this.genericOptions),
@@ -238,7 +247,10 @@ export class ProjectConfigComponent implements OnInit {
         if (fileList.length > 0) {
             option.value = fileList[0];
         }
-        this.optionsMap['should_regenerate'].value = true;
+    }
+
+    fileButtonClicked(option: SimulationOption) {
+        document.getElementById(option.propertyName).click();
     }
 
     showSnackBar(message: string) {

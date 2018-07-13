@@ -63,9 +63,12 @@
                                 </mat-select>
                             </mat-form-field>
 
-                            <mat-form-field *ngSwitchCase="SimulationOptionType.FILE">
-                                <input matInput placeholder="{{option.displayText}}">
-                            </mat-form-field>
+                            <div *ngSwitchCase="SimulationOptionType.FILE">
+                                <button mat-raised-button style="width: 50%; margin-bottom: 10px;" color="primary" (click)="fileButtonClicked(option)">
+                                    {{option.value ? option.displayText + ': ' + option.value.name : 'Upload ' + option.displayText}}
+                                </button>
+                                <input id="{{option.propertyName}}" type="file" style="display: none;" (change)="fileChange($event, option)">
+                            </div>
                         </div>
                     </div>
                 </div>
