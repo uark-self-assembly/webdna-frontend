@@ -45,6 +45,10 @@ export class SimulationFileUploadComponent implements OnInit {
         }
     }
 
+    clearFileClicked() {
+        this.option.value = null;
+    }
+
     fileButtonClicked() {
         document.getElementById(this.option.propertyName).click();
     }

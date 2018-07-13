@@ -1,5 +1,8 @@
 <div class="container-fluid" style="margin-bottom: 15px;">
     <div class="row">
+        <button *ngIf="option.value" mat-icon-button (click)="clearFileClicked()">
+            <mat-icon>clear</mat-icon>
+        </button>
         <button mat-raised-button color="primary" (click)="fileButtonClicked()">
             {{option.value ? option.displayText + ': ' + option.value.name : 'Upload ' + option.displayText}}
         </button>
