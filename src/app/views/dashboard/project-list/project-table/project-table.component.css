@@ -9,3 +9,11 @@ mat-expansion-panel-title.project-table-item {
 table.action-items {
     margin: 0px;
 }
+
+.no-projects-style {
+    margin-top: 100px;
+    text-align: center;
+    font-size: 18px;
+    font-style: italic;
+    color: #444444;
+}

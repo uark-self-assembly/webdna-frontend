@@ -21,6 +21,7 @@ import { LogOutputDialogComponent } from './log-output/dialog/log-output-dialog.
 import { ProjectAddDialogComponent } from './project-list/project-add-dialog/project-add-dialog.component';
 import { SimulationFileUploadComponent } from './project-config/simulation-file-upload/simulation-file-upload.component';
 import { FileDialogComponent } from './file-dialog/file-dialog.component';
+import { ScriptUploadDialogComponent } from './project-analysis/script-upload-dialog/script-upload-dialog.component';
 
 @NgModule({
     imports: [
@@ -42,6 +43,7 @@ import { FileDialogComponent } from './file-dialog/file-dialog.component';
         SimulationFileUploadComponent,
         ProjectAddDialogComponent,
         FileDialogComponent,
+        ScriptUploadDialogComponent,
         ProjectListComponent,
         ProjectTableComponent,
         ProjectConfigComponent,
@@ -50,6 +52,7 @@ import { FileDialogComponent } from './file-dialog/file-dialog.component';
         LogOutputDialogComponent,
         ProjectAddDialogComponent,
         FileDialogComponent,
+        ScriptUploadDialogComponent,
     ]
 })
 

@@ -1,4 +1,8 @@
-<mat-accordion>
+<div *ngIf="!projectRows || projectRows.length === 0" class="no-projects-style">
+    No projects. Click "+ New" to get started
+</div>
+
+<mat-accordion *ngIf="projectRows && projectRows.length">
     <mat-expansion-panel class="project-table-item" *ngFor="let row of projectRows" id="acc_{{row.project.id}}" (opened)="groupOpened(row)"
         (closed)="groupClosed(row)" [expanded]="row.project.id === openedProjectId">
         <mat-expansion-panel-header class="project-table-item right-aligned-header">

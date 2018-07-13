@@ -1,0 +1,19 @@
+.project-analysis-page {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.analysis-row {
+    margin-bottom: 16px;
+}
+
+.analysis-pipeline-output-container {
+    margin-top: 32px;
+}
+
+.button-row {
+    margin-bottom: 16px;
+    margin-right: 0px;
+    margin-left: 0px;
+}
