@@ -10,10 +10,24 @@ import { Router } from '@angular/router';
 export class DashboardLayoutComponent {
     private sideNavOpened = false;
 
+    get currentPath(): string {
+        return this.router.url.split('/').pop();
+    }
+
     constructor(private storageService: StorageService, private router: Router) { }
 
     onLogoutClicked() {
         this.storageService.logOut();
         this.router.navigate(['login']);
+    }
+
+    projectsClicked() {
+        this.router.navigate(['dashboard']);
+        this.sideNavOpened = false;
+    }
+
+    visualizerClicked() {
+        this.router.navigate(['visualizer']);
+        this.sideNavOpened = false;
     }
 }

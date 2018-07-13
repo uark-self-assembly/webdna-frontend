@@ -218,9 +218,7 @@ export class ProjectConfigComponent implements OnInit {
                     continue;
                 }
 
-                if (option.optionType === SimulationOptionType.CHOICE) {
-                    this.result[option.propertyName] = option.value[0];
-                } else if (option.optionType === SimulationOptionType.BOOLEAN) {
+                if (option.optionType === SimulationOptionType.BOOLEAN) {
                     this.result[option.propertyName] = option.value ? 1 : 0;
                 } else {
                     this.result[option.propertyName] = option.value;
