@@ -34,7 +34,7 @@
                         Output
                     </button>
 
-                    <button mat-button disabled="{{row.project.running}}" color="primary" (click)="editClicked(row)">
+                    <button *ngIf="!row.project.running" mat-button color="primary" (click)="editClicked(row)">
                         <mat-icon>edit</mat-icon>
                         Edit
                     </button>
