@@ -16,6 +16,7 @@ export interface FileDialogData {
 })
 export class FileDialogComponent implements OnInit {
 
+    private fileText: string;
     private fileLines: string[] = [];
 
     constructor(
@@ -25,9 +26,9 @@ export class FileDialogComponent implements OnInit {
 
     ngOnInit() {
         this.projectService.downloadFile(this.data.project.id, this.data.projectFileType).then((response: Response) => {
-            console.log(response);
             try {
-                this.fileLines = response.text().split('\n');
+                this.fileText = response.text();
+                this.fileLines = this.fileText.split('\n');
             } catch {
                 this.onCloseClicked();
             }
@@ -38,5 +39,17 @@ export class FileDialogComponent implements OnInit {
 
     onCloseClicked(): void {
         this.dialogRef.close();
+    }
+
+    onDownloadClicked(): void {
+        const a = document.createElement('a');
+        a.setAttribute('style', 'display: none');
+        a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.fileText));
+        a.setAttribute('download', this.data.projectFileType.toLowerCase() + '.txt');
+
+        document.body.appendChild(a);
+
+        a.click();
+        a.remove();
     }
 }

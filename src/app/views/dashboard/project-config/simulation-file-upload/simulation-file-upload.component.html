@@ -7,6 +7,7 @@
             <mat-icon>open_in_new</mat-icon>
             Open Current File
         </button>
+        <span *ngIf="!existingFile" style="margin-left: 15px; font-style: italic; color: #333333;">No file uploaded</span>
     </div>
     <input id="{{option.propertyName}}" type="file" style="display: none;" (change)="fileChange($event)">
 </div>
