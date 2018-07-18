@@ -94,8 +94,8 @@ export class RequestService {
     }).toPromise();
   }
 
-  putFile(urlPieces: string[], formData: FormData, authenticated: boolean = false): Promise<Response> {
-    return this.http.put(this.buildUrl(urlPieces), formData, this.buildOptions(authenticated, true)).toPromise();
+  postFile(urlPieces: string[], formData: FormData, authenticated: boolean = false): Promise<Response> {
+    return this.http.post(this.buildUrl(urlPieces), formData, this.buildOptions(authenticated, true)).toPromise();
   }
 
   delete<T>(urlPieces: string[], authenticated: boolean = false): Promise<T> {

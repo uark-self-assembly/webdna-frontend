@@ -12,7 +12,7 @@
                     </div>
 
                     <div *ngSwitchCase="ProjectPage.ANALYSIS">
-                        <project-analysis [project]="editingProject" [didClickBack]="didClickBackFromAnalysis"></project-analysis>
+                        <project-analysis [project]="editingProject" [currentPage]="currentPage" [didClickBack]="didClickBackFromAnalysis"></project-analysis>
                     </div>
                 </div>
             </div>

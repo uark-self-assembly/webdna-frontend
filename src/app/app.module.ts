@@ -6,13 +6,10 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 import { AppComponent } from './app.component';
 
-import { DropdownModule } from 'ngx-dropdown';
-import { AccordionModule } from 'ngx-accordion';
 import { SidebarModule } from './views/shared/sidebar/sidebar.module';
 import { FixedPluginModule } from './views/shared/fixedplugin/fixedplugin.module';
 import { NavbarModule } from './views/shared/navbar/navbar.module';
 import { PagesnavbarModule } from './views/shared/pagesnavbar/pagesnavbar.module';
-import { AngularDateTimePickerModule } from 'angular2-datetimepicker';
 
 import { AuthLayoutComponent } from './views/layouts/auth/auth-layout.component';
 import { PageNotFoundComponent } from './views/page-not-found.component';
@@ -33,6 +30,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { DashboardLayoutComponent } from './views/layout/dashboard-layout.component';
+import { DragDropService, DragDropConfig, DragDropSortableService } from 'ng2-dnd';
 
 
 @NgModule({
@@ -45,9 +43,6 @@ import { DashboardLayoutComponent } from './views/layout/dashboard-layout.compon
         NavbarModule,
         FixedPluginModule,
         PagesnavbarModule,
-        DropdownModule,
-        AccordionModule,
-        AngularDateTimePickerModule,
         MatToolbarModule,
         MatSidenavModule,
         MatButtonModule,
@@ -71,7 +66,10 @@ import { DashboardLayoutComponent } from './views/layout/dashboard-layout.compon
         ProjectService,
         SweetAlertComponent,
         AlertService,
-        ScriptService
+        ScriptService,
+        DragDropService,
+        DragDropConfig,
+        DragDropSortableService
     ],
     bootstrap: [AppComponent]
 })

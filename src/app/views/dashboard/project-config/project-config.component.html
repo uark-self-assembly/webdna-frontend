@@ -1,19 +1,18 @@
 <div class="project-config-page">
+    <button mat-icon-button class="back-button" color="accent" (click)="backClicked()">
+        <mat-icon class="back-button-icon">arrow_back</mat-icon>
+    </button>
+
+    <button mat-button class="analysis-button" color="accent" (click)="analysisClicked()">
+        Analysis
+        <mat-icon class="analysis-button-icon">arrow_forward_ios</mat-icon>
+    </button>
+
     <div class="row config-row">
-        <button type="button" class="btn btn-primary" style="border: 0px solid transparent; font-size: 18px; vertical-align: middle;"
-            (click)="backClicked()">
-            <span class="glyphicon glyphicon-menu-left"></span> Back
-        </button>
-
-        <span class="text-muted config-text-title">
-            <strong>{{project.name}}</strong>
-        </span>
-
-        <button type="button" class="btn btn-primary pull-right" style="border: 0px solid transparent; font-size: 18px; vertical-align: middle;"
-            (click)="analysisClicked()">
-            Configure Analysis
-            <span class="glyphicon glyphicon-menu-right"></span>
-        </button>
+        <div class="text-muted config-text-title">
+            Simulation Configuration
+            <span style="font-size: 18px;">"{{project.name}}"</span>
+        </div>
     </div>
 
     <div class="content content-full-width">

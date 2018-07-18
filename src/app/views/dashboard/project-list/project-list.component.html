@@ -1,8 +1,8 @@
  <div class="project-list-page">
     <div class="row project-list-header">
         <span class="text-muted project-list-header-title">
-            <strong *ngIf="user && user.first_name">{{user.first_name}}'s Projects</strong>
-            <strong *ngIf="!user || !user.first_name">Projects</strong>
+            <span *ngIf="user && user.first_name">{{user.first_name}}'s Projects</span>
+            <span *ngIf="!user || !user.first_name">Projects</span>
         </span>
 
 

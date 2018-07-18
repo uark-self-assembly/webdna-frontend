@@ -4,7 +4,7 @@ export class Script {
   description: string;
 
   constructor(file_name?: string, description?: string) {
-    this.file_name = name;
+    this.file_name = file_name;
     this.description = description;
   }
 }

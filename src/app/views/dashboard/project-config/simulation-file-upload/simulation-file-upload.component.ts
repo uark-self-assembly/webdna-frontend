@@ -31,7 +31,6 @@ export class SimulationFileUploadComponent implements OnInit {
 
     ngOnInit() {
         this.projectService.checkFileExists(this.project.id, this.option.propertyName).then(response => {
-            console.log(this.option.propertyName + ' ' + response);
             this.existingFile = response;
         }, _ => {
             this.existingFile = false;
@@ -54,7 +53,6 @@ export class SimulationFileUploadComponent implements OnInit {
     }
 
     viewExistingClicked() {
-        console.log('Requested to view existing file');
         this.dialog.open(FileDialogComponent, {
             data: this.fileDialogData
         });

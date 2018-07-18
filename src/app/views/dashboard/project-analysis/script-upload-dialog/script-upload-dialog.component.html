@@ -10,7 +10,7 @@
     <button mat-raised-button color="primary" (click)="fileInput.click()">
         {{scriptFileChosen ? 'File: ' + scriptFile.name : 'Choose Script File'}}
     </button>
-    <input #fileInput type="file" style="display: none;" (change)="fileChange($event)">
+    <input #fileInput type="file" style="display: none;" (change)="fileChange($event)" accept=".py">
 
     <div *ngIf="scriptFileChosen" style="margin-top: 30px;">
         <mat-form-field style="width: 50%">
@@ -23,7 +23,7 @@
 
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button *ngIf="uploadReady" mat-button color="primary" [mat-dialog-close]="true" (click)="uploadClicked()">
+    <button *ngIf="uploadReady" mat-button color="primary" (click)="uploadClicked()">
         Upload
     </button>
 </mat-dialog-actions>

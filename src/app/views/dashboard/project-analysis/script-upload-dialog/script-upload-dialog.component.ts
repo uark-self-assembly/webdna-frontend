@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ScriptService } from '../../../../services/script/script.service';
+import { Script } from '../../../../services/script/script';
 
 @Component({
     selector: 'script-upload-dialog',
@@ -24,7 +25,7 @@ export class ScriptUploadDialogComponent {
         private scriptService: ScriptService) { }
 
     onCloseClicked(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(false);
     }
 
     fileChange(event) {
@@ -36,6 +37,11 @@ export class ScriptUploadDialogComponent {
     }
 
     uploadClicked() {
-        // TODO (jace) upload script
+        const script = new Script(this.newScriptName, this.newScriptDescription);
+        this.scriptService.uploadScript(this.scriptFile, script).then(_ => {
+            this.dialogRef.close(true);
+        }, _ => {
+            this.dialogRef.close(false);
+        });
     }
 }

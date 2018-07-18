@@ -6,15 +6,7 @@ import { StorageService } from '../storage/storage.service';
 
 @Injectable()
 export class ScriptService {
-  private usersUrl = ['users'];
-
-  get userId(): string {
-    return this.storageService.user.id;
-  }
-
-  get scriptsUrl() {
-    return this.usersUrl.concat(this.userId).concat('scripts');
-  }
+  private scriptsUrl = ['scripts'];
 
   projectsUrl(projectId) {
     return ['projects'].concat(projectId);
@@ -32,38 +24,28 @@ export class ScriptService {
     formData.append('file_name', script.file_name);
     formData.append('description', script.description);
 
-    return this.requestService.putFile(this.scriptsUrl.concat('upload'), formData, true);
+    return this.requestService.postFile(this.scriptsUrl, formData, true);
   }
 
-  getScriptChain(projectId: string): Promise<string> {
-    return this.requestService.get(this.projectsUrl(projectId).concat('scriptchain'), true).then(value => {
-      console.log(value);
-      if (Array.isArray(value) && value.length > 0) {
-        return value[0];
-      } else {
-        return value;
-      }
-    });
+  getScriptChain(projectId: string): Promise<string[]> {
+    return this.requestService.get(this.projectsUrl(projectId).concat('script-chain'), true);
   }
 
   setPipeline(projectId: string, scripts: Script[]): Promise<string> {
     const body = {
       project_id: projectId,
-      script_list: scripts.map(s => s.id).join(',')
+      scripts: scripts.map(value => value.id)
     };
 
-    return this.requestService.post(this.projectsUrl(projectId).concat('scriptchain'), body, true);
+    return this.requestService.post(this.projectsUrl(projectId).concat('script-chain'), body, true);
   }
 
   getAnalysisLog(projectId: string): Promise<string[]> {
-    return this.requestService.get(this.projectsUrl(projectId).concat('userlog'), true).then((response: string[]) => {
-        console.log(response);
-        return response;
-    });
+    return this.requestService.get(this.projectsUrl(projectId).concat('analysis-output'), true);
   }
 
   runAnalysis(projectId: string): Promise<string> {
-    return this.requestService.post(this.projectsUrl(projectId).concat('execute-analysis'), null, true);
+    return this.requestService.get(this.projectsUrl(projectId).concat('execute-analysis'), true);
   }
 
   deleteScript(scriptId: string): Promise<string> {

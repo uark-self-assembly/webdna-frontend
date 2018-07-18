@@ -82,7 +82,7 @@ export class ProjectService {
     formData.append('file', file, file.name);
     formData.append('type', projectFileType.toString());
 
-    return this.requestService.putFile(this.filesUrl(projectId).concat('upload'), formData, true);
+    return this.requestService.postFile(this.filesUrl(projectId).concat('upload'), formData, true);
   }
 
   downloadFile(projectId: string, projectFileType: string): Promise<Response> {

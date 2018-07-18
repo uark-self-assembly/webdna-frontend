@@ -1,13 +1,19 @@
 import { NgModule } from '@angular/core';
 import { LogOutputComponent } from '../dashboard/log-output/log-output.component';
 import { CommonModule } from '@angular/common';
-
-const SHARED_COMPONENTS = [LogOutputComponent];
-const SHARED_MODULES = [CommonModule];
+import { DndModule } from 'ng2-dnd';
 
 @NgModule({
-  declarations: SHARED_COMPONENTS,
-  imports: SHARED_MODULES,
-  exports: SHARED_COMPONENTS
+  declarations: [
+    LogOutputComponent
+  ],
+  imports: [
+    CommonModule,
+    DndModule
+  ],
+  exports: [
+    LogOutputComponent,
+    DndModule
+  ]
 })
 export class SharedModule {}
