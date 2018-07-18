@@ -38,7 +38,7 @@
                 <div class="form-container">
                     <div *ngFor="let option of optionCollection.options">
                         <div [ngSwitch]="option.optionType">
-                            <div *ngSwitchCase="SimulationOptionType.BOOLEAN" class="full-width">
+                            <div *ngSwitchCase="SimulationOptionType.BOOLEAN" class="full-width" style="margin-bottom: 10px;">
                                 <mat-slide-toggle [(ngModel)]="option.value">{{option.displayText}}</mat-slide-toggle>
                             </div>
 
@@ -61,6 +61,14 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
+
+                            <mat-form-field *ngSwitchCase="SimulationOptionType.DYNAMIC" class="full-width">
+                                    <mat-select placeholder="{{option.displayText}}" [(value)]="option.value">
+                                        <mat-option *ngFor="let choice of option.choices" value="{{choice[0]}}">
+                                            {{choice[1]}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
 
                             <div *ngSwitchCase="SimulationOptionType.FILE">
                                 <simulation-file-upload [option]="option" [project]="project"></simulation-file-upload>

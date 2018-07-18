@@ -18,14 +18,14 @@ class OptionCollection {
 }
 
 export enum SimulationOptionType {
-    BOOLEAN, INTEGER, FLOAT, STRING, CHOICE, FILE
+    BOOLEAN, INTEGER, FLOAT, STRING, CHOICE, FILE, DYNAMIC
 }
 
 export class SimulationOption {
     propertyName: string;
     displayText: string;
     optionType: SimulationOptionType;
-    choices?: string[][];
+    choices?: any[][];
     private _value: any;
     get value() {
         return this._value;
@@ -37,6 +37,9 @@ export class SimulationOption {
         }
     }
 
+    dynamicTag: string;
+    parentCollection: OptionCollection;
+
     optionsMap: Map<String, SimulationOption>;
     validate = (_) => { };
 
@@ -44,7 +47,7 @@ export class SimulationOption {
         propertyName: string,
         displayText: string,
         optionType: SimulationOptionType,
-        choices?: string[][],
+        choices?: any[][],
         value?: any,
         validate?: (options) => void) {
         this.propertyName = propertyName;
@@ -67,11 +70,47 @@ export class SimulationOption {
     }
 
     choose(index: number) {
-        if (this.optionType !== SimulationOptionType.CHOICE) {
+        if (this.optionType !== SimulationOptionType.CHOICE && this.optionType !== SimulationOptionType.DYNAMIC) {
             return;
         }
 
         this.value = this.choices[index][0];
+    }
+
+    getChosen(): any[] {
+        for (const choice of this.choices) {
+            if (this.value === choice[0]) {
+                return choice;
+            }
+        }
+
+        return null;
+    }
+
+    resetOptions() {
+        const currentChoice = this.getChosen();
+
+        let i = 0;
+        while (i < this.parentCollection.options.length) {
+            const currentOption = this.parentCollection.options[i];
+            if (currentOption.dynamicTag === this.propertyName) {
+                this.parentCollection.options.splice(i, 1);
+            } else {
+                i++;
+            }
+        }
+
+        for (let option of currentChoice[2]) {
+            const propertyName = option.propertyName;
+            if (this.optionsMap[propertyName]) {
+                this.optionsMap[propertyName].dynamicTag = this.propertyName;
+                this.parentCollection.options.push(this.optionsMap[propertyName]);
+            } else {
+                option.dynamicTag = this.propertyName;
+                option.optionsMap = this.optionsMap;
+                this.parentCollection.options.push(option);
+            }
+        }
     }
 }
 
@@ -94,14 +133,49 @@ export class ProjectConfigComponent implements OnInit {
 
     private loading = false;
 
-    private generationOptions = [
+    private generateSaOptions = [
+        new SimulationOption(ProjectFileType.SEQUENCE, 'Sequence File', SimulationOptionType.FILE, null, null, (options) => {
+            if (options[ProjectFileType.SEQUENCE].value) {
+                console.log('this is its value: ' + options[ProjectFileType.SEQUENCE]);
+                options['should_regenerate'].value = true;
+            }
+        }),
+        new SimulationOption('box_size', 'Box Size', SimulationOptionType.INTEGER, null, 20),
+    ];
+
+    private generateFoldedOptions = [
         new SimulationOption(ProjectFileType.SEQUENCE, 'Sequence File', SimulationOptionType.FILE, null, null, (options) => {
             if (options[ProjectFileType.SEQUENCE].value) {
                 options['should_regenerate'].value = true;
             }
         }),
         new SimulationOption('box_size', 'Box Size', SimulationOptionType.INTEGER, null, 20),
+    ];
+
+    private generateCadnanoOptions = [
+        new SimulationOption(ProjectFileType.CADNANO, 'Cadnano File', SimulationOptionType.FILE, null, null, (options) => {
+            if (options[ProjectFileType.CADNANO].value) {
+                options['should_regenerate'].value = true;
+            }
+        }),
+        new SimulationOption('box_size', 'Box Size', SimulationOptionType.INTEGER, null, 20),
+        new SimulationOption('lattice_type', 'Lattice Type', SimulationOptionType.CHOICE, [['he', 'Helix'], ['sq', 'Square']], 'he')
+    ];
+
+    private generationOptions = [
         new SimulationOption('should_regenerate', 'Regenerate Initial Topology', SimulationOptionType.BOOLEAN),
+        new SimulationOption('generation_method', 'Generation Method', SimulationOptionType.DYNAMIC,
+            [
+                ['generate-sa', 'Basic Strand Generator', this.generateSaOptions],
+                ['generate-folded', 'Spiral Strand Generator', this.generateFoldedOptions],
+                ['cadnano-interface', 'Cadnano Origami Generator', this.generateCadnanoOptions]
+            ],
+            'generate-sa',
+            (options) => {
+                if (options['generation_method'].value) {
+                    options['generation_method'].resetOptions();
+                }
+            }),
     ]
 
     private genericOptions = [
@@ -156,7 +230,6 @@ export class ProjectConfigComponent implements OnInit {
     ]
 
     private optionsMap: Map<string, SimulationOption> = new Map<string, SimulationOption>();
-    private fileOptions: SimulationOption[] = [];
 
     private optionCollections: OptionCollection[] = [];
 
@@ -171,7 +244,6 @@ export class ProjectConfigComponent implements OnInit {
         ];
 
         this.buildOptionsMap();
-        this.collectFileOptions();
     }
 
     ngOnInit() {
@@ -186,21 +258,30 @@ export class ProjectConfigComponent implements OnInit {
 
     buildOptionsMap() {
         for (const optionCollection of this.optionCollections) {
-            optionCollection.options.forEach(option => {
+            for (const option of optionCollection.options) {
+                option.parentCollection = optionCollection;
                 this.optionsMap[option.propertyName] = option;
                 option.optionsMap = this.optionsMap;
-            });
-        }
-    }
 
-    collectFileOptions() {
-        for (const optionCollection of this.optionCollections) {
+                if (option.optionType === SimulationOptionType.DYNAMIC) {
+                    for (const choice of option.choices) {
+                        for (const subOption of choice[2]) {
+                            subOption.parentCollection = optionCollection;
+                            this.optionsMap[subOption.propertyName] = subOption;
+                            subOption.optionsMap = this.optionsMap;
+                        }
+                    }
+                }
+            }
+
             for (const option of optionCollection.options) {
-                if (option.optionType === SimulationOptionType.FILE) {
-                    this.fileOptions.push(option);
+                if (option.optionType === SimulationOptionType.DYNAMIC) {
+                    option.resetOptions();
                 }
             }
         }
+
+        console.log(this.optionsMap);
     }
 
     initializeOptions(response) {
@@ -228,17 +309,10 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     buildResults() {
-        const ignoreKeys = ['sequence_file', 'should_regenerate']
-
         this.result['refresh_vel'] = 1;
-        this.result['generation_method'] = 'generate-sa';
 
         for (const optionCollection of this.optionCollections) {
             for (const option of optionCollection.options) {
-                if (ignoreKeys.indexOf(option.propertyName) > -1) {
-                    continue;
-                }
-
                 if (option.optionType === SimulationOptionType.BOOLEAN) {
                     this.result[option.propertyName] = option.value ? 1 : 0;
                 } else {
@@ -282,9 +356,11 @@ export class ProjectConfigComponent implements OnInit {
     }
 
     async saveFiles(): Promise<void> {
-        for (const fileOption of this.fileOptions) {
-            if (fileOption.value) {
-                await this.projectService.uploadFile(this.project.id, fileOption.value, fileOption.propertyName);
+        for (const optionCollection of this.optionCollections) {
+            for (const option of optionCollection.options) {
+                if (option.optionType === SimulationOptionType.FILE && option.value) {
+                    await this.projectService.uploadFile(this.project.id, option.value, option.propertyName);
+                }
             }
         }
     }
