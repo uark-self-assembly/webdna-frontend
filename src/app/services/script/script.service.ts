@@ -40,7 +40,7 @@ export class ScriptService {
     return this.requestService.post(this.projectsUrl(projectId).concat('script-chain'), body, true);
   }
 
-  getAnalysisLog(projectId: string): Promise<string[]> {
+  getAnalysisLog(projectId: string): Promise<string> {
     return this.requestService.get(this.projectsUrl(projectId).concat('analysis-output'), true);
   }
 

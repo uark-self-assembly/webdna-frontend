@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
 import { ProjectPage } from '../dashboard.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -41,12 +42,13 @@ export class ProjectAnalysisComponent implements OnInit, OnDestroy {
 
     private analysisLogTimer: Observable<number>;
     private analysisLogSubscription: Subscription;
-    private analysisLogText = 'Analysis has not been run. Click "Save and Run" to run the first execution';
+    private analysisLogText = 'Analysis has not been run or had no output. Click "Save and Run" to run the first execution';
 
     constructor(
         private scriptService: ScriptService,
         private storageService: StorageService,
-        private dialog: MatDialog) { }
+        private dialog: MatDialog,
+        private snackBar: MatSnackBar) { }
 
     ngOnInit() {
         this.scriptService.getScripts().then(scripts => {
@@ -73,6 +75,12 @@ export class ProjectAnalysisComponent implements OnInit, OnDestroy {
         this.didClickBack();
     }
 
+    showSnackBar(message: string, duration: number = 2000) {
+        this.snackBar.open(message, null, {
+            duration: duration
+        });
+    }
+
     refreshScripts() {
         this.scriptService.getScripts().then(scripts => {
             this.scripts = scripts;
@@ -91,7 +99,7 @@ export class ProjectAnalysisComponent implements OnInit, OnDestroy {
 
     updateAnalysisLog() {
         this.scriptService.getAnalysisLog(this.project.id).then(response => {
-            if (typeof response === 'string') {
+            if (typeof response === 'string' && response.length > 0) {
                 this.analysisLogText = response;
             }
         });
@@ -109,14 +117,14 @@ export class ProjectAnalysisComponent implements OnInit, OnDestroy {
 
     saveClicked() {
         this.scriptService.setPipeline(this.project.id, this.pipeline).then(response => {
-
+            this.showSnackBar('Analysis settings saved successfully');
         });
     }
 
     saveAndRunClicked() {
         this.scriptService.setPipeline(this.project.id, this.pipeline).then(_ => {
             this.scriptService.runAnalysis(this.project.id).then(response => {
-
+                this.showSnackBar('Running analysis pipeline...');
             });
         });
     }
@@ -136,11 +144,25 @@ export class ProjectAnalysisComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.refreshScripts();
+                this.showSnackBar('Script saved successfully');
             }
         });
     }
 
     manageScriptsClicked() {
         // TODO (jace) implement scripts page and link to it here
+        this.showSnackBar('Coming soon...');
+    }
+
+    logDownloadClicked() {
+        const a = document.createElement('a');
+        a.setAttribute('style', 'display: none');
+        a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.analysisLogText));
+        a.setAttribute('download', this.project.name + '_analysis.txt');
+
+        document.body.appendChild(a);
+
+        a.click();
+        a.remove();
     }
 }
