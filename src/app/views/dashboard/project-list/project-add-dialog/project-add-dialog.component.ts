@@ -18,4 +18,13 @@ export class ProjectAddDialogComponent {
     onCloseClicked(): void {
         this.dialogRef.close();
     }
+
+    detectEnter(event) {
+        const charCode = event.which ? event.which : event.keyCode;
+        if (charCode === 13) {
+            this.dialogRef.close(this.data.name);
+        }
+
+        return true;
+    }
 }
