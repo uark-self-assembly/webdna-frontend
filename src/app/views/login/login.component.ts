@@ -1,16 +1,39 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/auth-guard/auth.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { trigger, style, transition, animate, keyframes, query, stagger } from '@angular/animations';
+import { trigger, style, transition, animate, query, stagger } from '@angular/animations';
 
 
 @Component({
     moduleId: module.id,
     selector: 'login-cmp',
     templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css']
+    styleUrls: ['./login.component.css'],
+    animations: [
+        trigger('pageStagger', [
+            transition('* <=> *', [
+                query(
+                    ':enter',
+                    [
+                        style({ opacity: 0, transform: 'translateY(-15px)' }),
+                        stagger(
+                            '50ms',
+                            animate(
+                                '550ms ease-out',
+                                style({ opacity: 1, transform: 'translateY(0px)' })
+                            )
+                        )
+                    ],
+                    { optional: true }
+                ),
+                query(':leave', animate('50ms', style({ opacity: 0 })), {
+                    optional: true
+                })
+            ])
+        ])
+    ]
 })
 export class LoginComponent {
     loading = false;

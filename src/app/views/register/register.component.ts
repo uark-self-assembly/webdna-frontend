@@ -6,13 +6,37 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterSuccessDialogComponent } from './register-success-dialog/register-success-dialog.component';
+import { trigger, style, transition, animate, query, stagger } from '@angular/animations';
 
 
 @Component({
     moduleId: module.id,
     selector: 'register-cmp',
     templateUrl: './register.component.html',
-    styleUrls: ['./register.component.css']
+    styleUrls: ['./register.component.css'],
+    animations: [
+        trigger('pageStagger', [
+            transition('* <=> *', [
+                query(
+                    ':enter',
+                    [
+                        style({ opacity: 0, transform: 'translateY(-15px)' }),
+                        stagger(
+                            '50ms',
+                            animate(
+                                '300ms ease-out',
+                                style({ opacity: 1, transform: 'translateY(0px)' })
+                            )
+                        )
+                    ],
+                    { optional: true }
+                ),
+                query(':leave', animate('50ms', style({ opacity: 0 })), {
+                    optional: true
+                })
+            ])
+        ])
+    ]
 })
 export class RegisterComponent {
     // TODO (jace) implement password validation
