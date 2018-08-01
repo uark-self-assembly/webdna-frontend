@@ -8,9 +8,9 @@ import { Script } from '../../../../services/script/script';
     templateUrl: './script-upload-dialog.component.html'
 })
 export class ScriptUploadDialogComponent {
-    private scriptFile: File = null;
-    private newScriptName;
-    private newScriptDescription;
+    scriptFile: File = null;
+    newScriptName;
+    newScriptDescription;
 
     get scriptFileChosen(): boolean {
         return !!this.scriptFile;

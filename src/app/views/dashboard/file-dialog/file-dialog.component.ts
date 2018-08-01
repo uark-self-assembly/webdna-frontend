@@ -16,8 +16,8 @@ export interface FileDialogData {
 })
 export class FileDialogComponent implements OnInit {
 
-    private fileText: string;
-    private fileLines: string[] = [];
+    fileText: string;
+    fileLines: string[] = [];
 
     constructor(
         private projectService: ProjectService,

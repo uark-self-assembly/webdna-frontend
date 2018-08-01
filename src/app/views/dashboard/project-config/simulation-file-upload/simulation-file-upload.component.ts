@@ -16,7 +16,7 @@ export class SimulationFileUploadComponent implements OnInit {
     @Input()
     project: Project;
 
-    private existingFile = false;
+    existingFile = false;
 
     get fileDialogData(): FileDialogData {
         return {

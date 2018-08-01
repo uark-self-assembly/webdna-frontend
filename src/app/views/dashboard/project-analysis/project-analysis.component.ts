@@ -35,14 +35,15 @@ export class ProjectAnalysisComponent implements OnInit, OnDestroy {
     private newScript: Script = new Script();
     private newScriptFile: File = null;
 
-    private scripts: Script[] = [];
-    private pipeline: Script[] = [];
+    scripts: Script[] = [];
+    pipeline: Script[] = [];
 
-    private isDragging = false;
+    isDragging = false;
+
+    analysisLogText = 'Analysis has not been run or had no output. Click "Save and Run" to run the first execution';
 
     private analysisLogTimer: Observable<number>;
     private analysisLogSubscription: Subscription;
-    private analysisLogText = 'Analysis has not been run or had no output. Click "Save and Run" to run the first execution';
 
     constructor(
         private scriptService: ScriptService,

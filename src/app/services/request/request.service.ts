@@ -1,6 +1,7 @@
 import { Headers, Http, Response, RequestOptionsArgs, ResponseContentType } from '@angular/http';
 import { StorageService } from '../storage/storage.service';
 import { Injectable } from '@angular/core';
+import { environment } from 'environments/environment';
 
 
 export class FileResponse {
@@ -18,11 +19,7 @@ export class RequestService {
   isDev = true;
 
   get host(): string {
-    if (this.isDev) {
-      return 'http://192.168.1.3:8080';
-    } else {
-      return 'http://52.15.126.236';
-    }
+    return 'http://' + environment.WAN_IP;
   }
 
   constructor(

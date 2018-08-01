@@ -33,9 +33,6 @@ export class ProjectTableComponent implements OnInit, OnDestroy, AfterViewChecke
     projectClicked: (project: Project) => void;
 
     @Input()
-    runClicked: (project: Project) => void;
-
-    @Input()
     deleteClicked: (project: Project) => void;
 
     @Input()
@@ -66,7 +63,7 @@ export class ProjectTableComponent implements OnInit, OnDestroy, AfterViewChecke
     private selectedRow: ProjectRow = null;
 
     private logData: LogOutputData = { project: null, logHeight: 500, oxDNALog: '', programLog: '' };
-    private projectRows: ProjectRow[] = [];
+    projectRows: ProjectRow[] = [];
 
     private logTimer: Observable<number>;
     private logSubscription: Subscription;

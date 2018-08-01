@@ -9,11 +9,11 @@ import { ProjectService } from '../../services/project/project.service';
 })
 export class VisualizerComponent implements OnInit {
 
-  private projects: Project[] = [];
-  private selectedProject: Project;
+  projects: Project[] = [];
+  selectedProject: Project;
 
-  private loading = true;
-  private forcing = false;
+  loading = true;
+  forcing = false;
 
   constructor(private projectService: ProjectService) {
 

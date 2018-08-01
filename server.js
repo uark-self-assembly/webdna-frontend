@@ -2,10 +2,10 @@ var express = require('express');
 var favicon = require('serve-favicon');
 var join = require('path').join;
 var proxy = require('http-proxy-middleware');
-var http = require('http');
 var binaryjs = require('binaryjs');
 var fs = require('fs');
 var cors = require('cors');
+require('dotenv').config();
 
 eval(fs.readFileSync('htmol/local/config.js') + '');
 
@@ -17,11 +17,11 @@ app.use(cors());
 app.use(express.static(join(distDir)));
 app.use(favicon(__dirname + "/src/favicon.ico"));
 
-app.use('/simfiles', express.static(join(__dirname, SIMULATION_DIR)));
+app.use('/simfiles', express.static(join(__dirname, process.env.SIMULATION_DIR)));
 app.use('/static', express.static(join(__dirname, 'htmol')));
-app.use('/api', proxy('http://192.168.1.3:8000/api'));
+app.use('/api', proxy('http://' + process.env.LAN_IP + ':8000/api'));
 
-var server = app.listen(port, '192.168.1.3', () => {
+var server = app.listen(port, process.env.LAN_IP, () => {
     var server_port = server.address().port;
     console.log("App now running on port " + server_port);
 });
@@ -33,7 +33,7 @@ var binaryServer = binaryjs.BinaryServer({
 binaryServer.on('connection', client => {
     client.on('stream', (stream, meta) => {
         if (meta.reqsize == true) {
-            var path = join(__dirname, SIMULATION_DIR, meta.fpath);
+            var path = join(__dirname, process.env.SIMULATION_DIR, meta.fpath);
             fs.exists(path, function (exists) {
                 if (exists) {
                     var stats = fs.statSync(path);
@@ -44,7 +44,7 @@ binaryServer.on('connection', client => {
                 }
             });
         } else {
-            var path = join(__dirname, SIMULATION_DIR, meta.fpath)
+            var path = join(__dirname, process.env.SIMULATION_DIR, meta.fpath)
             fs.exists(path, function (exists) {
                 if (exists) {
                     if (meta.verif == true) {

@@ -38,7 +38,7 @@ import { trigger, style, transition, animate, query, stagger } from '@angular/an
 export class LoginComponent {
     loading = false;
 
-    private login: FormGroup;
+    login: FormGroup;
 
     constructor(
         private router: Router,

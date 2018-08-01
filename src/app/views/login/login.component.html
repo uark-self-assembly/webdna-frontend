@@ -15,7 +15,7 @@
                 <mat-card-content>
                     <form class="login-form" [formGroup]="login">
                         <mat-form-field hideRequiredMarker="true">
-                            <input matInput formControlName="username" placeholder="Username" required>
+                            <input matInput formControlName="username" placeholder="Username" (keyup.enter)="loginClicked()" required>
                         </mat-form-field>
 
                         <mat-form-field hideRequiredMarker="true">

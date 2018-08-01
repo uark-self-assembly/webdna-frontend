@@ -12,10 +12,10 @@ export enum ProjectPage {
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
-  private ProjectPage = ProjectPage;
+  ProjectPage = ProjectPage;
 
-  private currentPage: ProjectPage = ProjectPage.TABLE;
-  private editingProject: Project = null;
+  currentPage: ProjectPage = ProjectPage.TABLE;
+  editingProject: Project = null;
 
   get pageTitle(): string {
     return 'Projects';

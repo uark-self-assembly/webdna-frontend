@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
     styleUrls: ['./dashboard-layout.component.scss']
 })
 export class DashboardLayoutComponent {
-    private sideNavOpened = false;
+    sideNavOpened = false;
 
     get currentPath(): string {
         return this.router.url.split('/').pop();

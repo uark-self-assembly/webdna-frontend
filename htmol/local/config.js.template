@@ -21,10 +21,8 @@ if (typeof PROJECT_ID === 'undefined') {
 }
 
 // Binary Server information
-var WebIP="192.168.1.3"; // Server Name or IP. Use 'localhost' for testing
+var WebIP="<%= WAN_IP %>"; // Server Name or IP. Use 'localhost' for testing
 var WebPort="8080"; // Define internet port for communication, other than 80 (reserved for Apache)
-
-var SIMULATION_DIR = '../webdna-django-server/server-data/server-sims/';
 
 var PDBDIR="pdbfiles/"; // path to coordinates file. It can be located in another Apache server: "http://"+WebIP+"/HTMoLv3.5/pdbfiles/";
 var TRJDIR="trjfiles/"; // path to trajectory file at BinServer. It is advisable to leave the directory structure as is.

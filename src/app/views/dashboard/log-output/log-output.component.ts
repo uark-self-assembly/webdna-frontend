@@ -6,10 +6,10 @@ import { Component, Input, AfterViewChecked, ChangeDetectorRef } from '@angular/
 })
 export class LogOutputComponent implements AfterViewChecked {
     @Input()
-    private logText: string;
+    logText: string;
 
     @Input()
-    private height: number;
+    height: number;
 
     get lines(): string[] {
         return this.logText.split('\n');

@@ -131,9 +131,9 @@ export class ProjectConfigComponent implements OnInit {
     @Input()
     public didClickAnalysis: () => void;
 
-    private loading = false;
+    loading = false;
 
-    private generateSaOptions = [
+    generateSaOptions = [
         new SimulationOption(ProjectFileType.SEQUENCE, 'Sequence File', SimulationOptionType.FILE, null, null, (options) => {
             if (options[ProjectFileType.SEQUENCE].value) {
                 console.log('this is its value: ' + options[ProjectFileType.SEQUENCE]);
@@ -143,7 +143,7 @@ export class ProjectConfigComponent implements OnInit {
         new SimulationOption('box_size', 'Box Size', SimulationOptionType.INTEGER, null, 20),
     ];
 
-    private generateFoldedOptions = [
+    generateFoldedOptions = [
         new SimulationOption(ProjectFileType.SEQUENCE, 'Sequence File', SimulationOptionType.FILE, null, null, (options) => {
             if (options[ProjectFileType.SEQUENCE].value) {
                 options['should_regenerate'].value = true;
@@ -152,7 +152,7 @@ export class ProjectConfigComponent implements OnInit {
         new SimulationOption('box_size', 'Box Size', SimulationOptionType.INTEGER, null, 20),
     ];
 
-    private generateCadnanoOptions = [
+    generateCadnanoOptions = [
         new SimulationOption(ProjectFileType.CADNANO, 'Cadnano File', SimulationOptionType.FILE, null, null, (options) => {
             if (options[ProjectFileType.CADNANO].value) {
                 options['should_regenerate'].value = true;
@@ -162,7 +162,7 @@ export class ProjectConfigComponent implements OnInit {
         new SimulationOption('lattice_type', 'Lattice Type', SimulationOptionType.CHOICE, [['he', 'Helix'], ['sq', 'Square']], 'he')
     ];
 
-    private generationOptions = [
+    generationOptions = [
         new SimulationOption('should_regenerate', 'Regenerate Initial Topology', SimulationOptionType.BOOLEAN),
         new SimulationOption('generation_method', 'Generation Method', SimulationOptionType.DYNAMIC,
             [
@@ -178,7 +178,7 @@ export class ProjectConfigComponent implements OnInit {
             }),
     ]
 
-    private genericOptions = [
+    genericOptions = [
         new SimulationOption(
             'interaction_type', 'Interaction Type', SimulationOptionType.CHOICE,
             [
@@ -207,7 +207,7 @@ export class ProjectConfigComponent implements OnInit {
         new SimulationOption('debug', 'Debug', SimulationOptionType.BOOLEAN),
     ]
 
-    private simulationOptions = [
+    simulationOptions = [
         new SimulationOption('steps', 'Simulation Steps', SimulationOptionType.INTEGER, null, 1_000_000),
         new SimulationOption('seed', 'Simulation Seed', SimulationOptionType.INTEGER, null, 42),
         new SimulationOption('T', 'Temperature (K)', SimulationOptionType.FLOAT, null, 243),
@@ -220,7 +220,7 @@ export class ProjectConfigComponent implements OnInit {
         new SimulationOption('external_forces', 'Use External Forces', SimulationOptionType.BOOLEAN),
     ]
 
-    private mdSimulationOptions = [
+    mdSimulationOptions = [
         new SimulationOption('thermostat', 'Thermostat', SimulationOptionType.CHOICE,
             [['no', 'None'], ['refresh', 'Refresh'], ['brownian', 'Brownian'], ['john', 'John']]),
         new SimulationOption('dt', 'Integration Time Step', SimulationOptionType.FLOAT, null, 0.005),
@@ -229,9 +229,9 @@ export class ProjectConfigComponent implements OnInit {
         new SimulationOption('print_conf_interval', 'Output Configuration every', SimulationOptionType.INTEGER, null, 10000),
     ]
 
-    private optionsMap: Map<string, SimulationOption> = new Map<string, SimulationOption>();
+    optionsMap: Map<string, SimulationOption> = new Map<string, SimulationOption>();
 
-    private optionCollections: OptionCollection[] = [];
+    optionCollections: OptionCollection[] = [];
 
     private result = {};
 
