@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AuthLayoutComponent } from './views/layouts/auth/auth-layout.component';
+import { AuthLayoutComponent } from './views/layout/auth/auth-layout.component';
 import { PageNotFoundComponent } from './views/page-not-found.component';
-import { AuthGuard } from './services/auth-guard/auth.guard';
-import { DashboardLayoutComponent } from './views/layout/dashboard-layout.component';
+import { DashboardLayoutComponent } from './views/layout/dashboard/dashboard-layout.component';
 
 export const AppRoutes: Routes = [
     { path: '', redirectTo: '/register', pathMatch: 'full' },

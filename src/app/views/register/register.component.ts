@@ -1,82 +1,95 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
 import { User } from '../../services/user/user';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { RegisterSuccessDialogComponent } from './register-success-dialog/register-success-dialog.component';
 
-declare var $: any;
 
 @Component({
     moduleId: module.id,
     selector: 'register-cmp',
-    templateUrl: './register.component.html'
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.css']
 })
+export class RegisterComponent {
+    // TODO (jace) implement password validation
+    // private passwordPattern = '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})';
 
-export class RegisterComponent implements OnInit {
-    test: Date = new Date();
-    user: User = new User();
-    password_confirmation: String;
+    registration: FormGroup;
 
     constructor(
         private router: Router,
-        private userService: UserService) {
+        private userService: UserService,
+        private formBuilder: FormBuilder,
+        private snackBar: MatSnackBar,
+        private dialog: MatDialog) {
 
+        this.registration = formBuilder.group({
+            'firstName': ['', Validators.required],
+            'lastName': ['', Validators.required],
+            'username': ['', Validators.required],
+            'email': ['', [Validators.required, Validators.email]],
+            'password': ['', Validators.required],
+            'confirmPassword': ['', Validators.required]
+        });
     }
 
-    checkFullPageBackgroundImage() {
-        var $page = $('.full-page');
-        var image_src = $page.data('image');
+    showSnackBar(message: string, duration: number = 2000) {
+        this.snackBar.open(message, null, {
+            duration: duration
+        });
+    }
 
-        if (image_src !== undefined) {
-            var image_container = '<div class="full-page-background" style="background-image: url(' + image_src + ') "/>'
-            $page.append(image_container);
+    showSuccessDialog() {
+        const dialogRef = this.dialog.open(RegisterSuccessDialogComponent, {
+
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            this.router.navigate(['login']);
+        });
+    }
+
+    registerClicked() {
+        if (!this.registration.valid) {
+            // TODO (jace) better UI error handling
+            this.showSnackBar('Please fill all fields properly', 3000);
+            return;
         }
-    };
 
-    ngOnInit() {
-        this.checkFullPageBackgroundImage();
+        const firstName = this.registration.value['firstName'];
+        const lastName = this.registration.value['lastName'];
+        const username = this.registration.value['username'];
+        const email = this.registration.value['email'];
+        const password = this.registration.value['password'];
+        const confirmPassword = this.registration.value['confirmPassword'];
 
-        setTimeout(function () {
-            // after 1000 ms we add the class animated to the login/register card
-            $('.card').removeClass('card-hidden');
-        }, 700)
-    }
+        if (password !== confirmPassword) {
+            this.snackBar.open('These passwords don\'t match');
+            return;
+        }
 
-    register() {
+        const newUser = new User();
+        newUser.first_name = firstName;
+        newUser.last_name = lastName;
+        newUser.username = username;
+        newUser.email = email;
+        newUser.password = password;
 
-        var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-
-        if (this.user.first_name == null || this.user.last_name == null || this.user.username == null ||
-            this.user.email == null || this.user.password == null) {
-            alert("One or all fields are empty. Please finish filling out the form.")
-            console.log("One or all fields are empty. Please finish filling out the form.")
-        } else {
-            // Validate Register Form and Create Database entry
-            if (this.user.password == this.password_confirmation) {
-                if (strongRegex.test(this.user.password)) {
-                    this.userService.registerUser(this.user).then(data => {
-                        if (data) {
-                            this.router.navigate(['dashboard']);
-                        } else {
-                            // Add a visual alert here that pops up
-                            alert("User already exists")
-                            console.log("User already exists")
-                        }
-                    });
-                } else {
-                    // Add a visual alert here that pops up
-                    alert("Password must be at least 8 characters with at least one [A-Z], [a-z], [0-9]")
-                    console.log("Password must be at least 8 characters with at least one [A-Z], [a-z], [0-9]")
-                }
+        this.userService.registerUser(newUser).then(response => {
+            if (response) {
+                this.showSuccessDialog();
             } else {
-                // Add a visual alert here that pops up
-                alert("Passwords don't match")
-                console.log("Passwords don't match")
+                // TODO (jace) show more specific error messages
+                this.showSnackBar('Invalid registration');
             }
-        }
+        });
     }
 
     existing() {
-        // Navigate to login page
         this.router.navigate(['login']);
     }
 }

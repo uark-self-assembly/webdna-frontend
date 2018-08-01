@@ -19,7 +19,7 @@ export class RequestService {
 
   get host(): string {
     if (this.isDev) {
-      return 'http://192.168.1.5:8080';
+      return 'http://192.168.1.3:8080';
     } else {
       return 'http://52.15.126.236';
     }

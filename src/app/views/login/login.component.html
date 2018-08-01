@@ -1,45 +1,35 @@
-<div class="wrapper wrapper-full-page">
-    <div class="full-page login-page" data-color="blue" data-image="../../../assets/img/dna-background.jpg">
-
-        <!--   you can change the color of the filter page using: data-color="blue | azure | green | orange | red | purple" -->
-        <div class="content">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
-                        <form (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
-
-                            <!--   if you want to have the card without animation please remove the ".card-hidden" class   -->
-                            <div class="card card-hidden">
-                                <div class="header text-center">Login</div>
-                                <div class="content">
-                                    <div class="form-group">
-                                        <label>Username</label>
-                                        <input [(ngModel)]="username" name="username" #usernameInput="ngModel" required type="email" placeholder="Username" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Password</label>
-                                        <input name="password" [(ngModel)]="password" #passwordInput="ngModel" required type="password" placeholder="Password" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="footer text-center">
-                                    <button class="btn btn-fill btn-primary btn-wd">Login</button>
-                                </div>
-                            </div>
-
-                        </form>
-                        <alert></alert>
-                    </div>
-                </div>
-            </div>
+<div class="container-fluid login-page">
+    <div class="row">
+        <div class="header-text">
+            <h2>Welcome to WebDNA</h2>
+            <h4>An oxDNA Simulation + Analysis Framework</h4>
         </div>
+    </div>
 
-        <footer class="footer footer-transparent">
-            <div class="container">
-                <p class="copyright text-center">
-                    &copy; {{test | date: 'yyyy'}}
-                    <a href="http://self-assembly.net/wiki/index.php?title=Main_Page">WebDNA</a>, University of Arkansas
-                </p>
-            </div>
-        </footer>
+    <div class="row">
+        <div class="login-container">
+            <mat-card>
+                <mat-card-title>
+                    Login
+                </mat-card-title>
+                <mat-card-content>
+                    <form class="login-form" [formGroup]="login">
+                        <mat-form-field hideRequiredMarker="true">
+                            <input matInput formControlName="username" placeholder="Username" required>
+                        </mat-form-field>
+
+                        <mat-form-field hideRequiredMarker="true">
+                            <input matInput type="password" formControlName="password" placeholder="Password" (keyup.enter)="loginClicked()" required>
+                        </mat-form-field>
+                    </form>
+                </mat-card-content>
+
+                <mat-card-actions>
+                    <button mat-button color="primary" (click)="loginClicked()">Login</button>
+                </mat-card-actions>
+            </mat-card>
+
+            <a class="no-account" (click)="noAccount()">Need to create an account?</a>
+        </div>
     </div>
 </div>

@@ -1,70 +1,70 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/auth-guard/auth.service';
-import { AlertService } from '../components/alert/alert.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { trigger, style, transition, animate, keyframes, query, stagger } from '@angular/animations';
 
-declare var $: any;
 
 @Component({
-  moduleId: module.id,
-  selector: 'login-cmp',
-  templateUrl: './login.component.html'
+    moduleId: module.id,
+    selector: 'login-cmp',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css']
 })
+export class LoginComponent {
+    loading = false;
 
-export class LoginComponent implements OnInit {
-  test: Date = new Date();
-  loading = false;
-  username: string;
-  password: string;
-  responseOk = true;
-  responseMessage = '';
+    private login: FormGroup;
 
-  constructor(
-    private router: Router,
-    private alertService: AlertService,
-    private authenticationService: AuthenticationService) { }
+    constructor(
+        private router: Router,
+        private authenticationService: AuthenticationService,
+        private formBuilder: FormBuilder,
+        private snackBar: MatSnackBar) {
 
-  checkFullPageBackgroundImage() {
-    const $page = $('.full-page');
-    const image_src = $page.data('image');
-
-    if (image_src !== undefined) {
-      const image_container = '<div class="full-page-background" style="background-image: url(' + image_src + ') "/>'
-      $page.append(image_container);
+        this.login = formBuilder.group({
+            'username': ['', Validators.required],
+            'password': ['', Validators.required],
+        });
     }
-  }
 
-  ngOnInit() {
-    this.checkFullPageBackgroundImage();
+    showSnackBar(message: string, duration: number = 2000) {
+        this.snackBar.open(message, null, {
+            duration: duration
+        });
+    }
 
-    setTimeout(function () {
-      // after 1000 ms we add the class animated to the login/register card
-      $('.card').removeClass('card-hidden');
-    }, 700)
-  }
+    loginClicked() {
+        if (this.loading) {
+            return;
+        }
 
-  login() {
-    this.loading = true;
-    this.responseMessage = '';
-    this.responseOk = true;
+        if (!this.login.valid) {
+            this.showSnackBar('Please fill all fields');
+            return;
+        }
 
-    this.authenticationService.authenticateUser(this.username, this.password).then(response => {
-      if (typeof response === 'string') {
-        this.loading = false;
-        this.responseOk = false;
+        const username = this.login.value['username'];
+        const password = this.login.value['password'];
 
-        console.log(response);
+        this.loading = true;
 
-        // TODO (jace) Add a visual alert here that pops up, currently the server is providing the error
+        this.authenticationService.authenticateUser(username, password).then(response => {
+            this.loading = false;
 
-        console.log('No user found with username: ' + this.username);
-      } else {
-        this.responseOk = true;
-        this.loading = false;
-        this.router.navigate(['dashboard']);
-      }
-    }, error => {
-      this.alertService.error('Invalid login');
-    });
-  }
+            if (typeof response === 'string') {
+                this.showSnackBar('Invalid login');
+            } else {
+                this.router.navigate(['dashboard']);
+            }
+        }, error => {
+            this.loading = false;
+            this.showSnackBar('Invalid login. Please try again', 4000);
+        });
+    }
+
+    noAccount() {
+        this.router.navigate(['register']);
+    }
 };

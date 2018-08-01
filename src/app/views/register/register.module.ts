@@ -6,17 +6,25 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegisterRoutes } from './register.routing';
 
 import { RegisterComponent } from './register.component';
+import { SharedModule } from '../shared/shared.module';
+import { AppMaterialModule } from '../../material/app-material.module';
+import { RegisterSuccessDialogComponent } from './register-success-dialog/register-success-dialog.component';
 
 @NgModule({
     imports: [
         CommonModule,
         RouterModule.forChild(RegisterRoutes),
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        SharedModule,
+        AppMaterialModule
     ],
     declarations: [
-        RegisterComponent
+        RegisterComponent,
+        RegisterSuccessDialogComponent,
+    ],
+    entryComponents: [
+        RegisterSuccessDialogComponent,
     ]
 })
-
 export class RegisterModule {}
