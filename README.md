@@ -115,7 +115,7 @@ To fix this, run the following commands:
 
 ```bash
 sudo apt install nginx
-sudo vim /etc/sites-enabled/default
+sudo vim /etc/nginx/sites-enabled/default
 ```
 
 Then, modify the contents of this file to be exactly the following, making sure to replace `LAN_IP` with your local IP.
