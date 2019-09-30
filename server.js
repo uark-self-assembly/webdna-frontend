@@ -21,8 +21,6 @@ app.use('/simfiles', express.static(join(__dirname, process.env.SIMULATION_DIR))
 app.use('/static', express.static(join(__dirname, 'htmol')));
 app.use('/api', proxy('http://' + process.env.LAN_IP + ':8000/api'));
 
-app.use('/analysis', express.static(join(__dirname, 'analysis')));
-
 var server = app.listen(port, process.env.LAN_IP, () => {
     var server_port = server.address().port;
     console.log("App now running on port " + server_port);
