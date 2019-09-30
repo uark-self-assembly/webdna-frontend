@@ -20,6 +20,14 @@
                     </button>
                 </mat-card-actions>
             </mat-card>
+			
+			<a id="link_to_analysis">Go to beta version of new analysis page</a>
+			
+			<script>
+				import { RequestService } from '../../../services/request/request.service' ;
+				url = this.requestService.host + '/analysis/webpage/full_page.html' ;
+				document.getElementById('link_to_analysis').href = url ;
+			</script>
 
             <div *ngIf="!loading">
                 <htmol-cmp [projectId]="selectedProject.id"></htmol-cmp>

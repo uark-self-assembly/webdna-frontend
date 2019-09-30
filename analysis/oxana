@@ -1,0 +1,115 @@
+
+#!/usr/bin/env bash
+
+ANALYSIS_SCRIPTS_PATH="`dirname \"$0\"`"
+ANALYSIS_SCRIPTS_PATH="`( cd \"$ANALYSIS_SCRIPTS_PATH\" && pwd )`"
+
+ORIGINAL_DATA_PATH="$(pwd)"
+
+if [ "$1" == 'load' ]; then
+
+echo -e "Path to analysis scripts\t:\t$ANALYSIS_SCRIPTS_PATH"
+echo -e "Path to original data files\t:\t$ORIGINAL_DATA_PATH"
+
+# check if the simulation files were passed in as arguments
+#------------------------------------------------------------------------------
+if [ -z $2 ] || [ -z $3 ] || [ -z $4 ] || [ -z $5 ]; then
+	echo "ERROR : correct usage is $0 load <input-file> <trajectory-file> <topology-file> <project-name>"
+	exit 1
+fi
+if [ ! -r "$ORIGINAL_DATA_PATH/$2" ] || [ ! -r "$ORIGINAL_DATA_PATH/$3" ] || [ ! -r "$ORIGINAL_DATA_PATH/$4" ]; then
+	echo "ERROR : at least one of the given files isn't readible, may be permissions issue"
+	exit 1
+fi
+
+INPUT="$ORIGINAL_DATA_PATH/$2"
+echo -e "input file set to\t\t:\t$2"
+TRAJE="$ORIGINAL_DATA_PATH/$3"
+echo -e "trajectory file set to\t\t:\t$3"
+TOPOL="$ORIGINAL_DATA_PATH/$4"
+echo -e "topology file set to\t\t:\t$4\n"
+#------------------------------------------------------------------------------
+
+# created the bond data file for the "full page" javascript analysis
+#------------------------------------------------------------------------------
+python "$ANALYSIS_SCRIPTS_PATH/parsing/write_bond_data.py" "$INPUT" "$TRAJE" "$TOPOL"
+if [ -r "$ORIGINAL_DATA_PATH/bond_data.json" ]; then
+	echo "bond data file successfully written"
+	mv "$ORIGINAL_DATA_PATH/bond_data.json" "$ANALYSIS_SCRIPTS_PATH/data-files/$5.json"
+else
+	echo "ERROR : bond data file not successfully written"
+	exit 1
+fi
+#------------------------------------------------------------------------------
+
+# create the pdb and xtc files for the htmol visualizer
+#------------------------------------------------------------------------------
+python "$ANALYSIS_SCRIPTS_PATH/parsing/traj2pdb.py" "$TRAJE" "$TOPOL" "$ANALYSIS_SCRIPTS_PATH/trajectory.pdb"
+if [ -r "$ANALYSIS_SCRIPTS_PATH/trajectory.pdb" ]; then
+	echo "pdb file successfully written"
+else
+	echo "ERROR : pdb file not successfully written"
+	exit 1
+fi
+
+gmx trjconv -f "$ANALYSIS_SCRIPTS_PATH/trajectory.pdb" -o "$ANALYSIS_SCRIPTS_PATH/trajectory.xtc"
+if [ -r "$ANALYSIS_SCRIPTS_PATH/trajectory.pdb" ]; then
+	echo "xtc file successfully written"
+else
+	echo "ERROR : xtc file not successfully written"
+	exit 1
+fi
+
+python "$ANALYSIS_SCRIPTS_PATH/parsing/trim_pdb_file.py" "$ANALYSIS_SCRIPTS_PATH/trajectory.pdb" "$ANALYSIS_SCRIPTS_PATH/single_frame_trajectory.pdb"
+if [ -r "$ANALYSIS_SCRIPTS_PATH/single_frame_trajectory.pdb" ]; then
+	echo "pdb file successfully trimmed"
+else
+	echo "ERROR : pdb file not successfully trimmed"
+	exit 1
+fi
+
+rm "$ANALYSIS_SCRIPTS_PATH/trajectory.pdb"
+mv "$ANALYSIS_SCRIPTS_PATH/trajectory.xtc" "$ANALYSIS_SCRIPTS_PATH/visualizer/trjfiles/$5.xtc"
+mv "$ANALYSIS_SCRIPTS_PATH/single_frame_trajectory.pdb" "$ANALYSIS_SCRIPTS_PATH/visualizer/pdbfiles/$5.pdb"
+#------------------------------------------------------------------------------
+
+elif [ "$1" == 'start' ]; then
+	# make sure argument is number
+	re='^[0-9]+$'
+	if ! [[ $2 =~ $re ]] || (( $2 < 1000 )) || (( $2 > 9999 )); then
+		echo "Correct usage is $0 $1 <port-number>"
+		exit 1
+	else
+		CURRENT_SCREENS=$(sudo screen -ls)
+		if echo "$CURRENT_SCREENS" | grep -q "htmol" || echo "$CURRENT_SCREENS" | grep -q "server"; then
+			echo "ERROR : servers are already running"
+			exit 1
+		else
+			cd "$ANALYSIS_SCRIPTS_PATH/visualizer"
+			sudo screen -d -m -S htmol bash -c "node BinServer.js"
+			cd ..
+			sudo screen -d -m -S server bash -c "python -m SimpleHTTPServer $2"
+			cd "$ORIGINAL_DATA_PATH"
+		
+			echo "You should now be able to access the analysis page at http://localhost:$2/webpage/full_page.html?PROJECT_ID=<project-name>"
+		fi
+	fi
+	
+elif [ "$1" == 'stop' ]; then
+	OUT1=$(sudo screen -S htmol -X quit)
+	OUT2=$(sudo screen -S server -X quit)
+
+elif [ "$1" == 'clear' ]; then
+	
+	rm -R "$ANALYSIS_SCRIPTS_PATH/data-files"
+	rm -R "$ANALYSIS_SCRIPTS_PATH/visualizer/trjfiles"
+	rm -R "$ANALYSIS_SCRIPTS_PATH/visualizer/pdbfiles"
+	
+	mkdir "$ANALYSIS_SCRIPTS_PATH/data-files"
+	mkdir "$ANALYSIS_SCRIPTS_PATH/visualizer/trjfiles"
+	mkdir "$ANALYSIS_SCRIPTS_PATH/visualizer/pdbfiles"
+
+else
+	echo "Options are : load, start, stop, clear"
+fi
+
