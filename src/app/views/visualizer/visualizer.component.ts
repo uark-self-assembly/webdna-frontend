@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Project } from '../../services/project/project';
 import { ProjectService } from '../../services/project/project.service';
-import { RequestService } from '../../../services/request/request.service' ;
+import { RequestService } from '../../services/request/request.service' ;
 
 @Component({
   selector: 'visualizer-cmp',
