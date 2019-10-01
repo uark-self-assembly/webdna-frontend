@@ -17,7 +17,7 @@
 		PROJECT_ID = url.substring( url.indexOf('PROJECT_ID=')+11, end_character );
 		
 		if( url.indexOf('localhost') != -1 ){ base_url = url.substring( 0, url.indexOf('/', url.indexOf('localhost'))+1 ) }
-		else if( url.indexOf('analysis') != -1 ) { base_url = url.substring( 0, url.indexOf('analysis')+8}
+		else if( url.indexOf('analysis') != -1 ) { base_url = url.substring( 0, url.indexOf('analysis')+8 ) }
 		else {alert('Configuration only written for base url\'s in analysis server or localhost, webpage may not work as expected');}
 		
 		if( url.indexOf( 'PROJECT_ID=' ) == -1 ) {alert("No project ID given, try using the url :\n" + base_url + "webpage/full_page.html?PROJECT_ID=<project-id>");}
