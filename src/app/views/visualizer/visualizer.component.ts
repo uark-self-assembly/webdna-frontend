@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Project } from '../../services/project/project';
 import { ProjectService } from '../../services/project/project.service';
+import { RequestService } from '../../../services/request/request.service' ;
 
 @Component({
   selector: 'visualizer-cmp',
@@ -21,6 +22,7 @@ export class VisualizerComponent implements OnInit {
 
   ngOnInit() {
     this.loadProjects();
+	this.setLink();
   }
 
   loadProjects() {
@@ -32,6 +34,11 @@ export class VisualizerComponent implements OnInit {
         }
       }
     });
+  }
+  
+  setLink() {
+      url = this.requestService.host + '/analysis/webpage/full_page.html' ;
+      document.getElementById('link_to_analysis').href = url ;
   }
 
   loadProject() {
