@@ -15,8 +15,10 @@ export class VisualizerComponent implements OnInit {
 
   loading = true;
   forcing = false;
+  
+  @ViewChild('analysisLink') analysisLink: ElementRef;
 
-  constructor(private projectService: ProjectService) {
+  constructor(private projectService: ProjectService, private requestService: RequestService) {
 
   }
 
@@ -37,8 +39,8 @@ export class VisualizerComponent implements OnInit {
   }
   
   setLink() {
-      url = this.requestService.host + '/analysis/webpage/full_page.html' ;
-      document.getElementById('link_to_analysis').href = url ;
+      var url = this.requestService.host + '/analysis/webpage/full_page.html' ;
+      this.analysisLink.nativeElement.href = url ;
   }
 
   loadProject() {
