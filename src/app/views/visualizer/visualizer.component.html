@@ -1,6 +1,15 @@
 <div class="main-content" layout="column" flex style="height: 100%; overflow: auto; overflow-x: hidden; margin-bottom: 0px; top: 64px; padding: 30px">
     <div class="visualizer-page">
         <div class="container-fluid">
+		
+			<a id="link_to_analysis" style="display: inline-block">Go to beta version of new analysis page</a>
+			
+			<script>
+				import { RequestService } from '../../../services/request/request.service' ;
+				url = this.requestService.host + '/analysis/webpage/full_page.html' ;
+				document.getElementById('link_to_analysis').href = url ;
+			</script>
+		
             <mat-card style="width: 800px; margin-bottom: 20px;">
                 <mat-card-title>Select a Project</mat-card-title>
 
@@ -20,14 +29,6 @@
                     </button>
                 </mat-card-actions>
             </mat-card>
-			
-			<a id="link_to_analysis">Go to beta version of new analysis page</a>
-			
-			<script>
-				import { RequestService } from '../../../services/request/request.service' ;
-				url = this.requestService.host + '/analysis/webpage/full_page.html' ;
-				document.getElementById('link_to_analysis').href = url ;
-			</script>
 
             <div *ngIf="!loading">
                 <htmol-cmp [projectId]="selectedProject.id"></htmol-cmp>
