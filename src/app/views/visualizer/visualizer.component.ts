@@ -24,7 +24,6 @@ export class VisualizerComponent implements OnInit {
 
   ngOnInit() {
     this.loadProjects();
-	this.setLink();
   }
 
   loadProjects() {
@@ -36,11 +35,6 @@ export class VisualizerComponent implements OnInit {
         }
       }
     });
-  }
-  
-  setLink() {
-      var url = this.requestService.host + '/analysis/webpage/full_page.html' ;
-      this.analysisLink.nativeElement.href = url ;
   }
 
   loadProject() {
@@ -63,9 +57,16 @@ export class VisualizerComponent implements OnInit {
         this.showHTMOL();
       }
     });
+	
+	this.setLink();
   }
 
   showHTMOL() {
     this.loading = false;
+  }
+  
+  setLink() {
+      var url = this.requestService.host + '/analysis/webpage/full_page.html?PROJECT_ID=' + this.selectedProject.id ;
+      this.analysisLink.nativeElement.href = url ;
   }
 }
