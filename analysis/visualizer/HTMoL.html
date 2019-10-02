@@ -234,7 +234,7 @@ v3.5 Leonardo Alvarez-Rivera
 	
 	window.addEventListener('message', function(event) {
 		
-		//console.log("message received");
+		console.log("message received");
 	
 		if ( event.origin.indexOf('analysis') >= 0 && bndfinal ) {
 		
@@ -244,7 +244,7 @@ v3.5 Leonardo Alvarez-Rivera
 			if( event.data.substring( 0, event.data.indexOf("\n") ) == "Atoms" ) {
 				ChangeFocus( JSON.parse( event.data.substring( event.data.indexOf("\n")+1, event.data.length ) ) );}
 		
-		} else { return; } //console.log(  event.origin.indexOf('http://localhost:2000') + " " + bndfinal ); }
+		} else { console.log(  event.origin + " " + bndfinal ); }
 	});
 </script>
 
