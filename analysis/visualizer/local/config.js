@@ -19,7 +19,7 @@ v3.5 Leonardo Alvarez-Rivera
 var PROJECT_ID = PROJECT_ID;
 
 // Binary Server information
-var WebIP="<%= WAN_IP %>"; // Server Name or IP. Use 'localhost' for testing
+var WebIP="10.5.53.235"; // Server Name or IP. Use 'localhost' for testing
 var WebPort="80"; // Define internet port for communication, other than 80 (reserved for Apache)
 
 var PDBDIR="pdbfiles/"; // path to coordinates file. It can be located in another Apache server: "http://"+WebIP+"/HTMoLv3.5/pdbfiles/";
