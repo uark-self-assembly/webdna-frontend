@@ -235,6 +235,8 @@ v3.5 Leonardo Alvarez-Rivera
 	window.addEventListener('message', function(event) {
 		
 		console.log("message received");
+		
+		alert(localStorage.getItem("ip"));
 	
 		if ( event.origin.indexOf("<%= WAN_IP %>") >= 0 && bndfinal ) {
 		
