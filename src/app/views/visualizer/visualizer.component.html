@@ -2,10 +2,6 @@
     <div class="visualizer-page">
         <div class="container-fluid">
 		
-			<div style="display: inline-block">
-			<a #analysisLink href="" id="link_to_analysis" style="test-align: center">Go to beta version of new analysis page</a>
-			</div>
-		
             <mat-card style="width: 800px; margin-bottom: 20px;">
                 <mat-card-title>Select a Project</mat-card-title>
 
@@ -22,6 +18,12 @@
                 <mat-card-actions>
                     <button mat-button color="primary" (click)="loadProject()">
                         Visualize
+                    </button>
+                </mat-card-actions>
+				
+				<mat-card-actions>
+                    <button mat-button color="primary" (click)="goToAnalysisPage()">
+                        Go to Beta Analysis Page
                     </button>
                 </mat-card-actions>
             </mat-card>

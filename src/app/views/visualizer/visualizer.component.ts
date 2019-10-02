@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Project } from '../../services/project/project';
 import { ProjectService } from '../../services/project/project.service';
 import { RequestService } from '../../services/request/request.service' ;
@@ -15,8 +15,6 @@ export class VisualizerComponent implements OnInit {
 
   loading = true;
   forcing = false;
-  
-  @ViewChild('analysisLink') analysisLink: ElementRef;
 
   constructor(private projectService: ProjectService, private requestService: RequestService) {
 
@@ -57,16 +55,13 @@ export class VisualizerComponent implements OnInit {
         this.showHTMOL();
       }
     });
-	
-	this.setLink();
   }
 
   showHTMOL() {
     this.loading = false;
   }
   
-  setLink() {
-      var url = this.requestService.host + '/analysis/webpage/full_page.html?PROJECT_ID=' + this.selectedProject.id ;
-      this.analysisLink.nativeElement.href = url ;
+  goToAnalysisPage() {
+      window.location.href = this.requestService.host + '/analysis/webpage/full_page.html?PROJECT_ID=' + this.selectedProject.id ;
   }
 }
