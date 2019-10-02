@@ -236,7 +236,7 @@ v3.5 Leonardo Alvarez-Rivera
 		
 		//console.log("message received");
 	
-		if ( event.origin.indexOf('http://localhost:2010') >= 0 && bndfinal ) {
+		if ( event.origin.indexOf('analysis') >= 0 && bndfinal ) {
 		
 			if( event.data.substring( 0, event.data.indexOf("\n") ) == "Frame" ) {
 				RewFor( null, event.data.substring( event.data.indexOf("\n")+1, event.data.length ) )();}
