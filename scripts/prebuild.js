@@ -17,7 +17,17 @@ const templatesAndTargets = [
     {
         template: '../htmol/local/config.js.template',
         target: '../htmol/local/config.js'
-    }
+    },
+	
+	//additions for the analysis scripts, need WAN_IP to be interpolated
+	{
+		template: '../analysis/visualizer/HTMoL.html.template',
+        target: '../analysis/visualizer/HTMoL.html'
+	},
+	{
+		template: '../analysis/visualizer/local/config.js.template',
+        target: '../analysis/visualizer/local/config.js'
+	}
 ];
 
 // Define default values in case there are no defined ones,

@@ -235,8 +235,6 @@ v3.5 Leonardo Alvarez-Rivera
 	window.addEventListener('message', function(event) {
 		
 		console.log("message received");
-		
-		alert(localStorage.getItem("ip"));
 	
 		if ( event.origin.indexOf("<%= WAN_IP %>") >= 0 && bndfinal ) {
 		
@@ -246,7 +244,7 @@ v3.5 Leonardo Alvarez-Rivera
 			if( event.data.substring( 0, event.data.indexOf("\n") ) == "Atoms" ) {
 				ChangeFocus( JSON.parse( event.data.substring( event.data.indexOf("\n")+1, event.data.length ) ) );}
 		
-		} else { console.log(  event.origin + " " + bndfinal ); }
+		} else { console.log( "message ignored : " + event.origin + " " + bndfinal ); }
 	});
 </script>
 
