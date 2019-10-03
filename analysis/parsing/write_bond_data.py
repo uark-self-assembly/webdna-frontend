@@ -71,7 +71,7 @@ while mysystem != False:
 	mysystem.map_nucleotides_to_strands()
 	mysystem.print_lorenzo_output(tempfile_obj.name,'/dev/null')
 	tempfile_obj.flush()
-	myinput = subprocess.Popen(launchargs,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	myinput = subprocess.Popen( launchargs, stdout=subprocess.PIPE, stderr=subprocess.PIPE )
 	stdout,stderr = myinput.communicate()
 	linewise = stdout.split('\n')
 	mysystem.read_H_bonds(linewise[:-1])
@@ -97,9 +97,6 @@ while mysystem != False:
 				if mysystem != None and NP != None and absolute_to_strand != None:
 					running_data_structure.append( [mysystem._time, int(NP[0]), absolute_to_strand[NP[0]][0], 'BINDS', int(NP[1]), absolute_to_strand[NP[1]][0]] )
 					# f.write( '\t\t'.join( [str(mysystem._time), str(NP[0]), str(absolute_to_strand[NP[0]][0]), 'BINDS', str(NP[1]), str(absolute_to_strand[NP[1]][0])] ) + '\n' )
-	
-	with open("/home/webdna-user/bonds_over_time.txt","w") as fileout:
-		fileout.write( str(curr_config) )
 	
 	prev_config = curr_config
 	last_recorded_time = mysystem._time
