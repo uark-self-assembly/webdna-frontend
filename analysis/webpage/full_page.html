@@ -31,7 +31,7 @@
 		
 		var system;
 		var xhttp = new XMLHttpRequest();
-		xhttp.open("GET", base_url + "data-files/" + PROJECT_ID + ".json", true);
+		xhttp.open("GET", json_url, true);
 		
 		function urlExists(testUrl) {
 			var http = jQuery.ajax({
@@ -103,6 +103,8 @@
 				if (xhttp.status === 200) {
 				
 					system = JSON.parse(xhttp.responseText);
+					
+					console.log(system)
 					
 					//necessary for origami scripts
 					designate_backbone(1);
