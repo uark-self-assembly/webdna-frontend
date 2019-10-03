@@ -98,6 +98,9 @@ while mysystem != False:
 					running_data_structure.append( [mysystem._time, int(NP[0]), absolute_to_strand[NP[0]][0], 'BINDS', int(NP[1]), absolute_to_strand[NP[1]][0]] )
 					# f.write( '\t\t'.join( [str(mysystem._time), str(NP[0]), str(absolute_to_strand[NP[0]][0]), 'BINDS', str(NP[1]), str(absolute_to_strand[NP[1]][0])] ) + '\n' )
 	
+	with open("/home/webdna-user/bonds_over_time.txt","w") as fileout:
+		fileout.write( str(curr_config) )
+	
 	prev_config = curr_config
 	last_recorded_time = mysystem._time
 	mysystem = myreader.get_system()
